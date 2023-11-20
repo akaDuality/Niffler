@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "73F0701C-0090-40FB-B98A-C35E19D29D1D",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Niffler.xcodeproj",
+      "identifier" : "7474CEF62B0764910064C6D4",
+      "name" : "Niffler"
+    }
+  },
+  "testTargets" : [
+    {
+      "enabled" : false,
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Niffler.xcodeproj",
+        "identifier" : "7474CF162B0764920064C6D4",
+        "name" : "NifflerUITests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:..\/Api",
+        "identifier" : "ApiTests",
+        "name" : "ApiTests"
+      }
+    }
+  ],
+  "version" : 1
+}
