@@ -40,6 +40,15 @@ class Network: NSObject {
         return (text, response)
     }
     
+    func performWithJsonResult<T: Decodable>(_ request: URLRequest) async throws -> (T, HTTPURLResponse) {
+        let decoder = JSONDecoder()
+        let (data, response) = try await perform(request)
+        
+        let dto = try decoder.decode(T.self, from: data)
+        
+        return (dto, response)
+    }
+    
     func perform(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         print("Manually call \(request.httpMethod!) \(request.url!))")
         let (data, response) = try await urlSession.data(for: request)

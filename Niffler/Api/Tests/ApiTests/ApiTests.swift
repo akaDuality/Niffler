@@ -47,7 +47,25 @@ final class ApiTests: XCTestCase {
 //        XCTAssertEqual(text, "{\"id\":\"91c42b35-30f0-4a70-8fc7-e11d99da7702\",\"username\":\"akaDuality@yandex.ru\",\"firstname\":null,\"surname\":null,\"currency\":\"RUB\",\"photo\":null}")
         XCTAssertEqual(response.statusCode, 200)
     }
+    
+    func test_authorized_spends() async throws {
+        try await network.auth.authorize(user: "stage", password: "12345")
 
+        let (spends, response) = try await spends()
+        
+        XCTAssertEqual(response.statusCode, 200)
+        XCTAssertTrue(spends.count > 0)
+    }
+    
+    struct Spends: Decodable {
+        let id: String
+    }
+    
+    func spends() async throws -> ([Spends], HTTPURLResponse) {
+        let request = network.request(method: "GET", path: "spends")
+        return try await network.performWithJsonResult(request)
+    }
+    
     // MARK: flow with bearer token
     
     // MARK: Spends

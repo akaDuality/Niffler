@@ -16,6 +16,7 @@
 		746853972B0CAE9900E48DFE /* NifflerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746853962B0CAE9900E48DFE /* NifflerUITests.swift */; };
 		746853992B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746853982B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift */; };
 		749E20F62B0CB0070045F4E3 /* Api in Frameworks */ = {isa = PBXBuildFile; productRef = 749E20F52B0CB0070045F4E3 /* Api */; };
+		A967D0802B0CB22400410674 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A967D07F2B0CB22400410674 /* LoginView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		746853982B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NifflerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		749E20F22B0CAF1D0045F4E3 /* Api */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Api; sourceTree = "<group>"; };
 		749E20F32B0CAFD60045F4E3 /* Niffler.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Niffler.xctestplan; sourceTree = "<group>"; };
+		A967D07F2B0CB22400410674 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 			children = (
 				746853792B0CAE9700E48DFE /* NifflerApp.swift */,
 				7468537B2B0CAE9700E48DFE /* ContentView.swift */,
+				A967D07E2B0CB20500410674 /* VIew */,
 				7468537D2B0CAE9700E48DFE /* Item.swift */,
 				7468537F2B0CAE9900E48DFE /* Assets.xcassets */,
 				746853812B0CAE9900E48DFE /* Preview Content */,
@@ -134,6 +137,14 @@
 				746853982B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift */,
 			);
 			path = NifflerUITests;
+			sourceTree = "<group>";
+		};
+		A967D07E2B0CB20500410674 /* VIew */ = {
+			isa = PBXGroup;
+			children = (
+				A967D07F2B0CB22400410674 /* LoginView.swift */,
+			);
+			path = VIew;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,6 +285,7 @@
 			files = (
 				7468537C2B0CAE9700E48DFE /* ContentView.swift in Sources */,
 				7468537E2B0CAE9700E48DFE /* Item.swift in Sources */,
+				A967D0802B0CB22400410674 /* LoginView.swift in Sources */,
 				7468537A2B0CAE9700E48DFE /* NifflerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
