@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7474CEF62B0764910064C6D4"
+               BlueprintIdentifier = "746853752B0CAE9700E48DFE"
                BuildableName = "Niffler.app"
                BlueprintName = "Niffler"
                ReferencedContainer = "container:Niffler.xcodeproj">
@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:UnitTests.xctestplan"
+            reference = "container:Niffler.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -39,18 +39,18 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7474CF0C2B0764920064C6D4"
+               BlueprintIdentifier = "746853872B0CAE9900E48DFE"
                BuildableName = "NifflerTests.xctest"
                BlueprintName = "NifflerTests"
                ReferencedContainer = "container:Niffler.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "YES"
+            skipped = "NO"
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7474CF162B0764920064C6D4"
+               BlueprintIdentifier = "746853912B0CAE9900E48DFE"
                BuildableName = "NifflerUITests.xctest"
                BlueprintName = "NifflerUITests"
                ReferencedContainer = "container:Niffler.xcodeproj">
@@ -72,7 +72,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "7474CEF62B0764910064C6D4"
+            BlueprintIdentifier = "746853752B0CAE9700E48DFE"
             BuildableName = "Niffler.app"
             BlueprintName = "Niffler"
             ReferencedContainer = "container:Niffler.xcodeproj">
@@ -89,7 +89,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "7474CEF62B0764910064C6D4"
+            BlueprintIdentifier = "746853752B0CAE9700E48DFE"
             BuildableName = "Niffler.app"
             BlueprintName = "Niffler"
             ReferencedContainer = "container:Niffler.xcodeproj">

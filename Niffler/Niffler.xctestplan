@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "73F0701C-0090-40FB-B98A-C35E19D29D1D",
+      "id" : "7CF7E95A-F49A-41DD-A474-6E80143952DF",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -11,24 +11,31 @@
   "defaultOptions" : {
     "targetForVariableExpansion" : {
       "containerPath" : "container:Niffler.xcodeproj",
-      "identifier" : "7474CEF62B0764910064C6D4",
+      "identifier" : "746853752B0CAE9700E48DFE",
       "name" : "Niffler"
     }
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Niffler.xcodeproj",
+        "identifier" : "746853872B0CAE9900E48DFE",
+        "name" : "NifflerTests"
+      }
+    },
+    {
       "enabled" : false,
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:Niffler.xcodeproj",
-        "identifier" : "7474CF162B0764920064C6D4",
+        "identifier" : "746853912B0CAE9900E48DFE",
         "name" : "NifflerUITests"
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:..\/Api",
+        "containerPath" : "container:Api",
         "identifier" : "ApiTests",
         "name" : "ApiTests"
       }

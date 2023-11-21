@@ -2,7 +2,7 @@
 //  NifflerUITestsLaunchTests.swift
 //  NifflerUITests
 //
-//  Created by Mikhail Rubanov on 17.11.2023.
+//  Created by Mikhail Rubanov on 21.11.2023.
 //
 
 import XCTest
