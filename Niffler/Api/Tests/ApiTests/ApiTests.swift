@@ -51,19 +51,10 @@ final class ApiTests: XCTestCase {
     func test_authorized_spends() async throws {
         try await network.auth.authorize(user: "stage", password: "12345")
 
-        let (spends, response) = try await spends()
+        let (spends, response) = try await network.getSpends()
         
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertTrue(spends.count > 0)
-    }
-    
-    struct Spends: Decodable {
-        let id: String
-    }
-    
-    func spends() async throws -> ([Spends], HTTPURLResponse) {
-        let request = network.request(method: "GET", path: "spends")
-        return try await network.performWithJsonResult(request)
     }
     
     // MARK: flow with bearer token

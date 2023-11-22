@@ -26,6 +26,11 @@ class Api: Network {
         }
         return request
     }
+    
+    func getSpends() async throws -> ([Spends], HTTPURLResponse) {
+        let request = request(method: "GET", path: "spends")
+        return try await performWithJsonResult(request)
+    }
 }
 
 class Network: NSObject {
