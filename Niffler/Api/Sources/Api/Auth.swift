@@ -2,8 +2,8 @@ import Foundation
 
 /// https://github.com/qa-guru/niffler-st3/blob/00705308d259607c30447103cb7b9834afdf8209/niffler-e-2-e-tests/src/test/java/guru/qa/niffler/api/AuthService.java#L30
 class Auth: Network {
-    
-    let base = URL(string: "https://auth.niffler-stage.qa.guru/oauth2")!
+    let base = URL(string: "https://auth.niffler-stage.qa.guru")!
+    let baseOauth = URL(string: "https://auth.niffler-stage.qa.guru/oauth2")!
     let challenge: String
     let verifier: PKCE.PKCECode
     private(set) var authorizationHeader: String? = nil
@@ -15,7 +15,7 @@ class Auth: Network {
         self.challenge = challenge ?? (try! PKCE.codeChallenge(fromVerifier: verifier))
     }
     
-    func authorize(user: String, password: String) async throws {
+    public func authorize(user: String, password: String) async throws {
         let authorizeRequest = authorizeRequest()
         let (_, authResponse) = try await perform(authorizeRequest)
         guard let xsrf = authResponse.allHeaderFields["x-xsrf-token"] as? String else {
@@ -47,7 +47,7 @@ class Auth: Network {
         query: [URLQueryItem] = [],
         addAcceptJsonHeader: Bool = true
     ) -> URLRequest {
-        let url = (baseURL ?? base)
+        let url = (baseURL ?? baseOauth)
             .appendingPathComponent(path)
             .appending(queryItems: query)
         
@@ -89,8 +89,7 @@ class Auth: Network {
         password: String,
         xsrf: String
     ) -> URLRequest {
-        var request = URLRequest(url: URL(string: "https://auth.niffler-stage.qa.guru")!
-            .appending(path: "login"))
+        var request = URLRequest(url: base.appending(path: "login"))
         
         request.httpMethod = "POST"
         request.setValue("application/x-www-form-urlencoded",
@@ -127,6 +126,50 @@ class Auth: Network {
         request.addValue(token,forHTTPHeaderField: "Authorization")
         
         return request
+    }
+    
+    public func register(username: String, password: String) async throws -> Int {
+        let xsrf = try await getRegisterXSRF()
+        
+        let statusCode = try await postRegister(username: username,
+                                                password: password,
+                                                xsrf: xsrf)
+        return statusCode
+    }
+    
+    private func getRegisterXSRF() async throws -> String {
+        var getRequest = URLRequest(url: base.appending(path: "register"))
+        getRequest.httpMethod = "GET"
+        
+        let (_, getResponse) = try await perform(getRequest)
+        
+        let xsrf = (getResponse.allHeaderFields["x-xsrf-token"] as! String)
+        return xsrf
+    }
+    
+    private func postRegister(
+        username: String,
+        password: String,
+        xsrf: String
+    ) async throws -> Int {
+        var postRequest = URLRequest(url: base.appending(path: "register"))
+        
+        postRequest.httpMethod = "POST"
+        postRequest.setValue("application/x-www-form-urlencoded",
+                             forHTTPHeaderField: "Content-Type")
+        
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name: "username", value: username),
+            URLQueryItem(name: "password", value: password),
+            URLQueryItem(name: "passwordSubmit", value: password),
+            URLQueryItem(name: "_csrf", value: xsrf),
+        ]
+        
+        postRequest.httpBody = components.query?.data(using: .utf8)
+        
+        let (_, postResponse) = try await perform(postRequest)
+        return postResponse.statusCode
     }
     
     enum AuthorizationError: Error {

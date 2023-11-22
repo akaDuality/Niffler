@@ -32,11 +32,25 @@ final class AuthTests: XCTestCase {
     }
 
     func test_auth() async throws {
-        try await network.authorize(user: "stage", 
-                                    password: "12345")
+        try await network.authorize(user: "Misha1",
+                                    password: "123")
         
         XCTAssertNotNil(network.authorizationHeader)
     }
+    
+    func test_registerAndAuthorize() async throws {
+        let username = UUID().uuidString
+        
+        let response = try await network.register(username: username,
+                                                  password: "123")
+        XCTAssertEqual(response, 201)
+        
+        try await network.authorize(user: username,
+                                    password: "123")
+        XCTAssertNotNil(network.authorizationHeader)
+    }
+    
+    
     
     // TODO: Logout on 401 error
     // TODO: Refresh token after 401 automatically. Waiting for backend implementation
