@@ -24,7 +24,13 @@ public class Auth: Network {
         
         let loginRequest = loginRequest(login: user, password: password, xsrf: xsrf)
         let (_, loginResponse) = try await perform(loginRequest)
+        
         guard let code = loginResponse.url?.query()?.components(separatedBy: "=").last else {
+            throw AuthorizationError.noCode
+        }
+        
+        if let range = code.range(of: "error") {
+        } else {
             throw AuthorizationError.noCode
         }
         
@@ -175,6 +181,7 @@ public class Auth: Network {
     enum AuthorizationError: Error {
         case noXsrfToken
         case noCode
+        case invalidCode
     }
 }
 
