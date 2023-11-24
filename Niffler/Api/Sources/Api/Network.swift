@@ -7,9 +7,9 @@
 
 import Foundation
 
-class Api: Network {
+public class Api: Network {
     private let base = URL(string: "https://api.niffler-stage.qa.guru")!
-    let auth = Auth()
+    public let auth = Auth()
     
     func request(method: String, path: String) -> URLRequest {
         let url = base.appendingPathComponent(path)
@@ -27,13 +27,13 @@ class Api: Network {
         return request
     }
     
-    func getSpends() async throws -> ([Spends], HTTPURLResponse) {
+    public func getSpends() async throws -> ([Spends], HTTPURLResponse) {
         let request = request(method: "GET", path: "spends")
         return try await performWithJsonResult(request)
     }
 }
 
-class Network: NSObject {
+public class Network: NSObject {
     private lazy var urlSession: URLSession = .shared
     
     func performWithStringResult(_ request: URLRequest) async throws -> (String, HTTPURLResponse) {

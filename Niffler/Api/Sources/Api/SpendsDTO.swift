@@ -1,11 +1,11 @@
 import Foundation
 
-struct Spends: Decodable {
-    let id: String
-    let spendDate: String
-    let category: String
-    let currency: String
-    let amount: Double
-    let description: String
-    let username: String
+public struct Spends: Identifiable, Decodable {
+    public let id: String
+    public let spendDate: String
+    public let category: String
+    public let currency: String
+    public let amount: Double
+    public let description: String
+    public let username: String
 }

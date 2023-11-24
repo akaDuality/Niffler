@@ -46,7 +46,11 @@ struct LoginView: View {
 
                 /// deprecated in 16.0
                 NavigationLink(
-                    destination: Text("Welcome \(username)!"),
+                    destination:
+                        VStack {
+                            Text("Welcome \(username)!")
+                            SpendsView()
+                        },
                     isActive: $isLoginSuccessful,
                     label: {
                         EmptyView()
