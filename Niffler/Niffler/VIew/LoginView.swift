@@ -7,11 +7,21 @@
 
 import SwiftUI
 
-struct LoginView: View {
-    @State private var username: String = ""
-    @State private var password: String = ""
-    @State private var isLoginSuccessful: Bool = false
+struct Defaults {
+    static var username: String {
+        ProcessInfo.processInfo.environment["username"] ?? ""
+    }
+    
+    static var password: String {
+        ProcessInfo.processInfo.environment["password"] ?? ""
+    }
+}
 
+struct LoginView: View {
+    @State private var username: String = Defaults.username
+    @State private var password: String = Defaults.password
+    @State private var isLoginSuccessful: Bool = false
+    
     var body: some View {
         NavigationView {
             VStack {
