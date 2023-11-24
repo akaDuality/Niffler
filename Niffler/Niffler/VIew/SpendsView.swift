@@ -16,22 +16,24 @@ struct SpendsView: View {
         }
         .onAppear {
             Task {
-                spends = try await spendsModel.fetchData()
+                let spends = try await spendsModel.fetchData()
+                
+                await MainActor.run {
+                    self.spends = spends
+                }
             }
         }
     }
 }
 
 class SpendsViewModel: ObservableObject {
-    @Published var spendsData: [Spends] = []
     let network = Api()
 
     func fetchData() async throws -> [Spends] {
         try await network.auth.authorize(user: "stage", password: "12345")
 
         let (spends, response) = try await network.getSpends()
-        spendsData = spends
-        return spendsData
+        return spends
     }
 }
 
