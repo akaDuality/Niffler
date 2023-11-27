@@ -43,6 +43,7 @@ public class Auth: Network {
         let decoder = JSONDecoder()
         let tokenDto = try decoder.decode(TokenDto.self, from: data3)
         self.authorizationHeader = "Bearer " + tokenDto.id_token
+        UserDefaults.standard.set(authorizationHeader, forKey: "UserAuthToken")
     }
     
     private func request(
