@@ -27,7 +27,7 @@ public class Api: Network {
         return request
     }
     
-    public func getSpends() async throws -> ([Spends], HTTPURLResponse) {
+    public func getSpends() async throws -> ([SpendsDTO], HTTPURLResponse) {
         let request = request(method: "GET", path: "spends")
         return try await performWithJsonResult(request)
     }

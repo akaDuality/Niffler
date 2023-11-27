@@ -13,7 +13,7 @@ struct SpendsView: View {
             let (spends, response) = try await network.getSpends()
             
             await MainActor.run {
-                self.spends = spends
+                self.spends = spends.map { Spends(dto: $0) }
             }
         }
     }
@@ -24,7 +24,14 @@ extension SpendsView {
         VStack {
             List(spends) { spend in
                 VStack(alignment: .leading) {
-                    Text("ID: \(spend.id)")
+                    Text("\(spend.spendDate)")
+                        .font(.headline)
+                    
+                    Text("\(spend.amount)")
+                        .font(.subheadline)
+                    Text("\(spend.currency)")
+                    Text("\(spend.category)")
+                    Text("\(spend.description)")
                 }
             }
             Text("Spends View?")

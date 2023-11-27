@@ -29,10 +29,9 @@ public class Auth: Network {
             throw AuthorizationError.noCode
         }
         
-        if let range = code.range(of: "error") {
-        } else {
+        if code.range(of: "error") != nil {
             throw AuthorizationError.noCode
-        }
+        } 
         
         let request3 = tokenRequest(code: code)
         let (data3, _) = try await perform(request3)
