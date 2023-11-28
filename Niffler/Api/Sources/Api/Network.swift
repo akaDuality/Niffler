@@ -35,6 +35,7 @@ public class Api: Network {
 
 public class Network: NSObject {
     private lazy var urlSession: URLSession = .shared
+    public var onUnauthorize: () -> Void = {}
     
     func performWithStringResult(_ request: URLRequest) async throws -> (String, HTTPURLResponse) {
         
@@ -59,6 +60,9 @@ public class Network: NSObject {
         let (data, response) = try await urlSession.data(for: request)
         
         let urlResponse = response as! HTTPURLResponse
+        if urlResponse.statusCode == 401 {
+            onUnauthorize()
+        }
         
         print("Did receive in the end \(urlResponse.url!)")
         return (data, urlResponse)

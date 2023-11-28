@@ -7,9 +7,13 @@
 
 import SwiftUI
 import SwiftData
+import Api
 
 @main
 struct NifflerApp: App {
+    let network = Api()
+    @State var isRegistrationPresented: Bool = false
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -25,8 +29,15 @@ struct NifflerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SpendsView(network: network)
+                .onAppear {
+                    network.onUnauthorize = { isRegistrationPresented = true }
+                }
+                .sheet(isPresented: $isRegistrationPresented) {
+                    LoginView()
+                }
         }
+      
         .modelContainer(sharedModelContainer)
     }
 }

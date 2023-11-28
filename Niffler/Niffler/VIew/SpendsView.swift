@@ -3,12 +3,11 @@ import SwiftUI
 
 struct SpendsView: View {
     @State var spends: [Spends] = []
-
-    let network = Api()
+    let network: Api
     
     func fetchData() {
         Task {
-            try await network.auth.authorize(user: "stage", password: "12345")
+//            try await network.auth.authorize(user: "stage", password: "12345")
             
             let (spends, response) = try await network.getSpends()
             
@@ -43,6 +42,6 @@ extension SpendsView {
 }
 
 
-#Preview {
-    SpendsView()
-}
+//#Preview {
+//    SpendsView()
+//}

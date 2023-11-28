@@ -47,6 +47,8 @@ extension LoginView {
                     if !username.isEmpty && !password.isEmpty {
                         isLoginSuccessful = true
                     }
+                    
+                    
                 }) {
                     Text("Login")
                         .foregroundColor(.white)
@@ -63,7 +65,7 @@ extension LoginView {
                     VStack {
                         Text("Welcome \(username)!")
                         Token()
-                        SpendsView()
+//                        SpendsView()
                     },
                     isActive: $isLoginSuccessful,
                     label: {
