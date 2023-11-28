@@ -6,7 +6,14 @@ public class Auth: Network {
     let baseOauth = URL(string: "https://auth.niffler-stage.qa.guru/oauth2")!
     let challenge: String
     let verifier: PKCE.PKCECode
-    private(set) var authorizationHeader: String? = nil
+    private(set) var authorizationHeader: String? {
+        set {
+            UserDefaults.standard.set(newValue, forKey: "UserAuthToken")
+        }
+        get {
+            UserDefaults.standard.string(forKey: "UserAuthToken")
+        }
+    }
                 
     init(
         challenge: String? = nil
@@ -43,7 +50,6 @@ public class Auth: Network {
         let decoder = JSONDecoder()
         let tokenDto = try decoder.decode(TokenDto.self, from: data3)
         self.authorizationHeader = "Bearer " + tokenDto.id_token
-        UserDefaults.standard.set(authorizationHeader, forKey: "UserAuthToken")
     }
     
     private func request(

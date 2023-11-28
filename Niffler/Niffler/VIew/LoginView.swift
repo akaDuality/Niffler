@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Api
 
 struct Defaults {
     static var username: String {
@@ -22,11 +23,13 @@ struct LoginView: View {
     @State private var password: String = Defaults.password
     @State private var isLoginSuccessful: Bool = false
     @State private var userAuthToken: String?
+    @Binding var isRegistrationPresented: Bool
+    let auth: Auth
 }
 
 extension LoginView {
     var body: some View {
-        NavigationView {
+        VStack {
             VStack {
                 CoinN()
 
@@ -47,6 +50,12 @@ extension LoginView {
                     if !username.isEmpty && !password.isEmpty {
                         isLoginSuccessful = true
                     }
+                    Task {
+                        try await auth.authorize(user: username, password: password)
+                        await MainActor.run {
+                            isRegistrationPresented = false
+                        }
+                    }
                     
                     
                 }) {
@@ -60,18 +69,18 @@ extension LoginView {
                 .padding(.horizontal, 20)
 
                 /// deprecated in 16.0
-                NavigationLink(
-                    destination:
-                    VStack {
-                        Text("Welcome \(username)!")
-                        Token()
-//                        SpendsView()
-                    },
-                    isActive: $isLoginSuccessful,
-                    label: {
-                        EmptyView()
-                    }
-                )
+//                NavigationLink(
+//                    destination:
+//                    VStack {
+//                        Text("Welcome \(username)!")
+//                        Token()
+////                        SpendsView()
+//                    },
+//                    isActive: $isLoginSuccessful,
+//                    label: {
+//                        EmptyView()
+//                    }
+//                )
             }
             .padding()
             .navigationBarTitle("Login")
@@ -174,6 +183,6 @@ extension UIColor {
     }
 }
 
-#Preview {
-    LoginView()
-}
+//#Preview {
+//    LoginView()
+//}
