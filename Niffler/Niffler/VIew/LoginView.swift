@@ -5,8 +5,8 @@
 //  Created by Станислав Карпенко on 21.11.2023.
 //
 
-import SwiftUI
 import Api
+import SwiftUI
 
 struct Defaults {
     static var username: String {
@@ -23,6 +23,7 @@ struct LoginView: View {
     @State private var password: String = Defaults.password
     @State private var isLoginSuccessful: Bool = false
     @State private var userAuthToken: String?
+    @State private var isLoading: Bool = false
     @Binding var isRegistrationPresented: Bool
     let auth: Auth
 }
@@ -50,37 +51,30 @@ extension LoginView {
                     if !username.isEmpty && !password.isEmpty {
                         isLoginSuccessful = true
                     }
+                    isLoading.toggle()
+
                     Task {
                         try await auth.authorize(user: username, password: password)
                         await MainActor.run {
                             isRegistrationPresented = false
                         }
                     }
-                    
-                    
+
                 }) {
-                    Text("Login")
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(isLoginSuccessful ? Color.green : Color.blue)
-                        .cornerRadius(8)
+                    HStack {
+                        if isLoading {
+                            ProgressView()
+                        } else {
+                            Text("Login")
+                        }
+                    }
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(isLoginSuccessful ? Color.gray : Color.blue)
+                    .cornerRadius(8)
                 }
                 .padding(.horizontal, 20)
-
-                /// deprecated in 16.0
-//                NavigationLink(
-//                    destination:
-//                    VStack {
-//                        Text("Welcome \(username)!")
-//                        Token()
-////                        SpendsView()
-//                    },
-//                    isActive: $isLoginSuccessful,
-//                    label: {
-//                        EmptyView()
-//                    }
-//                )
             }
             .padding()
             .navigationBarTitle("Login")
@@ -183,6 +177,6 @@ extension UIColor {
     }
 }
 
-//#Preview {
+// #Preview {
 //    LoginView()
-//}
+// }

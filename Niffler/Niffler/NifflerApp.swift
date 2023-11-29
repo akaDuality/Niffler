@@ -29,15 +29,18 @@ struct NifflerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            SpendsView(network: network)
-                .onAppear {
-                    network.onUnauthorize = { isRegistrationPresented = true }
-                }
-                .sheet(isPresented: $isRegistrationPresented) {
-                    LoginView(
-                        isRegistrationPresented: self.$isRegistrationPresented,
-                        auth: network.auth)
-                }
+            SpendsView(
+                isRegistrationPresented: $isRegistrationPresented,
+                network: network
+            )
+            .onAppear {
+                network.onUnauthorize = { isRegistrationPresented = true }
+            }
+            .sheet(isPresented: $isRegistrationPresented) {
+                LoginView(
+                    isRegistrationPresented: self.$isRegistrationPresented,
+                    auth: network.auth)
+            }
         }
 
         .modelContainer(sharedModelContainer)
