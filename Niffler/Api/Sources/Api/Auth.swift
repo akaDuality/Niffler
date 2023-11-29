@@ -1,12 +1,19 @@
 import Foundation
 
 /// https://github.com/qa-guru/niffler-st3/blob/00705308d259607c30447103cb7b9834afdf8209/niffler-e-2-e-tests/src/test/java/guru/qa/niffler/api/AuthService.java#L30
-class Auth: Network {
+public class Auth: Network {
     let base = URL(string: "https://auth.niffler-stage.qa.guru")!
     let baseOauth = URL(string: "https://auth.niffler-stage.qa.guru/oauth2")!
     let challenge: String
     let verifier: PKCE.PKCECode
-    private(set) var authorizationHeader: String? = nil
+    private(set) var authorizationHeader: String? {
+        set {
+            UserDefaults.standard.set(newValue, forKey: "UserAuthToken")
+        }
+        get {
+            UserDefaults.standard.string(forKey: "UserAuthToken")
+        }
+    }
                 
     init(
         challenge: String? = nil
@@ -24,9 +31,14 @@ class Auth: Network {
         
         let loginRequest = loginRequest(login: user, password: password, xsrf: xsrf)
         let (_, loginResponse) = try await perform(loginRequest)
+        
         guard let code = loginResponse.url?.query()?.components(separatedBy: "=").last else {
             throw AuthorizationError.noCode
         }
+        
+        if code.range(of: "error") != nil {
+            throw AuthorizationError.noCode
+        } 
         
         let request3 = tokenRequest(code: code)
         let (data3, _) = try await perform(request3)
@@ -175,6 +187,7 @@ class Auth: Network {
     enum AuthorizationError: Error {
         case noXsrfToken
         case noCode
+        case invalidCode
     }
 }
 

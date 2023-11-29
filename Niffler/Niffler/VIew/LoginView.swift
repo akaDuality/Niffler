@@ -6,14 +6,30 @@
 //
 
 import SwiftUI
+import Api
+
+struct Defaults {
+    static var username: String {
+        ProcessInfo.processInfo.environment["username"] ?? ""
+    }
+
+    static var password: String {
+        ProcessInfo.processInfo.environment["password"] ?? ""
+    }
+}
 
 struct LoginView: View {
-    @State private var username: String = ""
-    @State private var password: String = ""
+    @State private var username: String = Defaults.username
+    @State private var password: String = Defaults.password
     @State private var isLoginSuccessful: Bool = false
+    @State private var userAuthToken: String?
+    @Binding var isRegistrationPresented: Bool
+    let auth: Auth
+}
 
+extension LoginView {
     var body: some View {
-        NavigationView {
+        VStack {
             VStack {
                 CoinN()
 
@@ -34,6 +50,14 @@ struct LoginView: View {
                     if !username.isEmpty && !password.isEmpty {
                         isLoginSuccessful = true
                     }
+                    Task {
+                        try await auth.authorize(user: username, password: password)
+                        await MainActor.run {
+                            isRegistrationPresented = false
+                        }
+                    }
+                    
+                    
                 }) {
                     Text("Login")
                         .foregroundColor(.white)
@@ -45,19 +69,38 @@ struct LoginView: View {
                 .padding(.horizontal, 20)
 
                 /// deprecated in 16.0
-                NavigationLink(
-                    destination: Text("Welcome \(username)!"),
-                    isActive: $isLoginSuccessful,
-                    label: {
-                        EmptyView()
-                    }
-                )
+//                NavigationLink(
+//                    destination:
+//                    VStack {
+//                        Text("Welcome \(username)!")
+//                        Token()
+////                        SpendsView()
+//                    },
+//                    isActive: $isLoginSuccessful,
+//                    label: {
+//                        EmptyView()
+//                    }
+//                )
             }
             .padding()
             .navigationBarTitle("Login")
         }
     }
-    
+
+    @ViewBuilder
+    func Token() -> some View {
+        if let userAuthToken = userAuthToken {
+            Text("Token: \(userAuthToken)")
+        } else {
+            Text("No token stored")
+        }
+
+        Button("Read Token") {
+            // Retrieve token from UserDefaults
+            self.userAuthToken = UserDefaults.standard.string(forKey: "UserAuthToken")
+        }
+    }
+
     @ViewBuilder
     func CoinN() -> some View {
         VStack {
@@ -79,7 +122,7 @@ struct LoginView: View {
                                 endPoint: UnitPoint(x: 1, y: 1)
                             )
                         )
-                         
+
                         .overlay(
                             Ellipse()
                                 .fill(Color(UIColor(hex: 0xC39951)))
@@ -89,17 +132,17 @@ struct LoginView: View {
                         .overlay(
                             Ellipse()
                                 .fill(
-                                                    LinearGradient(
-                                                        gradient: Gradient(
-                                                            stops: [
-                                                                .init(color: Color(UIColor(hex: 0xDEB35F)), location: 0.0),
-                                                                .init(color: Color(UIColor(hex: 0xCDA155)), location: 1.0)
-                                                            ]
-                                                        ),
-                                                        startPoint: .leading,
-                                                        endPoint: .trailing
-                                                    )
-                                                )
+                                    LinearGradient(
+                                        gradient: Gradient(
+                                            stops: [
+                                                .init(color: Color(UIColor(hex: 0xDEB35F)), location: 0.0),
+                                                .init(color: Color(UIColor(hex: 0xCDA155)), location: 1.0),
+                                            ]
+                                        ),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
                                 .frame(width: 100, height: 100)
                         )
                         .overlay(
@@ -140,6 +183,6 @@ extension UIColor {
     }
 }
 
-#Preview {
-    LoginView()
-}
+//#Preview {
+//    LoginView()
+//}

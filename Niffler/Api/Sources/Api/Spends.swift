@@ -1,8 +1,8 @@
 import Foundation
 
-public struct SpendsDTO: Identifiable, Decodable {
+public struct Spends: Identifiable, Encodable {
     public let id: String
-    public let spendDate: String?
+    public let spendDate: String
     public let category: String
     public let currency: String
     public let amount: Double
