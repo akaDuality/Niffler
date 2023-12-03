@@ -36,18 +36,21 @@ extension LoginView {
             VStack {
                 CoinN()
 
-                TextField("Username", text: $username)
-                    .padding()
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(8)
-                    .padding(.bottom, 20)
-
-                SecureField("Password", text: $password)
-                    .padding()
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(8)
-                    .padding(.bottom, 20)
-
+                VStack(alignment: .leading) {
+                    Text("Username")
+                    TextField("Type your username", text: $username)
+                        .padding()
+                        .background(Color(UIColor.systemGray6))
+                        .cornerRadius(8)
+                        .padding(.bottom, 20)
+                    
+                    Text("Password")
+                    SecureField("Type your password", text: $password)
+                        .padding()
+                        .background(Color(UIColor.systemGray6))
+                        .cornerRadius(8)
+                        .padding(.bottom, 20)
+                }
                 HStack {
                     LoginButton()
                     SignUpButton()
