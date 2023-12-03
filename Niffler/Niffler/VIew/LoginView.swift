@@ -22,6 +22,7 @@ struct LoginView: View {
     @State private var username: String = Defaults.username
     @State private var password: String = Defaults.password
     @State private var isLoginSuccessful: Bool = false
+    @State private var isSignUpSuccessful: Bool = false
     @State private var userAuthToken: String?
     @State private var isLoadingForLogin: Bool = false
     @State private var isLoadingForSignUp: Bool = false
@@ -66,7 +67,7 @@ extension LoginView {
                 .frame(width: 100, height: 100)
         }
     }
-    
+
     @ViewBuilder
     func LoginButton() -> some View {
         Button(action: {
@@ -98,12 +99,12 @@ extension LoginView {
         }
         .padding(.horizontal, 20)
     }
-    
+
     @ViewBuilder
     func SignUpButton() -> some View {
         Button(action: {
             if !username.isEmpty && !password.isEmpty {
-                isLoginSuccessful = true
+                isSignUpSuccessful = true
             }
             isLoadingForSignUp.toggle()
 
@@ -120,7 +121,7 @@ extension LoginView {
             .foregroundColor(.white)
             .padding()
             .frame(maxWidth: .infinity)
-            .background(isLoginSuccessful ? Color.gray : Color.purple)
+            .background(isSignUpSuccessful ? Color.gray : Color.purple)
             .cornerRadius(8)
         }
         .padding(.horizontal, 20)
