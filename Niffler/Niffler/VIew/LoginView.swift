@@ -23,7 +23,8 @@ struct LoginView: View {
     @State private var password: String = Defaults.password
     @State private var isLoginSuccessful: Bool = false
     @State private var userAuthToken: String?
-    @State private var isLoading: Bool = false
+    @State private var isLoadingForLogin: Bool = false
+    @State private var isLoadingForSignUp: Bool = false
     @Binding var isRegistrationPresented: Bool
     let auth: Auth
 }
@@ -46,52 +47,13 @@ extension LoginView {
                     .cornerRadius(8)
                     .padding(.bottom, 20)
 
-                Button(action: {
-                    // logic
-                    if !username.isEmpty && !password.isEmpty {
-                        isLoginSuccessful = true
-                    }
-                    isLoading.toggle()
-
-                    Task {
-                        try await auth.authorize(user: username, password: password)
-                        await MainActor.run {
-                            isRegistrationPresented = false
-                        }
-                    }
-
-                }) {
-                    HStack {
-                        if isLoading {
-                            ProgressView()
-                        } else {
-                            Text("Login")
-                        }
-                    }
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(isLoginSuccessful ? Color.gray : Color.blue)
-                    .cornerRadius(8)
+                HStack {
+                    LoginButton()
+                    SignUpButton()
                 }
-                .padding(.horizontal, 20)
             }
             .padding()
             .navigationBarTitle("Login")
-        }
-    }
-
-    @ViewBuilder
-    func Token() -> some View {
-        if let userAuthToken = userAuthToken {
-            Text("Token: \(userAuthToken)")
-        } else {
-            Text("No token stored")
-        }
-
-        Button("Read Token") {
-            // Retrieve token from UserDefaults
-            self.userAuthToken = UserDefaults.standard.string(forKey: "UserAuthToken")
         }
     }
 
@@ -103,6 +65,65 @@ extension LoginView {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 100, height: 100)
         }
+    }
+    
+    @ViewBuilder
+    func LoginButton() -> some View {
+        Button(action: {
+            if !username.isEmpty && !password.isEmpty {
+                isLoginSuccessful = true
+            }
+            isLoadingForLogin.toggle()
+
+            Task {
+                try await auth.authorize(user: username, password: password)
+                await MainActor.run {
+                    isRegistrationPresented = false
+                }
+            }
+
+        }) {
+            HStack {
+                if isLoadingForLogin {
+                    ProgressView()
+                } else {
+                    Text("Login")
+                }
+            }
+            .foregroundColor(.white)
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(isLoginSuccessful ? Color.gray : Color.blue)
+            .cornerRadius(8)
+        }
+        .padding(.horizontal, 20)
+    }
+    
+    @ViewBuilder
+    func SignUpButton() -> some View {
+        Button(action: {
+            if !username.isEmpty && !password.isEmpty {
+                isLoginSuccessful = true
+            }
+            isLoadingForSignUp.toggle()
+
+            // #TODO add logic for sigh up
+
+        }) {
+            HStack {
+                if isLoadingForSignUp {
+                    ProgressView()
+                } else {
+                    Text("Sign Up")
+                }
+            }
+            .foregroundColor(.white)
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(isLoginSuccessful ? Color.gray : Color.purple)
+            .cornerRadius(8)
+        }
+        .padding(.horizontal, 20)
     }
 }
 
