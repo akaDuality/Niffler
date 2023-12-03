@@ -98,70 +98,10 @@ extension LoginView {
     @ViewBuilder
     func CoinN() -> some View {
         VStack {
-            /// Main Ellipse
-            Ellipse()
-                .frame(width: 128, height: 128)
-                .overlay(
-                    /// Ellipse Delimeter
-                    Ellipse()
-                        .fill(
-                            LinearGradient(
-                                gradient: Gradient(
-                                    colors: [
-                                        Color(UIColor(hex: 0xFFD992)),
-                                        Color(UIColor(hex: 0xE1B15E)),
-                                    ]
-                                ),
-                                startPoint: UnitPoint(x: 0, y: 0),
-                                endPoint: UnitPoint(x: 1, y: 1)
-                            )
-                        )
-
-                        .overlay(
-                            Ellipse()
-                                .fill(Color(UIColor(hex: 0xC39951)))
-                                .frame(width: 105, height: 105)
-                        )
-
-                        .overlay(
-                            Ellipse()
-                                .fill(
-                                    LinearGradient(
-                                        gradient: Gradient(
-                                            stops: [
-                                                .init(color: Color(UIColor(hex: 0xDEB35F)), location: 0.0),
-                                                .init(color: Color(UIColor(hex: 0xCDA155)), location: 1.0),
-                                            ]
-                                        ),
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .frame(width: 100, height: 100)
-                        )
-                        .overlay(
-                            Ellipse()
-                                .fill(
-                                    LinearGradient(
-                                        gradient: Gradient(
-                                            stops: [
-                                                .init(color: Color(UIColor(hex: 0xFFD992)), location: 0.276),
-                                                .init(color: Color(UIColor(hex: 0xE1B15E)), location: 0.6823),
-                                            ]
-                                        ),
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 83, height: 83)
-                        )
-                )
-                .overlay(
-                    Text("N")
-                        .foregroundColor(Color(UIColor(hex: 0xC39951)))
-                        .font(.largeTitle)
-                )
-                .padding()
+            Image("LogoNiffler")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 100, height: 100)
         }
     }
 }
