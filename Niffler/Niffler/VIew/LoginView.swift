@@ -99,6 +99,7 @@ extension LoginView {
         }
         .disabled(isLoadingForLogin)
         .padding(.horizontal, 20)
+        .accessibilityIdentifier(String(#function.dropLast(2)))
     }
 
     @ViewBuilder
