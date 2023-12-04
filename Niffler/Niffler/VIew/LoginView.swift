@@ -74,9 +74,6 @@ extension LoginView {
     @ViewBuilder
     func LoginButton() -> some View {
         Button(action: {
-            if !username.isEmpty && !password.isEmpty {
-                isLoginSuccessful = true
-            }
             isLoadingForLogin.toggle()
 
             Task {
@@ -100,6 +97,7 @@ extension LoginView {
             .background(isLoginSuccessful ? Color.gray : Color.blue)
             .cornerRadius(8)
         }
+        .disabled(isLoadingForLogin)
         .padding(.horizontal, 20)
     }
 
@@ -127,6 +125,7 @@ extension LoginView {
             .background(isSignUpSuccessful ? Color.gray : Color.purple)
             .cornerRadius(8)
         }
+        .disabled(isSignUpSuccessful)
         .padding(.horizontal, 20)
     }
 }
