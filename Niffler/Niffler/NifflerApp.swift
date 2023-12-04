@@ -29,17 +29,40 @@ struct NifflerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            SpendsView(network: network)
-                .onAppear {
-                    network.onUnauthorize = { isRegistrationPresented = true }
-                }
-                .sheet(isPresented: $isRegistrationPresented) {
-                    LoginView(
-                        isRegistrationPresented: self.$isRegistrationPresented,
-                        auth: network.auth)
-                }
-        }
+            GeometryReader { geometry in
+                VStack {
+                    LogoutButton(geometry)
+                        .frame(height: 69)
 
+                    SpendsView(
+                        network: network
+                    )
+                    .onAppear {
+                        network.onUnauthorize = { isRegistrationPresented = true }
+                    }
+                    .sheet(isPresented: $isRegistrationPresented) {
+                        LoginView(
+                            isRegistrationPresented: self.$isRegistrationPresented,
+                            auth: network.auth)
+                    }
+                }
+            }
+        }
         .modelContainer(sharedModelContainer)
+    }
+
+    @ViewBuilder func LogoutButton(_ geometry: GeometryProxy) -> some View {
+        Button(action: {
+            isRegistrationPresented.toggle()
+        }) {
+            Spacer()
+            Text("Выйти")
+                .padding()
+                .frame(width: geometry.size.width * 0.8)
+                .background(Color.red)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+            Spacer()
+        }
     }
 }

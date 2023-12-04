@@ -5,8 +5,8 @@
 //  Created by Станислав Карпенко on 21.11.2023.
 //
 
-import SwiftUI
 import Api
+import SwiftUI
 
 struct Defaults {
     static var username: String {
@@ -22,7 +22,10 @@ struct LoginView: View {
     @State private var username: String = Defaults.username
     @State private var password: String = Defaults.password
     @State private var isLoginSuccessful: Bool = false
+    @State private var isSignUpSuccessful: Bool = false
     @State private var userAuthToken: String?
+    @State private var isLoadingForLogin: Bool = false
+    @State private var isLoadingForSignUp: Bool = false
     @Binding var isRegistrationPresented: Bool
     let auth: Auth
 }
@@ -33,54 +36,25 @@ extension LoginView {
             VStack {
                 CoinN()
 
-                TextField("Username", text: $username)
-                    .padding()
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(8)
-                    .padding(.bottom, 20)
-
-                SecureField("Password", text: $password)
-                    .padding()
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(8)
-                    .padding(.bottom, 20)
-
-                Button(action: {
-                    // logic
-                    if !username.isEmpty && !password.isEmpty {
-                        isLoginSuccessful = true
-                    }
-                    Task {
-                        try await auth.authorize(user: username, password: password)
-                        await MainActor.run {
-                            isRegistrationPresented = false
-                        }
-                    }
-                    
-                    
-                }) {
-                    Text("Login")
-                        .foregroundColor(.white)
+                VStack(alignment: .leading) {
+                    Text("Username")
+                    TextField("Type your username", text: $username)
                         .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(isLoginSuccessful ? Color.green : Color.blue)
+                        .background(Color(UIColor.systemGray6))
                         .cornerRadius(8)
+                        .padding(.bottom, 20)
+                    
+                    Text("Password")
+                    SecureField("Type your password", text: $password)
+                        .padding()
+                        .background(Color(UIColor.systemGray6))
+                        .cornerRadius(8)
+                        .padding(.bottom, 20)
                 }
-                .padding(.horizontal, 20)
-
-                /// deprecated in 16.0
-//                NavigationLink(
-//                    destination:
-//                    VStack {
-//                        Text("Welcome \(username)!")
-//                        Token()
-////                        SpendsView()
-//                    },
-//                    isActive: $isLoginSuccessful,
-//                    label: {
-//                        EmptyView()
-//                    }
-//                )
+                HStack {
+                    LoginButton()
+                    SignUpButton()
+                }
             }
             .padding()
             .navigationBarTitle("Login")
@@ -88,87 +62,71 @@ extension LoginView {
     }
 
     @ViewBuilder
-    func Token() -> some View {
-        if let userAuthToken = userAuthToken {
-            Text("Token: \(userAuthToken)")
-        } else {
-            Text("No token stored")
-        }
-
-        Button("Read Token") {
-            // Retrieve token from UserDefaults
-            self.userAuthToken = UserDefaults.standard.string(forKey: "UserAuthToken")
+    func CoinN() -> some View {
+        VStack {
+            Image("LogoNiffler")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 100, height: 100)
         }
     }
 
     @ViewBuilder
-    func CoinN() -> some View {
-        VStack {
-            /// Main Ellipse
-            Ellipse()
-                .frame(width: 128, height: 128)
-                .overlay(
-                    /// Ellipse Delimeter
-                    Ellipse()
-                        .fill(
-                            LinearGradient(
-                                gradient: Gradient(
-                                    colors: [
-                                        Color(UIColor(hex: 0xFFD992)),
-                                        Color(UIColor(hex: 0xE1B15E)),
-                                    ]
-                                ),
-                                startPoint: UnitPoint(x: 0, y: 0),
-                                endPoint: UnitPoint(x: 1, y: 1)
-                            )
-                        )
+    func LoginButton() -> some View {
+        Button(action: {
+            isLoadingForLogin.toggle()
 
-                        .overlay(
-                            Ellipse()
-                                .fill(Color(UIColor(hex: 0xC39951)))
-                                .frame(width: 105, height: 105)
-                        )
+            Task {
+                try await auth.authorize(user: username, password: password)
+                await MainActor.run {
+                    isRegistrationPresented = false
+                }
+            }
 
-                        .overlay(
-                            Ellipse()
-                                .fill(
-                                    LinearGradient(
-                                        gradient: Gradient(
-                                            stops: [
-                                                .init(color: Color(UIColor(hex: 0xDEB35F)), location: 0.0),
-                                                .init(color: Color(UIColor(hex: 0xCDA155)), location: 1.0),
-                                            ]
-                                        ),
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .frame(width: 100, height: 100)
-                        )
-                        .overlay(
-                            Ellipse()
-                                .fill(
-                                    LinearGradient(
-                                        gradient: Gradient(
-                                            stops: [
-                                                .init(color: Color(UIColor(hex: 0xFFD992)), location: 0.276),
-                                                .init(color: Color(UIColor(hex: 0xE1B15E)), location: 0.6823),
-                                            ]
-                                        ),
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 83, height: 83)
-                        )
-                )
-                .overlay(
-                    Text("N")
-                        .foregroundColor(Color(UIColor(hex: 0xC39951)))
-                        .font(.largeTitle)
-                )
-                .padding()
+        }) {
+            HStack {
+                if isLoadingForLogin {
+                    ProgressView()
+                } else {
+                    Text("Login")
+                }
+            }
+            .foregroundColor(.white)
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(isLoginSuccessful ? Color.gray : Color.blue)
+            .cornerRadius(8)
         }
+        .disabled(isLoadingForLogin)
+        .padding(.horizontal, 20)
+    }
+
+    @ViewBuilder
+    func SignUpButton() -> some View {
+        Button(action: {
+            if !username.isEmpty && !password.isEmpty {
+                isSignUpSuccessful = true
+            }
+            isLoadingForSignUp.toggle()
+
+            // #TODO add logic for sigh up
+
+        }) {
+            HStack {
+                if isLoadingForSignUp {
+                    ProgressView()
+                } else {
+                    Text("Sign Up")
+                }
+            }
+            .foregroundColor(.white)
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(isSignUpSuccessful ? Color.gray : Color.purple)
+            .cornerRadius(8)
+        }
+        .disabled(isSignUpSuccessful)
+        .padding(.horizontal, 20)
     }
 }
 
@@ -183,6 +141,6 @@ extension UIColor {
     }
 }
 
-//#Preview {
+// #Preview {
 //    LoginView()
-//}
+// }
