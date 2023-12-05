@@ -11,59 +11,73 @@ import SwiftUI
 
 @main
 struct NifflerApp: App {
+
     let network = Api()
-    @State var isRegistrationPresented: Bool = false
-
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    
+    @State var isPresentLoginOnStart: Bool
+    @State var isPresentLoginInModalScreen: Bool = false
+    
+    init() {
+        isPresentLoginOnStart = !network.auth.isAuthorized()
+    }
 
     var body: some Scene {
         WindowGroup {
-            GeometryReader { geometry in
-                VStack {
-                    LogoutButton(geometry)
+            if isPresentLoginOnStart {
+                LoginView(auth: network.auth, onLogin: {
+                    self.isPresentLoginOnStart = false
+                })
+            } else {
+                GeometryReader { geometry in
+                    VStack {
+                        LogoutButton(geometry) {
+                            UserDefaults.standard.removeObject(forKey: "UserAuthToken")
+                            isPresentLoginInModalScreen.toggle()
+                        }
                         .frame(height: 69)
-
-                    SpendsView(
-                        network: network
-                    )
+                        
+                        SpendsView(
+                            network: network
+                        )
+                    }
                     .onAppear {
                         // TODO: Check that is called on main queue
-                        network.onUnauthorize = presentLoginScreen
-                        
-                        if !network.auth.isAuthorized() {
-                            presentLoginScreen()
+                        network.onUnauthorize = {
+                            isPresentLoginInModalScreen = true
                         }
                     }
-                    .sheet(isPresented: $isRegistrationPresented) {
-                        LoginView(
-                            isRegistrationPresented: self.$isRegistrationPresented,
-                            auth: network.auth)
+                    // TODO: Present in fullscreen or deprecate swipe down
+                    .sheet(isPresented: $isPresentLoginInModalScreen) {
+                        LoginView(auth: network.auth, onLogin: {
+                            self.isPresentLoginInModalScreen = false
+                        })
                     }
+                    
                 }
             }
         }
         .modelContainer(sharedModelContainer)
     }
     
-    func presentLoginScreen() {
-        isRegistrationPresented = true
-    }
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            Item.self,
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+    
 
-    @ViewBuilder func LogoutButton(_ geometry: GeometryProxy) -> some View {
-        Button(action: {
-            isRegistrationPresented.toggle()
-        }) {
+    @ViewBuilder func LogoutButton(
+        _ geometry: GeometryProxy,
+        onPress: @escaping () -> Void
+    ) -> some View {
+        Button(action: onPress) {
             Spacer()
             Text("Выйти")
                 .padding()

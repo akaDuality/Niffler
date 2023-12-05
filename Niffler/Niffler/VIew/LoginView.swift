@@ -26,8 +26,9 @@ struct LoginView: View {
     @State private var userAuthToken: String?
     @State private var isLoadingForLogin: Bool = false
     @State private var isLoadingForSignUp: Bool = false
-    @Binding var isRegistrationPresented: Bool
+    
     let auth: Auth
+    let onLogin: () -> Void
 }
 
 extension LoginView {
@@ -77,9 +78,14 @@ extension LoginView {
             isLoadingForLogin.toggle()
 
             Task {
-                try await auth.authorize(user: username, password: password)
-                await MainActor.run {
-                    isRegistrationPresented = false
+                do {
+                    try await auth.authorize(user: username, password: password)
+                    await MainActor.run {
+                        onLogin()
+                    }
+                } catch let error {
+                    // TODO: Present error on screen
+                    print(error)
                 }
             }
 
