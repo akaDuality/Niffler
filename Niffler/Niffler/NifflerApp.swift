@@ -50,6 +50,7 @@ struct NifflerApp: App {
                     .sheet(isPresented: $isPresentLoginInModalScreen) {
                         LoginView(auth: network.auth, onLogin: {
                             self.isPresentLoginInModalScreen = false
+                            // TODO: Retry last request
                         })
                     }
                     
