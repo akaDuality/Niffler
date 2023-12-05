@@ -38,7 +38,12 @@ struct NifflerApp: App {
                         network: network
                     )
                     .onAppear {
-                        network.onUnauthorize = { isRegistrationPresented = true }
+                        // TODO: Check that is called on main queue
+                        network.onUnauthorize = presentLoginScreen
+                        
+                        if !network.auth.isAuthorized() {
+                            presentLoginScreen()
+                        }
                     }
                     .sheet(isPresented: $isRegistrationPresented) {
                         LoginView(
@@ -49,6 +54,10 @@ struct NifflerApp: App {
             }
         }
         .modelContainer(sharedModelContainer)
+    }
+    
+    func presentLoginScreen() {
+        isRegistrationPresented = true
     }
 
     @ViewBuilder func LogoutButton(_ geometry: GeometryProxy) -> some View {

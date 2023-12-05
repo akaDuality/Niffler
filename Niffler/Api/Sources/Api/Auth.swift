@@ -52,6 +52,10 @@ public class Auth: Network {
         self.authorizationHeader = "Bearer " + tokenDto.id_token
     }
     
+    public func isAuthorized() -> Bool {
+        authorizationHeader != nil
+    }
+    
     private func request(
         baseURL: URL? = nil,
         method: String,

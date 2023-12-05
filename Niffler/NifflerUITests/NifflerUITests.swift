@@ -32,12 +32,19 @@ final class NifflerUITests: XCTestCase {
     }
     
     func testUnathorizeLaunch() throws {
-        UserDefaults.standard.removeObject(forKey: "UserAuthToken")
+        UserDefaults.standard.unauthorize()
         
         let app = XCUIApplication()
         app.launch()
         
         let loginButton = app.buttons["LoginButton"]
         XCTAssert(loginButton.waitForExistence(timeout: 3))
+    }
+}
+
+// TODO: Move key to some shared library
+public extension UserDefaults {
+    func unauthorize() {
+        UserDefaults.standard.removeObject(forKey: "UserAuthToken")
     }
 }
