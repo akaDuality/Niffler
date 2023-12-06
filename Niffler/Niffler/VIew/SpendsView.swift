@@ -45,6 +45,8 @@ extension SpendsView {
             isLoading.toggle()
             fetchData()
         }
+        .accessibilityIdentifier(SpendsViewIDs.spendsView.rawValue)
+        
     }
 }
 

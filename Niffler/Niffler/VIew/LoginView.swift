@@ -43,6 +43,7 @@ extension LoginView {
                         .background(Color(UIColor.systemGray6))
                         .cornerRadius(8)
                         .padding(.bottom, 20)
+                        .accessibilityIdentifier(LoginViewIDs.userNameTextField.rawValue)
                     
                     Text("Password")
                     SecureField("Type your password", text: $password)
@@ -50,6 +51,7 @@ extension LoginView {
                         .background(Color(UIColor.systemGray6))
                         .cornerRadius(8)
                         .padding(.bottom, 20)
+                        .accessibilityIdentifier(LoginViewIDs.passwordTextField.rawValue)
                 }
                 HStack {
                     LoginButton()
@@ -105,7 +107,7 @@ extension LoginView {
         }
         .disabled(isLoadingForLogin)
         .padding(.horizontal, 20)
-        .accessibilityIdentifier(String(#function.dropLast(2)))
+        .accessibilityIdentifier(LoginViewIDs.loginButton.rawValue)
     }
 
     @ViewBuilder
