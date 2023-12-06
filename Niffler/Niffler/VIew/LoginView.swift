@@ -23,7 +23,6 @@ struct LoginView: View {
     @State private var password: String = Defaults.password
     @State private var isLoginSuccessful: Bool = false
     @State private var isSignUpSuccessful: Bool = false
-    @State private var userAuthToken: String?
     @State private var isLoadingForLogin: Bool = false
     @State private var isLoadingForSignUp: Bool = false
     
@@ -60,6 +59,7 @@ extension LoginView {
             .padding()
             .navigationBarTitle("Login")
         }
+        .interactiveDismissDisabled()
     }
 
     @ViewBuilder
