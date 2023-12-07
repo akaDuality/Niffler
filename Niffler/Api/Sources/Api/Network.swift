@@ -11,13 +11,17 @@ public class Api: Network {
     private let base = URL(string: "https://api.niffler-stage.qa.guru")!
     public let auth = Auth()
     
-    func request(method: String, path: String) -> URLRequest {
+    func request(method: String, path: String, body: [String: Any]? = nil) -> URLRequest {
         let url = base.appendingPathComponent(path)
         
         var request = URLRequest(url: url)
         request.httpMethod = method
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "accept")
+        
+        if let requestBody = body {
+            request.httpBody = makeBody(requestBody)
+        }
         
         if let authorization = auth.authorizationHeader {
             request.addValue(
@@ -27,8 +31,26 @@ public class Api: Network {
         return request
     }
     
+    private func makeBody(_ body: [String: Any]) -> Data? {
+        let requestBody: [String: Any] = body
+
+        var jsonData: Data
+        do {
+            jsonData = try JSONSerialization.data(withJSONObject: requestBody)
+        } catch {
+            return nil
+        }
+        return jsonData
+    }
+    
     public func getSpends() async throws -> ([SpendsDTO], HTTPURLResponse) {
         let request = request(method: "GET", path: "spends")
+        return try await performWithJsonResult(request)
+    }
+    
+    public func addSpend(_ spend: Spends) async throws -> (SpendsDTO, HTTPURLResponse) {
+        let requestBody: [String: Any] = spend.toDictionaryWithoutId()
+        let request = request(method: "POST", path: "addSpend", body: requestBody)
         return try await performWithJsonResult(request)
     }
 }
