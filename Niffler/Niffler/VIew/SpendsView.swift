@@ -4,6 +4,7 @@ import SwiftUI
 struct SpendsView: View {
     @State var spends: [Spends] = []
     @State var isLoading = false
+    @State var isPresentAddSpendView = false
     let network: Api
 
     func fetchData() {
@@ -21,6 +22,19 @@ struct SpendsView: View {
 extension SpendsView {
     var body: some View {
         VStack {
+            HStack {
+                Button(action: {
+                    isPresentAddSpendView.toggle()
+                }) {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.system(size: 50))
+                        .foregroundColor(.blue)
+                }
+            }
+            .sheet(isPresented: $isPresentAddSpendView) {
+                AddSpendView()
+            }
+            
             if isLoading {
                 ProgressView("Loading...")
                     .progressViewStyle(CircularProgressViewStyle())
