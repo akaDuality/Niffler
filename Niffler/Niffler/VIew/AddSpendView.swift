@@ -86,12 +86,8 @@ extension AddSpendView {
         VStack {
             Button(action: {
                 
-                var amountDouble: Double
-                if let amountA = Double(amount) {
-                    amountDouble = amountA
-                } else {
-                    amountDouble = 100.00
-                }
+                let amountDouble = Double(amount)!
+                
                 var spend = Spends(
                     spendDate: dateFormater(spendDate),
                     category: selectedCategory,
