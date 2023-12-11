@@ -38,4 +38,8 @@ class DateFormatterHelper {
             return "NoData"
         }
     }
+    
+    open func formatToApi(_ date: Date) -> String {
+        dateFormatterInput.string(from: date)
+    }
 }

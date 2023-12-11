@@ -9,22 +9,30 @@ struct AddSpendView: View {
     let categories: [String] = ["Рыбалка", "Бары", "Рестораны",
                                 "Кино", "Автозаправки",
                                 "Спорт", "Кальян", "Продукты"]
-    
+
     @State private var amount: String = ""
-    @State private var spendDate: String = ""
+    @State private var spendDate: Date = Date()
     @State private var description: String = ""
     @State private var selectedCategory: String = ""
+    
+    
+    // DateFormatterHelper из API недоступен для использования
+    private func dateFormater(_ dateForm: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        return formatter.string(from: dateForm)
+    }
 
     init(network: Api,
          spends: Binding<[Spends]>,
          onAddSpend: @escaping () -> Void,
          selectedCategory: String = "") {
         self.network = network
-        self._spends = spends
+        _spends = spends
         self.onAddSpend = onAddSpend
         self.selectedCategory = selectedCategory.isEmpty ? categories[0] : selectedCategory
     }
-    
+
     func addSpend(_ spend: Spends) {
         Task {
             let (spendDto, response) = try await network.addSpend(spend)
@@ -62,9 +70,10 @@ extension AddSpendView {
                 TextField("Amount", text: $amount)
             }
 
-            Section {
-                TextField("Spend Date", text: $spendDate)
-            }
+            DatePicker("Select a date", selection: $spendDate, displayedComponents: [.date])
+                .datePickerStyle(WheelDatePickerStyle())
+                .labelsHidden()
+                .padding()
 
             Section {
                 TextField("Description", text: $description)
@@ -76,29 +85,27 @@ extension AddSpendView {
     func SendSpendFormButton() -> some View {
         VStack {
             Button(action: {
+                
+                var amountDouble: Double
+                if let amountA = Double(amount) {
+                    amountDouble = amountA
+                } else {
+                    amountDouble = 100.00
+                }
                 var spend = Spends(
-                    spendDate: spendDate,
+                    spendDate: dateFormater(spendDate),
                     category: selectedCategory,
                     currency: "RUB",
-                    amount: 69, // брать из amount amount string to double?
+                    amount: amountDouble, // брать из amount amount string to double?
                     description: description,
                     username: "stage" // прикапывать user name
                 )
-                let testSpend = Spends(
-                    spendDate: "2023-12-07T05:00:00.000+00:00",
-                    category: "Рыбалка",
-                    currency: "RUB",
-                    amount: 69,
-                    description: "Test Spend 3",
-                    username: "stage"
-                )
-                addSpend(testSpend)
+                addSpend(spend)
                 print(selectedCategory)
                 print(amount)
                 print(spendDate)
             }) {
                 Text("Add spend")
-                    
             }
             .padding()
         }
@@ -108,3 +115,7 @@ extension AddSpendView {
 // #Preview {
 //    AddSpendView()
 // }
+
+class DateFormatterApi {
+    
+}
