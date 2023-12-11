@@ -22,19 +22,7 @@ struct SpendsView: View {
 extension SpendsView {
     var body: some View {
         VStack {
-            HStack {
-                Button(action: {
-                    isPresentAddSpendView.toggle()
-                }) {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.system(size: 50))
-                        .foregroundColor(.blue)
-                }
-            }
-            .sheet(isPresented: $isPresentAddSpendView) {
-                AddSpendView()
-            }
-            
+            AddSpendButton()
             if isLoading {
                 ProgressView("Loading...")
                     .progressViewStyle(CircularProgressViewStyle())
@@ -61,6 +49,30 @@ extension SpendsView {
         }
         .accessibilityIdentifier(SpendsViewIDs.spendsView.rawValue)
         
+    }
+}
+
+extension SpendsView {
+    @ViewBuilder
+    func AddSpendButton() -> some View {
+        HStack {
+            Button(action: {
+                isPresentAddSpendView.toggle()
+            }) {
+                Image(systemName: "plus.circle.fill")
+                    .font(.system(size: 50))
+                    .foregroundColor(.blue)
+            }
+        }
+        .sheet(isPresented: $isPresentAddSpendView) {
+            AddSpendView(
+                network: network,
+                spends: $spends,
+                onAddSpend: {
+                    self.isPresentAddSpendView = false
+                }
+            )
+        }
     }
 }
 
