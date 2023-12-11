@@ -8,10 +8,10 @@ public class Auth: Network {
     let verifier: PKCE.PKCECode
     private(set) var authorizationHeader: String? {
         set {
-            userDefaults.set(newValue, forKey: "UserAuthToken")
+            UserDefaults.standard.set(newValue, forKey: "UserAuthToken")
         }
         get {
-            userDefaults.object(forKey: "UserAuthToken")
+            UserDefaults.standard.string(forKey: "UserAuthToken")
         }
     }
                 

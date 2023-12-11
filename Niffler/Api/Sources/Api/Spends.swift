@@ -8,18 +8,6 @@ public struct Spends: Identifiable, Encodable {
     public let amount: Double
     public let description: String
     public let username: String
-
-    public func toDictionary() -> [String: Any] {
-        return [
-            "id": id,
-            "spendDate": spendDate,
-            "category": category,
-            "currency": currency,
-            "amount": amount,
-            "description": description,
-            "username": username
-        ]
-    }
     
     public func toDictionaryWithoutId() -> [String: Any] {
         return [

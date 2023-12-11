@@ -58,7 +58,6 @@ public class Api: Network {
 public class Network: NSObject {
     private lazy var urlSession: URLSession = .shared
     public var onUnauthorize: () -> Void = {}
-    var userDefaults = UserDefaultsWrapper()
     
     func performWithStringResult(_ request: URLRequest) async throws -> (String, HTTPURLResponse) {
         
