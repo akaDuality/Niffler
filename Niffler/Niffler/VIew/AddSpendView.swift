@@ -10,9 +10,9 @@ struct AddSpendView: View {
                                 "Кино", "Автозаправки",
                                 "Спорт", "Кальян", "Продукты"]
 
-    @State private var amount: String = ""
+    @State private var amount: String = "20.00"
     @State private var spendDate: Date = Date()
-    @State private var description: String = ""
+    @State private var description: String = "Hello kitty"
     @State private var selectedCategory: String = ""
     
     
@@ -88,7 +88,7 @@ extension AddSpendView {
                 
                 let amountDouble = Double(amount)!
                 
-                var spend = Spends(
+                let spend = Spends(
                     spendDate: dateFormater(spendDate),
                     category: selectedCategory,
                     currency: "RUB",
@@ -97,9 +97,6 @@ extension AddSpendView {
                     username: "stage" // прикапывать user name
                 )
                 addSpend(spend)
-                print(selectedCategory)
-                print(amount)
-                print(spendDate)
             }) {
                 Text("Add spend")
             }
