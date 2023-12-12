@@ -13,24 +13,22 @@ struct AddSpendView: View {
     @State private var amount: String = "20.00"
     @State private var spendDate: Date = Date()
     @State private var description: String = "Hello kitty"
-    @State private var selectedCategory: String = ""
+    @State private var selectedCategory: String = "Рыбалка"
     
     
     // DateFormatterHelper из API недоступен для использования
     private func dateFormater(_ dateForm: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
         return formatter.string(from: dateForm)
     }
 
     init(network: Api,
          spends: Binding<[Spends]>,
-         onAddSpend: @escaping () -> Void,
-         selectedCategory: String = "") {
+         onAddSpend: @escaping () -> Void) {
         self.network = network
         _spends = spends
         self.onAddSpend = onAddSpend
-        self.selectedCategory = selectedCategory.isEmpty ? categories[0] : selectedCategory
     }
 
     func addSpend(_ spend: Spends) {
