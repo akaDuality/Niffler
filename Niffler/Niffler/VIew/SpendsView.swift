@@ -5,8 +5,8 @@ struct SpendsView: View {
     @State var spends: [Spends] = []
     @State var isLoading = false
     @State var isPresentAddSpendView = false
-    let network: Api
-
+    @EnvironmentObject var network: Api
+    
     func fetchData() {
         Task {
             let (spends, response) = try await network.getSpends()
@@ -66,7 +66,6 @@ extension SpendsView {
         }
         .sheet(isPresented: $isPresentAddSpendView) {
             AddSpendView(
-                network: network,
                 spends: $spends,
                 onAddSpend: {
                     self.isPresentAddSpendView = false

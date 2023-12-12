@@ -2,7 +2,8 @@ import Api
 import SwiftUI
 
 struct AddSpendView: View {
-    let network: Api
+    @EnvironmentObject var network: Api
+    
     @Binding var spends: [Spends]
     let onAddSpend: () -> Void
 
@@ -23,10 +24,8 @@ struct AddSpendView: View {
         return formatter.string(from: dateForm)
     }
 
-    init(network: Api,
-         spends: Binding<[Spends]>,
+    init(spends: Binding<[Spends]>,
          onAddSpend: @escaping () -> Void) {
-        self.network = network
         _spends = spends
         self.onAddSpend = onAddSpend
     }

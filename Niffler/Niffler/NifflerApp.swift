@@ -36,9 +36,7 @@ struct NifflerApp: App {
                         }
                         .frame(height: 69)
                         
-                        SpendsView(
-                            network: network
-                        )
+                        SpendsView()
                     }
                     .onAppear {
                         // TODO: Check that is called on main queue
@@ -58,6 +56,7 @@ struct NifflerApp: App {
             }
         }
         .modelContainer(sharedModelContainer)
+        .environmentObject(network)
     }
     
     var sharedModelContainer: ModelContainer = {

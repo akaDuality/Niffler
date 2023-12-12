@@ -11,6 +11,8 @@ public class Api: Network {
     private let base = URL(string: "https://api.niffler-stage.qa.guru")!
     public let auth = Auth()
     
+    public override init() { super.init() }
+    
     func request(method: String, path: String, body: [String: Any]? = nil) -> URLRequest {
         let url = base.appendingPathComponent(path)
         
@@ -55,7 +57,7 @@ public class Api: Network {
     }
 }
 
-public class Network: NSObject {
+public class Network: ObservableObject {
     private lazy var urlSession: URLSession = .shared
     public var onUnauthorize: () -> Void = {}
     
