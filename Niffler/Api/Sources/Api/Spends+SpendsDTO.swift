@@ -19,11 +19,11 @@ extension Spends {
     }
 }
 
-class DateFormatterHelper {
+public class DateFormatterHelper {
     private let dateFormatterInput: DateFormatter
     private let dateFormatterOutput: DateFormatter
     
-    init() {
+    public init() {
         dateFormatterInput = DateFormatter()
         dateFormatterInput.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
 
@@ -39,7 +39,13 @@ class DateFormatterHelper {
         }
     }
     
-    open func formatToApi(_ date: Date) -> String {
+    public func formatToApi(_ date: Date) -> String {
         dateFormatterInput.string(from: date)
+    }
+    
+    public func formatForApiAddSpend(_ dateForm: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+        return formatter.string(from: dateForm)
     }
 }

@@ -3,6 +3,7 @@ import SwiftUI
 
 struct AddSpendView: View {
     @EnvironmentObject var network: Api
+    let dateFormatter = DateFormatterHelper()
     
     @Binding var spends: [Spends]
     let onAddSpend: () -> Void
@@ -15,14 +16,6 @@ struct AddSpendView: View {
     @State private var spendDate: Date = Date()
     @State private var description: String = "Hello kitty"
     @State private var selectedCategory: String = "Рыбалка"
-    
-    
-    // DateFormatterHelper из API недоступен для использования
-    private func dateFormater(_ dateForm: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
-        return formatter.string(from: dateForm)
-    }
 
     init(spends: Binding<[Spends]>,
          onAddSpend: @escaping () -> Void) {
@@ -89,7 +82,7 @@ extension AddSpendView {
                 let amountDouble = Double(amount)!
                 
                 let spend = Spends(
-                    spendDate: dateFormater(spendDate),
+                    spendDate: dateFormatter.formatToApi(spendDate),
                     category: selectedCategory,
                     currency: "RUB",
                     amount: amountDouble, // брать из amount amount string to double?
@@ -108,7 +101,3 @@ extension AddSpendView {
 // #Preview {
 //    AddSpendView()
 // }
-
-class DateFormatterApi {
-    
-}
