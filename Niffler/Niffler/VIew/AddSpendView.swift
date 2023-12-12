@@ -54,7 +54,7 @@ extension AddSpendView {
     @ViewBuilder
     func SpendForm() -> some View {
         Form {
-            Section {
+            Section(header: Text("Category")) {
                 Picker(
                     "Select category",
                     selection: $selectedCategory) {
@@ -63,17 +63,20 @@ extension AddSpendView {
                         }
                     }
             }
-
-            Section {
+            
+            Section(header: Text("Amount")) {
                 TextField("Amount", text: $amount)
+                    .keyboardType(.numberPad)
             }
 
-            DatePicker("Select a date", selection: $spendDate, displayedComponents: [.date])
-                .datePickerStyle(WheelDatePickerStyle())
-                .labelsHidden()
-                .padding()
+            Section(header: Text("Spend Date")) {
+                DatePicker("Select a date", selection: $spendDate, displayedComponents: [.date])
+                    .datePickerStyle(WheelDatePickerStyle())
+                    .labelsHidden()
+                    .padding()
+            }
 
-            Section {
+            Section(header: Text("Description")) {
                 TextField("Description", text: $description)
             }
         }
