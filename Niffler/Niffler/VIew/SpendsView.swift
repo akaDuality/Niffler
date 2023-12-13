@@ -32,31 +32,36 @@ extension SpendsView {
                     .progressViewStyle(CircularProgressViewStyle())
                     .padding()
             } else {
-                List(spends) { spend in
-
-                    VStack(alignment: .leading) {
-                        Text("\(spend.spendDate)")
-                            .font(.headline)
-
-                        Text("\(spend.amount)")
-                            .font(.subheadline)
-                        Text("\(spend.currency)")
-                        Text("\(spend.category)")
-                        Text("\(spend.description)")
-                    }
-                }
+                SpendsList()
             }
-            Text("Spends View?")
         }
+        
         .onAppear {
             isLoading.toggle()
             fetchData()
         }
-        .accessibilityIdentifier(SpendsViewIDs.spendsView.rawValue)
     }
 }
 
 extension SpendsView {
+    @ViewBuilder
+    func SpendsList() -> some View {
+        List(spends) { spend in
+
+            VStack(alignment: .leading) {
+                Text("\(spend.spendDate)")
+                    .font(.headline)
+
+                Text("\(spend.amount)")
+                    .font(.subheadline)
+                Text("\(spend.currency)")
+                Text("\(spend.category)")
+                Text("\(spend.description)")
+            }
+        }
+        .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
+    }
+    
     @ViewBuilder
     func AddSpendButton() -> some View {
         HStack {
@@ -76,6 +81,7 @@ extension SpendsView {
                 }
             )
         }
+        .accessibilityIdentifier(SpendsViewIDs.addSpendButton.rawValue)
     }
 
     @ViewBuilder

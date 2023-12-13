@@ -11,7 +11,7 @@ import SwiftUI
 
 @main
 struct NifflerApp: App {
-
+    
     let network = Api()
     
     @State var isPresentLoginOnStart: Bool
@@ -19,8 +19,31 @@ struct NifflerApp: App {
     
     init() {
         isPresentLoginOnStart = !network.auth.isAuthorized()
+        setupForUITests()
     }
+    
+    func setupForUITests() {
+        if CommandLine.arguments.contains("UITests") {
+            UserDefaults.standard.removeObject(forKey: "UserAuthToken")
+            isPresentLoginOnStart = false
+        }
+    }
+    
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            Item.self,
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+}
 
+extension NifflerApp {
     var body: some Scene {
         WindowGroup {
             if isPresentLoginOnStart {
@@ -59,18 +82,7 @@ struct NifflerApp: App {
         .environmentObject(network)
     }
     
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-        
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+
     
 
     @ViewBuilder func LogoutButton(

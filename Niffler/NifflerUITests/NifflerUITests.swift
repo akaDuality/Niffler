@@ -11,8 +11,8 @@ final class NifflerUITests: XCTestCase {
     let app = XCUIApplication()
 
     override func setUpWithError() throws {
+        app.launchArguments.append("UITests")
         continueAfterFailure = false
-        UserDefaults.standard.unauthorize()
     }
 
     override func tearDownWithError() throws {

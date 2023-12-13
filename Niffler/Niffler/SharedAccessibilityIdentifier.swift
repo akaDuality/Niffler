@@ -14,5 +14,6 @@ enum LoginViewIDs: String {
 }
 
 enum SpendsViewIDs: String {
-    case spendsView = "spendsView"
+    case spendsList = "spendsList"
+    case addSpendButton = "addSpendButton"
 }
