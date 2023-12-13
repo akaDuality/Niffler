@@ -6,7 +6,7 @@ struct SpendsView: View {
     @State var isLoading = false
     @State var isPresentAddSpendView = false
     @EnvironmentObject var network: Api
-    
+
     func fetchData() {
         Task {
             let (spends, response) = try await network.getSpends()
@@ -22,23 +22,28 @@ struct SpendsView: View {
 extension SpendsView {
     var body: some View {
         VStack {
-            AddSpendButton()
+            HStack {
+                AddSpendButton()
+                RetrySpendsButton()
+            }
+
             if isLoading {
                 ProgressView("Loading...")
                     .progressViewStyle(CircularProgressViewStyle())
                     .padding()
-            }
+            } else {
+                List(spends) { spend in
 
-            List(spends) { spend in
-                VStack(alignment: .leading) {
-                    Text("\(spend.spendDate)")
-                        .font(.headline)
+                    VStack(alignment: .leading) {
+                        Text("\(spend.spendDate)")
+                            .font(.headline)
 
-                    Text("\(spend.amount)")
-                        .font(.subheadline)
-                    Text("\(spend.currency)")
-                    Text("\(spend.category)")
-                    Text("\(spend.description)")
+                        Text("\(spend.amount)")
+                            .font(.subheadline)
+                        Text("\(spend.currency)")
+                        Text("\(spend.category)")
+                        Text("\(spend.description)")
+                    }
                 }
             }
             Text("Spends View?")
@@ -48,7 +53,6 @@ extension SpendsView {
             fetchData()
         }
         .accessibilityIdentifier(SpendsViewIDs.spendsView.rawValue)
-        
     }
 }
 
@@ -73,8 +77,22 @@ extension SpendsView {
             )
         }
     }
+
+    @ViewBuilder
+    func RetrySpendsButton() -> some View {
+        HStack {
+            Button(action: {
+                fetchData()
+                isLoading.toggle()
+            }) {
+                Image(systemName: "arrow.clockwise.circle.fill")
+                    .font(.system(size: 50))
+                    .foregroundColor(.blue)
+            }
+        }
+    }
 }
 
-// #Preview {
-//    SpendsView()
-// }
+#Preview {
+    SpendsView()
+}
