@@ -1,10 +1,3 @@
-//
-//  LoginView.swift
-//  Niffler
-//
-//  Created by Станислав Карпенко on 21.11.2023.
-//
-
 import Api
 import SwiftUI
 
@@ -26,7 +19,7 @@ struct LoginView: View {
     @State private var isLoadingForLogin: Bool = false
     @State private var isLoadingForSignUp: Bool = false
     
-    let auth: Auth
+    @EnvironmentObject var api: Api
     let onLogin: () -> Void
 }
 
@@ -81,7 +74,7 @@ extension LoginView {
 
             Task {
                 do {
-                    try await auth.authorize(user: username, password: password)
+                    try await api.auth.authorize(user: username, password: password)
                     await MainActor.run {
                         onLogin()
                     }

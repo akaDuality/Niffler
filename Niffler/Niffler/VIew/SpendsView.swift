@@ -5,11 +5,11 @@ struct SpendsView: View {
     @State var spends: [Spends] = []
     @State var isLoading = false
     @State var isPresentAddSpendView = false
-    @EnvironmentObject var network: Api
+    @EnvironmentObject var api: Api
 
     func fetchData() {
         Task {
-            let (spends, response) = try await network.getSpends()
+            let (spends, response) = try await api.getSpends()
 
             await MainActor.run {
                 self.spends = spends.map { Spends(dto: $0) }

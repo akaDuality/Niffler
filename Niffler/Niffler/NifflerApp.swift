@@ -12,13 +12,13 @@ import SwiftUI
 @main
 struct NifflerApp: App {
     
-    let network = Api()
+    let api = Api()
     
     @State var isPresentLoginOnStart: Bool
     @State var isPresentLoginInModalScreen: Bool = false
     
     init() {
-        isPresentLoginOnStart = !network.auth.isAuthorized()
+        isPresentLoginOnStart = !api.auth.isAuthorized()
         setupForUITests()
     }
     
@@ -47,7 +47,7 @@ extension NifflerApp {
     var body: some Scene {
         WindowGroup {
             if isPresentLoginOnStart {
-                LoginView(auth: network.auth, onLogin: {
+                LoginView(onLogin: {
                     self.isPresentLoginOnStart = false
                 })
             } else {
@@ -63,13 +63,13 @@ extension NifflerApp {
                     }
                     .onAppear {
                         // TODO: Check that is called on main queue
-                        network.onUnauthorize = {
+                        api.onUnauthorize = {
                             isPresentLoginInModalScreen = true
                         }
                     }
                     // TODO: Present in fullscreen or deprecate swipe down
                     .sheet(isPresented: $isPresentLoginInModalScreen) {
-                        LoginView(auth: network.auth, onLogin: {
+                        LoginView(onLogin: {
                             self.isPresentLoginInModalScreen = false
                             // TODO: Retry last request
                         })
@@ -79,7 +79,7 @@ extension NifflerApp {
             }
         }
         .modelContainer(sharedModelContainer)
-        .environmentObject(network)
+        .environmentObject(api)
     }
     
 

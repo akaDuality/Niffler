@@ -2,7 +2,7 @@ import Api
 import SwiftUI
 
 struct AddSpendView: View {
-    @EnvironmentObject var network: Api
+    @EnvironmentObject var api: Api
     let dateFormatter = DateFormatterHelper()
     
     @Binding var spends: [Spends]
@@ -25,7 +25,7 @@ struct AddSpendView: View {
 
     func addSpend(_ spend: Spends) {
         Task {
-            let (spendDto, response) = try await network.addSpend(spend)
+            let (spendDto, response) = try await api.addSpend(spend)
             let spend = Spends(dto: spendDto)
             await MainActor.run {
                 spends.append(spend)
