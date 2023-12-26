@@ -1,32 +1,28 @@
 import Foundation
 
 public class DateFormatterHelper {
-    private let dateFormatterInput: DateFormatter
-    private let dateFormatterOutput: DateFormatter
+    
+    public static var shared: DateFormatterHelper = {
+       DateFormatterHelper()
+    }()
+    
+    public let dateFormatterFromApi: DateFormatter
+    public let dateFormatterToApi: DateFormatter
+    
+    private let dateFormatterForUser: DateFormatter
+    
+    private init() {
+        dateFormatterFromApi = DateFormatter()
+        dateFormatterFromApi.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
 
-    public init() {
-        dateFormatterInput = DateFormatter()
-        dateFormatterInput.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-
-        dateFormatterOutput = DateFormatter()
-        dateFormatterOutput.dateFormat = "dd MMM yy"
+        dateFormatterForUser = DateFormatter()
+        dateFormatterForUser.dateFormat = "dd MMM yy"
+        
+        dateFormatterToApi = DateFormatter()
+        dateFormatterToApi.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
     }
 
-    func formatDateString(_ dateString: String) -> String {
-        if let date = dateFormatterInput.date(from: dateString) {
-            return dateFormatterOutput.string(from: date)
-        } else {
-            return "NoData"
-        }
-    }
-
-    public func formatToApi(_ date: Date) -> String {
-        dateFormatterInput.string(from: date)
-    }
-
-    public func formatForApiAddSpend(_ dateForm: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
-        return formatter.string(from: dateForm)
+    public func formatForUser(_ date: Date) -> String {
+        dateFormatterForUser.string(from: date)
     }
 }

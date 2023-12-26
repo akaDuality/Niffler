@@ -49,7 +49,7 @@ extension SpendsView {
         List(spends) { spend in
 
             VStack(alignment: .leading) {
-                Text("\(spend.spendDate)")
+                Text(spend.spendDate.map(DateFormatterHelper.shared.formatForUser) ?? "No data")
                     .font(.headline)
 
                 Text("\(spend.amount)")

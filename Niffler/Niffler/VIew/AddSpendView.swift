@@ -3,7 +3,6 @@ import SwiftUI
 
 struct AddSpendView: View {
     @EnvironmentObject var api: Api
-    let dateFormatter = DateFormatterHelper()
     
     @Binding var spends: [Spends]
     let onAddSpend: () -> Void
@@ -82,7 +81,7 @@ extension AddSpendView {
                 let amountDouble = Double(amount)!
                 
                 let spend = Spends(
-                    spendDate: dateFormatter.formatToApi(spendDate),
+                    spendDate: spendDate,
                     category: selectedCategory,
                     currency: "RUB",
                     amount: amountDouble, // брать из amount amount string to double?

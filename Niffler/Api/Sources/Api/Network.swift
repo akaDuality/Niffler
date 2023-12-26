@@ -13,7 +13,9 @@ public class Api: Network {
     
     public override init() { super.init() }
     
-    func request(method: String, path: String, body: [String: Any]? = nil) -> URLRequest {
+    private let dateFormatters = DateFormatterHelper.shared
+    
+    func request(method: String, path: String, body: Encodable? = nil) -> URLRequest {
         let url = base.appendingPathComponent(path)
         
         var request = URLRequest(url: url)
@@ -22,7 +24,10 @@ public class Api: Network {
         request.addValue("application/json", forHTTPHeaderField: "accept")
         
         if let requestBody = body {
-            request.httpBody = makeBody(requestBody)
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .formatted(dateFormatters.dateFormatterFromApi)
+            
+            request.httpBody = try? encoder.encode(requestBody)
         }
         
         if let authorization = auth.authorizationHeader {
@@ -33,26 +38,13 @@ public class Api: Network {
         return request
     }
     
-    private func makeBody(_ body: [String: Any]) -> Data? {
-        let requestBody: [String: Any] = body
-
-        var jsonData: Data
-        do {
-            jsonData = try JSONSerialization.data(withJSONObject: requestBody)
-        } catch {
-            return nil
-        }
-        return jsonData
-    }
-    
     public func getSpends() async throws -> ([SpendsDTO], HTTPURLResponse) {
         let request = request(method: "GET", path: "spends")
         return try await performWithJsonResult(request)
     }
     
     public func addSpend(_ spend: Spends) async throws -> (SpendsDTO, HTTPURLResponse) {
-        let requestBody: [String: Any] = spend.toDictionaryWithoutId()
-        let request = request(method: "POST", path: "addSpend", body: requestBody)
+        let request = request(method: "POST", path: "addSpend", body: spend)
         return try await performWithJsonResult(request)
     }
 }
@@ -60,6 +52,8 @@ public class Api: Network {
 public class Network: ObservableObject {
     private lazy var urlSession: URLSession = .shared
     public var onUnauthorize: () -> Void = {}
+    
+    private let dateFormatters = DateFormatterHelper.shared
     
     func performWithStringResult(_ request: URLRequest) async throws -> (String, HTTPURLResponse) {
         
@@ -72,6 +66,8 @@ public class Network: ObservableObject {
     
     func performWithJsonResult<T: Decodable>(_ request: URLRequest) async throws -> (T, HTTPURLResponse) {
         let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(dateFormatters.dateFormatterToApi)
+        
         let (data, response) = try await perform(request)
         
         let dto = try decoder.decode(T.self, from: data)
