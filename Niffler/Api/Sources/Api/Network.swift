@@ -49,6 +49,7 @@ public class Api: Network {
     }
 }
 
+/// ObservableObject used for environmentObject
 public class Network: ObservableObject {
     private lazy var urlSession: URLSession = .shared
     public var onUnauthorize: () -> Void = {}
