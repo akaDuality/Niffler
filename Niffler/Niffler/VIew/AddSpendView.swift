@@ -3,7 +3,7 @@ import SwiftUI
 
 struct AddSpendView: View {
     @EnvironmentObject var api: Api
-    
+
     @Binding var spends: [Spends]
     let onAddSpend: () -> Void
 
@@ -54,7 +54,7 @@ extension AddSpendView {
                         }
                     }
             }
-            
+
             Section(header: Text("Amount")) {
                 TextField("Amount", text: $amount)
                     .keyboardType(.numberPad)
@@ -77,9 +77,8 @@ extension AddSpendView {
     func SendSpendFormButton() -> some View {
         VStack {
             Button(action: {
-                
                 let amountDouble = Double(amount)!
-                
+
                 let spend = Spends(
                     spendDate: spendDate,
                     category: selectedCategory,
@@ -97,6 +96,22 @@ extension AddSpendView {
     }
 }
 
-// #Preview {
-//    AddSpendView()
-// }
+#Preview {
+    AddSpendView(spends: PreviewAddSpendView().$testSpends, onAddSpend: {})
+}
+
+struct PreviewAddSpendView: View {
+    var body: some View {
+        VStack {
+        }
+    }
+
+    @State var testSpends = [Spends(
+        spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
+        category: "Рыбалка",
+        currency: "RUB",
+        amount: 69,
+        description: "Test Spend",
+        username: "stage"
+    )]
+}
