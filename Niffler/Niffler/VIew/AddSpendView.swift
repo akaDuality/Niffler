@@ -97,21 +97,14 @@ extension AddSpendView {
 }
 
 #Preview {
-    AddSpendView(spends: PreviewAddSpendView().$testSpends, onAddSpend: {})
-}
-
-struct PreviewAddSpendView: View {
-    var body: some View {
-        VStack {
-        }
-    }
-
-    @State var testSpends = [Spends(
-        spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
+    AddSpendView(spends: .constant([Spends(
+        spendDate: DateFormatterHelper.shared
+            .dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
         category: "Рыбалка",
         currency: "RUB",
         amount: 69,
         description: "Test Spend",
         username: "stage"
-    )]
+    )]),
+    onAddSpend: {})
 }
