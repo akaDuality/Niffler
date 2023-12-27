@@ -16,6 +16,12 @@
 		746853972B0CAE9900E48DFE /* NifflerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746853962B0CAE9900E48DFE /* NifflerUITests.swift */; };
 		746853992B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746853982B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift */; };
 		749E20F62B0CB0070045F4E3 /* Api in Frameworks */ = {isa = PBXBuildFile; productRef = 749E20F52B0CB0070045F4E3 /* Api */; };
+		A93B91C22B21977D001B6DF3 /* AddSpendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B91C12B21977D001B6DF3 /* AddSpendView.swift */; };
+		A94CFBFE2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CFBFD2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift */; };
+		A94CFBFF2B204CF100BFD09F /* SharedAccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CFBFD2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift */; };
+		A94CFC032B204F8C00BFD09F /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CFC022B204F8C00BFD09F /* LoginScreen.swift */; };
+		A94CFC052B204FC400BFD09F /* BaseScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CFC042B204FC400BFD09F /* BaseScreen.swift */; };
+		A94CFC072B204FE600BFD09F /* SpendsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CFC062B204FE600BFD09F /* SpendsScreen.swift */; };
 		A967D0802B0CB22400410674 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A967D07F2B0CB22400410674 /* LoginView.swift */; };
 		A9F0B4642B1066AF00E33941 /* SpendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F0B4632B1066AF00E33941 /* SpendsView.swift */; };
 /* End PBXBuildFile section */
@@ -52,6 +58,11 @@
 		749E20F22B0CAF1D0045F4E3 /* Api */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Api; sourceTree = "<group>"; };
 		749E20F32B0CAFD60045F4E3 /* Niffler.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Niffler.xctestplan; sourceTree = "<group>"; };
 		74AA2FBC2B10C9F90070B8D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A93B91C12B21977D001B6DF3 /* AddSpendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSpendView.swift; sourceTree = "<group>"; };
+		A94CFBFD2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAccessibilityIdentifier.swift; sourceTree = "<group>"; };
+		A94CFC022B204F8C00BFD09F /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
+		A94CFC042B204FC400BFD09F /* BaseScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseScreen.swift; sourceTree = "<group>"; };
+		A94CFC062B204FE600BFD09F /* SpendsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendsScreen.swift; sourceTree = "<group>"; };
 		A967D07F2B0CB22400410674 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A9F0B4632B1066AF00E33941 /* SpendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -110,6 +121,7 @@
 				74AA2FBC2B10C9F90070B8D9 /* Info.plist */,
 				746853792B0CAE9700E48DFE /* NifflerApp.swift */,
 				7468537B2B0CAE9700E48DFE /* ContentView.swift */,
+				A94CFBFD2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift */,
 				A967D07E2B0CB20500410674 /* VIew */,
 				7468537D2B0CAE9700E48DFE /* Item.swift */,
 				7468537F2B0CAE9900E48DFE /* Assets.xcassets */,
@@ -137,10 +149,29 @@
 		746853952B0CAE9900E48DFE /* NifflerUITests */ = {
 			isa = PBXGroup;
 			children = (
+				A94CFC012B204F7D00BFD09F /* Screens */,
+				A94CFC002B204F7600BFD09F /* Base */,
 				746853962B0CAE9900E48DFE /* NifflerUITests.swift */,
 				746853982B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift */,
 			);
 			path = NifflerUITests;
+			sourceTree = "<group>";
+		};
+		A94CFC002B204F7600BFD09F /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				A94CFC042B204FC400BFD09F /* BaseScreen.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		A94CFC012B204F7D00BFD09F /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				A94CFC022B204F8C00BFD09F /* LoginScreen.swift */,
+				A94CFC062B204FE600BFD09F /* SpendsScreen.swift */,
+			);
+			path = Screens;
 			sourceTree = "<group>";
 		};
 		A967D07E2B0CB20500410674 /* VIew */ = {
@@ -148,6 +179,7 @@
 			children = (
 				A967D07F2B0CB22400410674 /* LoginView.swift */,
 				A9F0B4632B1066AF00E33941 /* SpendsView.swift */,
+				A93B91C12B21977D001B6DF3 /* AddSpendView.swift */,
 			);
 			path = VIew;
 			sourceTree = "<group>";
@@ -291,7 +323,9 @@
 				7468537C2B0CAE9700E48DFE /* ContentView.swift in Sources */,
 				7468537E2B0CAE9700E48DFE /* Item.swift in Sources */,
 				A967D0802B0CB22400410674 /* LoginView.swift in Sources */,
+				A93B91C22B21977D001B6DF3 /* AddSpendView.swift in Sources */,
 				7468537A2B0CAE9700E48DFE /* NifflerApp.swift in Sources */,
+				A94CFBFE2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift in Sources */,
 				A9F0B4642B1066AF00E33941 /* SpendsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -309,7 +343,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				746853972B0CAE9900E48DFE /* NifflerUITests.swift in Sources */,
+				A94CFC032B204F8C00BFD09F /* LoginScreen.swift in Sources */,
+				A94CFC072B204FE600BFD09F /* SpendsScreen.swift in Sources */,
+				A94CFBFF2B204CF100BFD09F /* SharedAccessibilityIdentifier.swift in Sources */,
 				746853992B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift in Sources */,
+				A94CFC052B204FC400BFD09F /* BaseScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

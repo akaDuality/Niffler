@@ -1,10 +1,3 @@
-//
-//  LoginView.swift
-//  Niffler
-//
-//  Created by Станислав Карпенко on 21.11.2023.
-//
-
 import Api
 import SwiftUI
 
@@ -23,11 +16,11 @@ struct LoginView: View {
     @State private var password: String = Defaults.password
     @State private var isLoginSuccessful: Bool = false
     @State private var isSignUpSuccessful: Bool = false
-    @State private var userAuthToken: String?
     @State private var isLoadingForLogin: Bool = false
     @State private var isLoadingForSignUp: Bool = false
-    @Binding var isRegistrationPresented: Bool
-    let auth: Auth
+    
+    @EnvironmentObject var api: Api
+    let onLogin: () -> Void
 }
 
 extension LoginView {
@@ -43,6 +36,7 @@ extension LoginView {
                         .background(Color(UIColor.systemGray6))
                         .cornerRadius(8)
                         .padding(.bottom, 20)
+                        .accessibilityIdentifier(LoginViewIDs.userNameTextField.rawValue)
                     
                     Text("Password")
                     SecureField("Type your password", text: $password)
@@ -50,6 +44,7 @@ extension LoginView {
                         .background(Color(UIColor.systemGray6))
                         .cornerRadius(8)
                         .padding(.bottom, 20)
+                        .accessibilityIdentifier(LoginViewIDs.passwordTextField.rawValue)
                 }
                 HStack {
                     LoginButton()
@@ -59,6 +54,7 @@ extension LoginView {
             .padding()
             .navigationBarTitle("Login")
         }
+        .interactiveDismissDisabled()
     }
 
     @ViewBuilder
@@ -77,9 +73,14 @@ extension LoginView {
             isLoadingForLogin.toggle()
 
             Task {
-                try await auth.authorize(user: username, password: password)
-                await MainActor.run {
-                    isRegistrationPresented = false
+                do {
+                    try await api.auth.authorize(user: username, password: password)
+                    await MainActor.run {
+                        onLogin()
+                    }
+                } catch let error {
+                    // TODO: Present error on screen
+                    print(error)
                 }
             }
 
@@ -99,6 +100,7 @@ extension LoginView {
         }
         .disabled(isLoadingForLogin)
         .padding(.horizontal, 20)
+        .accessibilityIdentifier(LoginViewIDs.loginButton.rawValue)
     }
 
     @ViewBuilder

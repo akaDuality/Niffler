@@ -11,13 +11,24 @@ public class Api: Network {
     private let base = URL(string: "https://api.niffler-stage.qa.guru")!
     public let auth = Auth()
     
-    func request(method: String, path: String) -> URLRequest {
+    public override init() { super.init() }
+    
+    private let dateFormatters = DateFormatterHelper.shared
+    
+    func request(method: String, path: String, body: Encodable? = nil) -> URLRequest {
         let url = base.appendingPathComponent(path)
         
         var request = URLRequest(url: url)
         request.httpMethod = method
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "accept")
+        
+        if let requestBody = body {
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .formatted(dateFormatters.dateFormatterFromApi)
+            
+            request.httpBody = try? encoder.encode(requestBody)
+        }
         
         if let authorization = auth.authorizationHeader {
             request.addValue(
@@ -31,11 +42,19 @@ public class Api: Network {
         let request = request(method: "GET", path: "spends")
         return try await performWithJsonResult(request)
     }
+    
+    public func addSpend(_ spend: Spends) async throws -> (SpendsDTO, HTTPURLResponse) {
+        let request = request(method: "POST", path: "addSpend", body: spend)
+        return try await performWithJsonResult(request)
+    }
 }
 
-public class Network: NSObject {
+/// ObservableObject used for environmentObject
+public class Network: ObservableObject {
     private lazy var urlSession: URLSession = .shared
     public var onUnauthorize: () -> Void = {}
+    
+    private let dateFormatters = DateFormatterHelper.shared
     
     func performWithStringResult(_ request: URLRequest) async throws -> (String, HTTPURLResponse) {
         
@@ -48,6 +67,8 @@ public class Network: NSObject {
     
     func performWithJsonResult<T: Decodable>(_ request: URLRequest) async throws -> (T, HTTPURLResponse) {
         let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(dateFormatters.dateFormatterToApi)
+        
         let (data, response) = try await perform(request)
         
         let dto = try decoder.decode(T.self, from: data)

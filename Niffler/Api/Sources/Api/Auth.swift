@@ -1,19 +1,30 @@
 import Foundation
 
+@propertyWrapper
+struct UserDefault<Value> {
+    let key: String
+    let defaultValue: Value
+    var container: UserDefaults = .standard
+    
+    var wrappedValue: Value {
+        get {
+            return container.object(forKey: key) as? Value ?? defaultValue
+        }
+        set {
+            container.set(newValue, forKey: key)
+        }
+    }
+}
+
 /// https://github.com/qa-guru/niffler-st3/blob/00705308d259607c30447103cb7b9834afdf8209/niffler-e-2-e-tests/src/test/java/guru/qa/niffler/api/AuthService.java#L30
 public class Auth: Network {
     let base = URL(string: "https://auth.niffler-stage.qa.guru")!
     let baseOauth = URL(string: "https://auth.niffler-stage.qa.guru/oauth2")!
     let challenge: String
     let verifier: PKCE.PKCECode
-    private(set) var authorizationHeader: String? {
-        set {
-            UserDefaults.standard.set(newValue, forKey: "UserAuthToken")
-        }
-        get {
-            UserDefaults.standard.string(forKey: "UserAuthToken")
-        }
-    }
+    
+    @UserDefault(key: "UserAuthToken", defaultValue: nil)
+    private(set) var authorizationHeader: String?
                 
     init(
         challenge: String? = nil
@@ -50,6 +61,10 @@ public class Auth: Network {
         let decoder = JSONDecoder()
         let tokenDto = try decoder.decode(TokenDto.self, from: data3)
         self.authorizationHeader = "Bearer " + tokenDto.id_token
+    }
+    
+    public func isAuthorized() -> Bool {
+        authorizationHeader != nil
     }
     
     private func request(

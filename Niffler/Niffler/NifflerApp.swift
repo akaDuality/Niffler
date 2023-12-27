@@ -11,50 +11,85 @@ import SwiftUI
 
 @main
 struct NifflerApp: App {
-    let network = Api()
-    @State var isRegistrationPresented: Bool = false
-
+    
+    let api = Api()
+    
+    @State var isPresentLoginOnStart: Bool
+    @State var isPresentLoginInModalScreen: Bool = false
+    
+    init() {
+        isPresentLoginOnStart = !api.auth.isAuthorized()
+        setupForUITests()
+    }
+    
+    func setupForUITests() {
+        if CommandLine.arguments.contains("UITests") {
+            UserDefaults.standard.removeObject(forKey: "UserAuthToken")
+            isPresentLoginOnStart = false
+        }
+    }
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
+        
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+}
 
+extension NifflerApp {
     var body: some Scene {
         WindowGroup {
-            GeometryReader { geometry in
-                VStack {
-                    LogoutButton(geometry)
+            if isPresentLoginOnStart {
+                LoginView(onLogin: {
+                    self.isPresentLoginOnStart = false
+                })
+            } else {
+                GeometryReader { geometry in
+                    VStack {
+                        LogoutButton(geometry) {
+                            UserDefaults.standard.removeObject(forKey: "UserAuthToken")
+                            isPresentLoginInModalScreen.toggle()
+                        }
                         .frame(height: 69)
-
-                    SpendsView(
-                        network: network
-                    )
+                        
+                        SpendsView()
+                    }
                     .onAppear {
-                        network.onUnauthorize = { isRegistrationPresented = true }
+                        // TODO: Check that is called on main queue
+                        api.onUnauthorize = {
+                            isPresentLoginInModalScreen = true
+                        }
                     }
-                    .sheet(isPresented: $isRegistrationPresented) {
-                        LoginView(
-                            isRegistrationPresented: self.$isRegistrationPresented,
-                            auth: network.auth)
+                    // TODO: Present in fullscreen or deprecate swipe down
+                    .sheet(isPresented: $isPresentLoginInModalScreen) {
+                        LoginView(onLogin: {
+                            self.isPresentLoginInModalScreen = false
+                            // TODO: Retry last request
+                        })
                     }
+                    
                 }
             }
         }
         .modelContainer(sharedModelContainer)
+        .environmentObject(api)
     }
+    
 
-    @ViewBuilder func LogoutButton(_ geometry: GeometryProxy) -> some View {
-        Button(action: {
-            isRegistrationPresented.toggle()
-        }) {
+    
+
+    @ViewBuilder func LogoutButton(
+        _ geometry: GeometryProxy,
+        onPress: @escaping () -> Void
+    ) -> some View {
+        Button(action: onPress) {
             Spacer()
             Text("Выйти")
                 .padding()

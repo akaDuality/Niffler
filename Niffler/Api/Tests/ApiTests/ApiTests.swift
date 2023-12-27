@@ -57,6 +57,25 @@ final class ApiTests: XCTestCase {
         XCTAssertTrue(spends.count > 0)
     }
     
+    func test_add_spend() async throws {
+        try await network.auth.authorize(user: "stage", password: "12345")
+        
+        let testSpend = Spends(
+            id: "Any",
+            spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00"),
+            category: "Рыбалка",
+            currency: "RUB",
+            amount: 69,
+            description: "Test Spend",
+            username: "stage"
+        )
+
+        let (spend, response) = try await network.addSpend(testSpend)
+        
+        XCTAssertEqual(response.statusCode, 201)
+        XCTAssertEqual(spend.category, testSpend.category)
+    }
+    
     // MARK: flow with bearer token
     
     // MARK: Spends
