@@ -27,14 +27,13 @@ public class Auth: Network {
     func authorize() async throws {
         requestCredentialsFromUser()
         
-        try await withUnsafeThrowingContinuation { completeRegistrationContinuation in
-            self.onCompleteRegistration = {
-                completeRegistrationContinuation.resume()
-            }
+        try await withUnsafeThrowingContinuation { loginContinuation in
+            self.loginContinuation = loginContinuation
         }
     }
     
-    var onCompleteRegistration: (() -> Void)?
+    var loginContinuation: UnsafeContinuation<Void, Error>?
+
     
     @UserDefault(key: "UserAuthToken", defaultValue: nil)
     private(set) var authorizationHeader: String?
@@ -74,7 +73,7 @@ public class Auth: Network {
         let decoder = JSONDecoder()
         let tokenDto = try decoder.decode(TokenDto.self, from: data3)
         self.authorizationHeader = "Bearer " + tokenDto.id_token
-        onCompleteRegistration?()
+        loginContinuation?.resume()
     }
     
     public func isAuthorized() -> Bool {
