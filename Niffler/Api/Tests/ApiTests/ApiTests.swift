@@ -76,6 +76,34 @@ final class ApiTests: XCTestCase {
         XCTAssertEqual(spend.category, testSpend.category)
     }
     
+    /// Stub wrong auth header
+    /// Request spends -> 401
+    /// Login -> Retry
+    /// -> Response
+    func test_whenReceive401_andPassLogin_shouldRetryRequest() async throws {
+        // Arrange
+        UserDefaults.standard.set("hntoehant", forKey: "UserAuthToken")
+        let showLoginUIExpectation = expectation(description: "show UI")
+        network.authorize = {
+            showLoginUIExpectation.fulfill()
+            
+            Task {
+                try await self.network.auth.authorize(user: "stage",
+                                                 password: "12345")
+                self.network.completeRegistration?()
+            }
+        }
+        
+        // Act
+        let (spends, response) = try await network.getSpends()
+        
+        // Asser
+        await fulfillment(of: [showLoginUIExpectation], timeout: 1)
+        
+        XCTAssertTrue(spends.count > 0)
+        XCTAssertEqual(response.statusCode, 200)
+    }
+    
     // MARK: flow with bearer token
     
     // MARK: Spends
