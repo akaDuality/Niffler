@@ -23,15 +23,18 @@ public class Auth: Network {
     let challenge: String
     let verifier: PKCE.PKCECode
     
-    var onCompleteRegistration: (() -> Void)?
-    
-    func completeRegistration() async throws {
+    public var requestCredentialsFromUser: () -> Void = {}
+    func authorize() async throws {
+        requestCredentialsFromUser()
+        
         try await withUnsafeThrowingContinuation { completeRegistrationContinuation in
             self.onCompleteRegistration = {
                 completeRegistrationContinuation.resume()
             }
         }
     }
+    
+    var onCompleteRegistration: (() -> Void)?
     
     @UserDefault(key: "UserAuthToken", defaultValue: nil)
     private(set) var authorizationHeader: String?

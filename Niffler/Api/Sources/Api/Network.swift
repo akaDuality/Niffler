@@ -47,11 +47,8 @@ public class Api: Network {
     
     
     // MARK: - Authorization
-    public var authorize: () -> Void = {}
+    
     public let auth = Auth()
-    
-    /// Should be called after login
-    
     
     func updateAuthorizationHeader(in request: inout URLRequest) {
         if let authorization = auth.authorizationHeader {
@@ -65,10 +62,8 @@ public class Api: Network {
         let (data, urlResponse) = try await super.perform(request)
         
         if urlResponse.statusCode == 401 {
-            authorize() // Present login screen
-            // Wait until user input credentials
             do {
-                try await auth.completeRegistration()
+                try await auth.authorize()
                 
                 var newRequest = request.copy()
                 updateAuthorizationHeader(in: &newRequest)

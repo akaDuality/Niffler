@@ -84,7 +84,7 @@ final class ApiTests: XCTestCase {
         // Arrange
         UserDefaults.standard.set("explicitly wrong token", forKey: "UserAuthToken")
         let showLoginUIExpectation = expectation(description: "show UI")
-        network.authorize = {
+        network.auth.requestCredentialsFromUser = {
             showLoginUIExpectation.fulfill()
             
             Task {

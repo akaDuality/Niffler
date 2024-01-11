@@ -63,7 +63,7 @@ extension NifflerApp {
                     }
                     .onAppear {
                         // TODO: Check that is called on main queue
-                        api.authorize = {
+                        api.auth.requestCredentialsFromUser = {
                             isPresentLoginInModalScreen = true
                         }
                     }
