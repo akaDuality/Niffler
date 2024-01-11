@@ -63,7 +63,7 @@ extension NifflerApp {
                     }
                     .onAppear {
                         // TODO: Check that is called on main queue
-                        api.onUnauthorize = {
+                        api.authorize = {
                             isPresentLoginInModalScreen = true
                         }
                     }
@@ -71,10 +71,9 @@ extension NifflerApp {
                     .sheet(isPresented: $isPresentLoginInModalScreen) {
                         LoginView(onLogin: {
                             self.isPresentLoginInModalScreen = false
-                            // TODO: Retry last request
+                            api.completeRegistration?()
                         })
                     }
-                    
                 }
             }
         }
@@ -82,9 +81,6 @@ extension NifflerApp {
         .environmentObject(api)
     }
     
-
-    
-
     @ViewBuilder func LogoutButton(
         _ geometry: GeometryProxy,
         onPress: @escaping () -> Void

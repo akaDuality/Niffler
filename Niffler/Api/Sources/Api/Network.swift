@@ -9,7 +9,7 @@ import Foundation
 
 public class Api: Network {
     private let base = URL(string: "https://api.niffler-stage.qa.guru")!
-    public let auth = Auth()
+    
     
     public override init() { super.init() }
     
@@ -30,11 +30,8 @@ public class Api: Network {
             request.httpBody = try? encoder.encode(requestBody)
         }
         
-        if let authorization = auth.authorizationHeader {
-            request.addValue(
-                authorization,
-                forHTTPHeaderField: "Authorization")
-        }
+        updateAuthorizationHeader(in: &request)
+        
         return request
     }
     
@@ -47,12 +44,53 @@ public class Api: Network {
         let request = request(method: "POST", path: "addSpend", body: spend)
         return try await performWithJsonResult(request)
     }
+    
+    
+    // MARK: - Authorization
+    public var authorize: () -> Void = {}
+    public let auth = Auth()
+    
+    /// Should be called after login
+    public private(set) var completeRegistration: (() -> Void)?
+    
+    func updateAuthorizationHeader(in request: inout URLRequest) {
+        if let authorization = auth.authorizationHeader {
+            request.allHTTPHeaderFields?["Authorization"] = authorization
+        }
+    }
+    
+    override func perform(
+        _ request: URLRequest
+    ) async throws -> (Data, HTTPURLResponse) {
+        let (data, urlResponse) = try await super.perform(request)
+        
+        if urlResponse.statusCode == 401 {
+            authorize() // Present login screen
+            
+            // Wait until user input credentials
+            try await withUnsafeThrowingContinuation { completeRegistrationContinuation in
+                self.completeRegistration = {
+                    completeRegistrationContinuation.resume()
+                }
+            }
+            
+            var newRequest = URLRequest(url: request.url!)
+            newRequest.httpMethod = request.httpMethod
+            newRequest.httpBody = request.httpBody
+            newRequest.allHTTPHeaderFields = request.allHTTPHeaderFields
+            updateAuthorizationHeader(in: &newRequest)
+            
+            return try await super.perform(newRequest)
+        }
+        
+        print("Did receive in the end \(urlResponse.url!)")
+        return (data, urlResponse)
+    }
 }
 
 /// ObservableObject used for environmentObject
 public class Network: ObservableObject {
     private lazy var urlSession: URLSession = .shared
-    public var onUnauthorize: () -> Void = {}
     
     private let dateFormatters = DateFormatterHelper.shared
     
@@ -76,14 +114,13 @@ public class Network: ObservableObject {
         return (dto, response)
     }
     
-    func perform(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+    func perform(
+        _ request: URLRequest
+    ) async throws -> (Data, HTTPURLResponse) {
         print("Manually call \(request.httpMethod!) \(request.url!))")
         let (data, response) = try await urlSession.data(for: request)
         
         let urlResponse = response as! HTTPURLResponse
-        if urlResponse.statusCode == 401 {
-            onUnauthorize()
-        }
         
         print("Did receive in the end \(urlResponse.url!)")
         return (data, urlResponse)
