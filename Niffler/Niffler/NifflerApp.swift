@@ -71,7 +71,6 @@ extension NifflerApp {
                     .sheet(isPresented: $isPresentLoginInModalScreen) {
                         LoginView(onLogin: {
                             self.isPresentLoginInModalScreen = false
-                            api.completeRegistration?()
                         })
                     }
                 }

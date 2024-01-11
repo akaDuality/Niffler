@@ -51,7 +51,7 @@ public class Api: Network {
     public let auth = Auth()
     
     /// Should be called after login
-    public private(set) var completeRegistration: (() -> Void)?
+    
     
     func updateAuthorizationHeader(in request: inout URLRequest) {
         if let authorization = auth.authorizationHeader {
@@ -66,25 +66,30 @@ public class Api: Network {
         
         if urlResponse.statusCode == 401 {
             authorize() // Present login screen
-            
             // Wait until user input credentials
-            try await withUnsafeThrowingContinuation { completeRegistrationContinuation in
-                self.completeRegistration = {
-                    completeRegistrationContinuation.resume()
-                }
+            do {
+                try await auth.completeRegistration()
+                
+                var newRequest = request.copy()
+                updateAuthorizationHeader(in: &newRequest)
+                return try await super.perform(newRequest)
+            } catch {
+                return (data, urlResponse)
             }
-            
-            var newRequest = URLRequest(url: request.url!)
-            newRequest.httpMethod = request.httpMethod
-            newRequest.httpBody = request.httpBody
-            newRequest.allHTTPHeaderFields = request.allHTTPHeaderFields
-            updateAuthorizationHeader(in: &newRequest)
-            
-            return try await super.perform(newRequest)
         }
         
         print("Did receive in the end \(urlResponse.url!)")
         return (data, urlResponse)
+    }
+}
+
+extension URLRequest {
+    func copy() -> URLRequest {
+        var newRequest = URLRequest(url: url!)
+        newRequest.httpMethod = httpMethod
+        newRequest.httpBody = httpBody
+        newRequest.allHTTPHeaderFields = allHTTPHeaderFields
+        return newRequest
     }
 }
 

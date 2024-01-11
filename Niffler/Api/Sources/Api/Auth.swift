@@ -23,6 +23,16 @@ public class Auth: Network {
     let challenge: String
     let verifier: PKCE.PKCECode
     
+    var onCompleteRegistration: (() -> Void)?
+    
+    func completeRegistration() async throws {
+        try await withUnsafeThrowingContinuation { completeRegistrationContinuation in
+            self.onCompleteRegistration = {
+                completeRegistrationContinuation.resume()
+            }
+        }
+    }
+    
     @UserDefault(key: "UserAuthToken", defaultValue: nil)
     private(set) var authorizationHeader: String?
                 
@@ -61,6 +71,7 @@ public class Auth: Network {
         let decoder = JSONDecoder()
         let tokenDto = try decoder.decode(TokenDto.self, from: data3)
         self.authorizationHeader = "Bearer " + tokenDto.id_token
+        onCompleteRegistration?()
     }
     
     public func isAuthorized() -> Bool {
