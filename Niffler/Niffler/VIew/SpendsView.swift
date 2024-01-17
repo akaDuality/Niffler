@@ -43,6 +43,7 @@ extension SpendsView {
                         AddSpendButton()
                         RetrySpendsButton()
                     }
+                    .padding(.vertical, 10)
                 }
             }
         }

@@ -11,30 +11,29 @@ import SwiftUI
 
 @main
 struct NifflerApp: App {
-    
     let api = Api()
-    
+
     @State var isPresentLoginOnStart: Bool
     @State var isPresentLoginInModalScreen: Bool = false
-    
+
     init() {
         isPresentLoginOnStart = !api.auth.isAuthorized()
         setupForUITests()
     }
-    
+
     func setupForUITests() {
         if CommandLine.arguments.contains("UITests") {
             UserDefaults.standard.removeObject(forKey: "UserAuthToken")
             isPresentLoginOnStart = false
         }
     }
-    
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-        
+
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
@@ -46,53 +45,64 @@ struct NifflerApp: App {
 extension NifflerApp {
     var body: some Scene {
         WindowGroup {
-            if isPresentLoginOnStart {
-                LoginView(onLogin: {
-                    self.isPresentLoginOnStart = false
-                })
-            } else {
-                GeometryReader { geometry in
+            VStack {
+                if isPresentLoginOnStart {
+                    LoginView(onLogin: {
+                        self.isPresentLoginOnStart = false
+                    })
+                } else {
                     VStack {
-                        LogoutButton(geometry) {
-                            UserDefaults.standard.removeObject(forKey: "UserAuthToken")
-                            isPresentLoginInModalScreen.toggle()
+                        Section {
+                            SpendsView()
+                                .onAppear {
+                                    // TODO: Check that is called on main queue
+                                    api.auth.requestCredentialsFromUser = {
+                                        isPresentLoginInModalScreen = true
+                                    }
+                                }
+                                // TODO: Present in fullscreen or deprecate swipe down
+                                .sheet(isPresented: $isPresentLoginInModalScreen) {
+                                    LoginView(onLogin: {
+                                        self.isPresentLoginInModalScreen = false
+                                    })
+                                }
+                        } header: {
+                            HeaderView()
                         }
-                        .frame(height: 69)
-                        
-                        SpendsView()
-                    }
-                    .onAppear {
-                        // TODO: Check that is called on main queue
-                        api.auth.requestCredentialsFromUser = {
-                            isPresentLoginInModalScreen = true
-                        }
-                    }
-                    // TODO: Present in fullscreen or deprecate swipe down
-                    .sheet(isPresented: $isPresentLoginInModalScreen) {
-                        LoginView(onLogin: {
-                            self.isPresentLoginInModalScreen = false
-                        })
                     }
                 }
             }
         }
-        .modelContainer(sharedModelContainer)
         .environmentObject(api)
+        .modelContainer(sharedModelContainer)
     }
-    
-    @ViewBuilder func LogoutButton(
-        _ geometry: GeometryProxy,
+
+    @ViewBuilder
+    func HeaderView() -> some View {
+        HStack(spacing: 10) {
+            Text("Welcome!")
+                .font(.title.bold())
+
+            Spacer()
+
+            LogoutButton {
+                UserDefaults.standard.removeObject(forKey: "UserAuthToken")
+                isPresentLoginInModalScreen.toggle()
+            }
+        }
+        .padding()
+        .backgroundStyle(.gray)
+    }
+
+    @ViewBuilder
+    func LogoutButton(
         onPress: @escaping () -> Void
     ) -> some View {
         Button(action: onPress) {
-            Spacer()
-            Text("Выйти")
-                .padding()
-                .frame(width: geometry.size.width * 0.8)
-                .background(Color.red)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-            Spacer()
+            VStack(alignment: .trailing) {
+                Text("Выйти")
+                    .font(.callout)
+            }
         }
     }
 }
