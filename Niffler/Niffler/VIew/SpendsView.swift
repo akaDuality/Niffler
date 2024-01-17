@@ -21,21 +21,32 @@ struct SpendsView: View {
 
 extension SpendsView {
     var body: some View {
-        VStack {
-            HStack {
-                AddSpendButton()
-                RetrySpendsButton()
-            }
-
-            if isLoading {
-                ProgressView("Loading...")
-                    .progressViewStyle(CircularProgressViewStyle())
-                    .padding()
-            } else {
-                SpendsList()
+        ScrollView(.vertical) {
+            LazyVStack(pinnedViews: [.sectionHeaders]) {
+                Section {
+                    if isLoading {
+                        ProgressView("Loading...")
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .padding()
+                    } else {
+                        VStack {
+                            ForEach(spends) { spend in
+                                SpendCard(spend: spend)
+                            }
+                            .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 10)
+                    }
+                } header: {
+                    HStack {
+                        AddSpendButton()
+                        RetrySpendsButton()
+                    }
+                }
             }
         }
-        
+        .background(.gray.opacity(0.15))
         .onAppear {
             isLoading.toggle()
             fetchData()
@@ -44,24 +55,6 @@ extension SpendsView {
 }
 
 extension SpendsView {
-    @ViewBuilder
-    func SpendsList() -> some View {
-        List(spends) { spend in
-
-            VStack(alignment: .leading) {
-                Text(spend.spendDate.map(DateFormatterHelper.shared.formatForUser) ?? "No data")
-                    .font(.headline)
-
-                Text("\(spend.amount)")
-                    .font(.subheadline)
-                Text("\(spend.currency)")
-                Text("\(spend.category)")
-                Text("\(spend.description)")
-            }
-        }
-        .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
-    }
-    
     @ViewBuilder
     func AddSpendButton() -> some View {
         HStack {
@@ -100,5 +93,5 @@ extension SpendsView {
 }
 
 #Preview {
-    SpendsView()
+    ContentView()
 }

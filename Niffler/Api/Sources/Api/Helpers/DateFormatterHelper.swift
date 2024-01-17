@@ -16,7 +16,7 @@ public class DateFormatterHelper {
         dateFormatterFromApi.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
 
         dateFormatterForUser = DateFormatter()
-        dateFormatterForUser.dateFormat = "dd MMM yy"
+        dateFormatterForUser.dateFormat = "dd MMM yyyy"
         
         dateFormatterToApi = DateFormatter()
         dateFormatterToApi.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
