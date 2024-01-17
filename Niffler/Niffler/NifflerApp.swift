@@ -45,30 +45,28 @@ struct NifflerApp: App {
 extension NifflerApp {
     var body: some Scene {
         WindowGroup {
-            VStack {
-                if isPresentLoginOnStart {
-                    LoginView(onLogin: {
-                        self.isPresentLoginOnStart = false
-                    })
-                } else {
-                    VStack {
-                        Section {
-                            SpendsView()
-                                .onAppear {
-                                    // TODO: Check that is called on main queue
-                                    api.auth.requestCredentialsFromUser = {
-                                        isPresentLoginInModalScreen = true
-                                    }
+            if isPresentLoginOnStart {
+                LoginView(onLogin: {
+                    self.isPresentLoginOnStart = false
+                })
+            } else {
+                VStack {
+                    Section {
+                        SpendsView()
+                            .onAppear {
+                                // TODO: Check that is called on main queue
+                                api.auth.requestCredentialsFromUser = {
+                                    isPresentLoginInModalScreen = true
                                 }
-                                // TODO: Present in fullscreen or deprecate swipe down
-                                .sheet(isPresented: $isPresentLoginInModalScreen) {
-                                    LoginView(onLogin: {
-                                        self.isPresentLoginInModalScreen = false
-                                    })
-                                }
-                        } header: {
-                            HeaderView()
-                        }
+                            }
+                            // TODO: Present in fullscreen or deprecate swipe down
+                            .sheet(isPresented: $isPresentLoginInModalScreen) {
+                                LoginView(onLogin: {
+                                    self.isPresentLoginInModalScreen = false
+                                })
+                            }
+                    } header: {
+                        HeaderView()
                     }
                 }
             }
