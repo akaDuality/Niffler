@@ -21,37 +21,39 @@ struct SpendsView: View {
 
 extension SpendsView {
     var body: some View {
-        ScrollView(.vertical) {
-            LazyVStack(pinnedViews: [.sectionHeaders]) {
-                Section {
-                    if isLoading {
-                        ProgressView("Loading...")
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .padding()
-                    } else {
-                        VStack {
-                            ForEach(spends) { spend in
-                                SpendCard(spend: spend)
-                            }
-                            .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
+        ZStack(alignment: .bottom) {
+            ScrollView(.vertical) {
+                if isLoading {
+                    ProgressView("Loading...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .padding()
+                } else {
+                    LazyVStack(pinnedViews: [.sectionHeaders]) {
+                        ForEach(spends) { spend in
+                            SpendCard(spend: spend)
                         }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 10)
                     }
-                } header: {
-                    HStack {
-                        AddSpendButton()
-                        RetrySpendsButton()
-                    }
+                    .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
+                    .padding(.horizontal, 12)
                     .padding(.vertical, 10)
+                    .background(.gray.opacity(0.15))
+                    
                 }
             }
+            .onAppear {
+                isLoading.toggle()
+                fetchData()
+            }
+            .refreshable {
+                isLoading.toggle()
+                fetchData()
+            }
+            
+            VStack {
+                AddSpendButton()
+            }
         }
-        .background(.gray.opacity(0.15))
-        .onAppear {
-            isLoading.toggle()
-            fetchData()
-        }
+//        .background(.gray.opacity(0.15))
     }
 }
 
@@ -59,6 +61,7 @@ extension SpendsView {
     @ViewBuilder
     func AddSpendButton() -> some View {
         HStack {
+            Spacer()
             Button(action: {
                 isPresentAddSpendView.toggle()
             }) {
@@ -67,6 +70,7 @@ extension SpendsView {
                     .foregroundColor(.blue)
             }
         }
+        .padding()
         .sheet(isPresented: $isPresentAddSpendView) {
             AddSpendView(
                 spends: $spends,
