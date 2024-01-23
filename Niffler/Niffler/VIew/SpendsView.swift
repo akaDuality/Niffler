@@ -28,7 +28,7 @@ extension SpendsView {
                         .progressViewStyle(CircularProgressViewStyle())
                         .padding()
                 } else {
-                    LazyVStack(pinnedViews: [.sectionHeaders]) {
+                    LazyVStack {
                         ForEach(spends) { spend in
                             SpendCard(spend: spend)
                         }
