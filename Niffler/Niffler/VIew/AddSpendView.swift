@@ -15,6 +15,7 @@ struct AddSpendView: View {
     @State private var spendDate: Date = Date()
     @State private var description: String = "Hello kitty"
     @State private var selectedCategory: String = "Рыбалка"
+    @FocusState private var keyboardFocused: Bool
 
     init(spends: Binding<[Spends]>,
          onAddSpend: @escaping () -> Void) {
@@ -45,6 +46,17 @@ extension AddSpendView {
     @ViewBuilder
     func SpendForm() -> some View {
         Form {
+            Section(header: Text("Amount")) {
+                TextField("Amount", text: $amount)
+                    .keyboardType(.numberPad)
+                    .focused($keyboardFocused)
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            keyboardFocused = true
+                        }
+                    }
+            }
+
             Section(header: Text("Category")) {
                 Picker(
                     "Select category",
@@ -53,11 +65,6 @@ extension AddSpendView {
                             Text(category).tag(category)
                         }
                     }
-            }
-
-            Section(header: Text("Amount")) {
-                TextField("Amount", text: $amount)
-                    .keyboardType(.numberPad)
             }
 
             Section(header: Text("Spend Date")) {
