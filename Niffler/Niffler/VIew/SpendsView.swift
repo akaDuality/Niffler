@@ -37,7 +37,6 @@ extension SpendsView {
                     .padding(.horizontal, 12)
                     .padding(.vertical, 10)
                     .background(.gray.opacity(0.15))
-                    
                 }
             }
             .onAppear {
@@ -48,12 +47,11 @@ extension SpendsView {
                 isLoading.toggle()
                 fetchData()
             }
-            
+
             VStack {
                 AddSpendButton()
             }
         }
-//        .background(.gray.opacity(0.15))
     }
 }
 
