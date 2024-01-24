@@ -1,16 +1,6 @@
 import Api
 import SwiftUI
 
-struct Defaults {
-    static var username: String {
-        ProcessInfo.processInfo.environment["username"] ?? ""
-    }
-
-    static var password: String {
-        ProcessInfo.processInfo.environment["password"] ?? ""
-    }
-}
-
 struct LoginView: View {
     @State private var username: String = Defaults.username
     @State private var password: String = Defaults.password
@@ -18,7 +8,7 @@ struct LoginView: View {
     @State private var isSignUpSuccessful: Bool = false
     @State private var isLoadingForLogin: Bool = false
     @State private var isLoadingForSignUp: Bool = false
-    
+
     @EnvironmentObject var api: Api
     let onLogin: () -> Void
 }
@@ -37,7 +27,7 @@ extension LoginView {
                         .cornerRadius(8)
                         .padding(.bottom, 20)
                         .accessibilityIdentifier(LoginViewIDs.userNameTextField.rawValue)
-                    
+
                     Text("Password")
                     SecureField("Type your password", text: $password)
                         .padding()

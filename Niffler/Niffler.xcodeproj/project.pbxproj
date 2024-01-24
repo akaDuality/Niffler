@@ -25,6 +25,7 @@
 		A9620BDE2B5795B100602D2C /* SpendCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9620BDD2B5795B100602D2C /* SpendCard.swift */; };
 		A9620BE12B579A7200602D2C /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9620BE02B579A7200602D2C /* View+Extensions.swift */; };
 		A967D0802B0CB22400410674 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A967D07F2B0CB22400410674 /* LoginView.swift */; };
+		A9D238732B60EDEA00251316 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D238722B60EDEA00251316 /* Defaults.swift */; };
 		A9F0B4642B1066AF00E33941 /* SpendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F0B4632B1066AF00E33941 /* SpendsView.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,7 @@
 		A9620BDD2B5795B100602D2C /* SpendCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendCard.swift; sourceTree = "<group>"; };
 		A9620BE02B579A7200602D2C /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		A967D07F2B0CB22400410674 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		A9D238722B60EDEA00251316 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		A9F0B4632B1066AF00E33941 /* SpendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -183,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				A9620BE02B579A7200602D2C /* View+Extensions.swift */,
+				A9D238722B60EDEA00251316 /* Defaults.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 				A93B91C22B21977D001B6DF3 /* AddSpendView.swift in Sources */,
 				7468537A2B0CAE9700E48DFE /* NifflerApp.swift in Sources */,
 				A94CFBFE2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift in Sources */,
+				A9D238732B60EDEA00251316 /* Defaults.swift in Sources */,
 				A9620BDE2B5795B100602D2C /* SpendCard.swift in Sources */,
 				A9F0B4642B1066AF00E33941 /* SpendsView.swift in Sources */,
 			);

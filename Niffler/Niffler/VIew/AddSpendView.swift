@@ -11,10 +11,10 @@ struct AddSpendView: View {
                                 "Кино", "Автозаправки",
                                 "Спорт", "Кальян", "Продукты"]
 
-    @State private var amount: String = "20.00"
+    @State private var amount: String = Defaults.amount
     @State private var spendDate: Date = Date()
-    @State private var description: String = "Hello kitty"
-    @State private var selectedCategory: String = "Рыбалка"
+    @State private var description: String = Defaults.description
+    @State private var selectedCategory: String = Defaults.selectedCategory
     @FocusState private var keyboardFocused: Bool
 
     init(spends: Binding<[Spends]>,
