@@ -37,16 +37,25 @@ struct AddSpendView: View {
 
 extension AddSpendView {
     var body: some View {
-        VStack {
-            SpendForm()
-            SendSpendFormButton()
+        ScrollView(.vertical) {
+            VStack(spacing: 15) {
+                SpendForm()
+                SendSpendFormButton()
+            }
+            .padding(15)
         }
+        .background(.gray.opacity(0.15))
     }
 
     @ViewBuilder
     func SpendForm() -> some View {
-        Form {
-            Section(header: Text("Amount")) {
+        VStack {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Category")
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
                 TextField("Amount", text: $amount)
                     .keyboardType(.numberPad)
                     .focused($keyboardFocused)
@@ -55,9 +64,17 @@ extension AddSpendView {
                             keyboardFocused = true
                         }
                     }
+                    .padding(.horizontal, 15)
+                    .padding(.vertical, 12)
+                    .background(.background, in: .rect(cornerRadius: 10))
             }
 
-            Section(header: Text("Category")) {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Amount")
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
                 Picker(
                     "Select category",
                     selection: $selectedCategory) {
@@ -65,17 +82,34 @@ extension AddSpendView {
                             Text(category).tag(category)
                         }
                     }
+                    .padding(.horizontal, 15)
+                    .padding(.vertical, 12)
+                    .background(.background, in: .rect(cornerRadius: 10))
             }
 
-            Section(header: Text("Spend Date")) {
-                DatePicker("Select a date", selection: $spendDate, displayedComponents: [.date])
-                    .datePickerStyle(WheelDatePickerStyle())
-                    .labelsHidden()
-                    .padding()
-            }
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Description")
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-            Section(header: Text("Description")) {
                 TextField("Description", text: $description)
+                    .padding(.horizontal, 15)
+                    .padding(.vertical, 12)
+                    .background(.background, in: .rect(cornerRadius: 10))
+            }
+
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Spend Date")
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                DatePicker("", selection: $spendDate, displayedComponents: [.date])
+                    .datePickerStyle(.graphical)
+                    .padding(.horizontal, 15)
+                    .padding(.vertical, 12)
+                    .background(.background, in: .rect(cornerRadius: 10))
             }
         }
     }
