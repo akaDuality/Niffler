@@ -66,7 +66,9 @@ extension NifflerApp {
                                 })
                             }
                     } header: {
-                        HeaderView()
+                        HeaderView(onPress: {
+                            isPresentLoginInModalScreen = true
+                        })
                     }
                 }
             }
@@ -74,18 +76,42 @@ extension NifflerApp {
         .environmentObject(api)
         .modelContainer(sharedModelContainer)
     }
+}
 
-    @ViewBuilder
-    func HeaderView() -> some View {
+struct HeaderView: View {
+    @EnvironmentObject var api: Api
+    @State private var loginState: LoginState = .login
+    var onPress: () -> Void
+
+    enum LoginState {
+        case login
+        case logouting
+    }
+
+    var body: some View {
         HStack(spacing: 10) {
             Text("Welcome!")
                 .font(.title.bold())
 
             Spacer()
 
-            LogoutButton {
-                UserDefaults.standard.removeObject(forKey: "UserAuthToken")
-                isPresentLoginInModalScreen.toggle()
+            switch loginState {
+            case .login:
+                LogoutButton {
+                    loginState = .logouting
+                    Task {
+                        try await api.auth.logout()
+                        UserDefaults.standard.removeObject(forKey: "UserAuthToken")
+                        await MainActor.run {
+                            onPress()
+                            loginState = .login
+                        }
+                    }
+                }
+            case .logouting:
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .padding(.horizontal, 12)
             }
         }
         .padding()

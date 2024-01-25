@@ -76,6 +76,13 @@ public class Auth: Network {
         loginContinuation?.resume()
     }
     
+    public func logout() async throws {
+        let logoutRequest = logoutRequest()
+        let (_, logoutResponse) = try await perform(logoutRequest)
+        
+        print(logoutResponse)
+    }
+    
     public func isAuthorized() -> Bool {
         authorizationHeader != nil
     }
@@ -143,6 +150,16 @@ public class Auth: Network {
         ]
         
         request.httpBody = components.query?.data(using: .utf8)
+        
+        return request
+    }
+    
+    private func logoutRequest() -> URLRequest {
+        var request = URLRequest(url: base.appending(path: "logout"))
+        
+        request.httpMethod = "GET"
+        request.setValue("application/x-www-form-urlencoded",
+                         forHTTPHeaderField: "Content-Type")
         
         return request
     }

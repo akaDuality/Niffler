@@ -50,6 +50,18 @@ final class AuthTests: XCTestCase {
         XCTAssertNotNil(network.authorizationHeader)
     }
     
+    func test_logout() async throws {
+        try await network.authorize(user: "stage",
+                                    password: "12345")
+        
+        try await network.logout()
+        
+        try await network.authorize(user: "stage",
+                                    password: "12345")
+        
+        XCTAssertNotNil(network.authorizationHeader)
+    }
+    
     
     
     // TODO: Logout on 401 error
