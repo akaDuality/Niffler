@@ -13,7 +13,7 @@ struct SpendsView: View {
 
             await MainActor.run {
                 self.spends = spends.map { Spends(dto: $0) }
-                isLoading.toggle()
+                isLoading = false
             }
         }
     }
@@ -40,11 +40,10 @@ extension SpendsView {
                 }
             }
             .onAppear {
-                isLoading.toggle()
+                isLoading = true
                 fetchData()
             }
             .refreshable {
-                isLoading.toggle()
                 fetchData()
             }
 
