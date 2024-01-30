@@ -50,25 +50,27 @@ extension NifflerApp {
                     self.isPresentLoginOnStart = false
                 })
             } else {
-                VStack {
-                    Section {
-                        SpendsView()
-                            .onAppear {
-                                // TODO: Check that is called on main queue
-                                api.auth.requestCredentialsFromUser = {
-                                    isPresentLoginInModalScreen = true
+                NavigationView {
+                    VStack {
+                        Section {
+                            SpendsView()
+                                .onAppear {
+                                    // TODO: Check that is called on main queue
+                                    api.auth.requestCredentialsFromUser = {
+                                        isPresentLoginInModalScreen = true
+                                    }
                                 }
-                            }
                             // TODO: Present in fullscreen or deprecate swipe down
-                            .sheet(isPresented: $isPresentLoginInModalScreen) {
-                                LoginView(onLogin: {
-                                    self.isPresentLoginInModalScreen = false
-                                })
-                            }
-                    } header: {
-                        HeaderView(onPress: {
-                            isPresentLoginInModalScreen = true
-                        })
+                                .sheet(isPresented: $isPresentLoginInModalScreen) {
+                                    LoginView(onLogin: {
+                                        self.isPresentLoginInModalScreen = false
+                                    })
+                                }
+                        } header: {
+                            HeaderView(onPress: {
+                                isPresentLoginInModalScreen = true
+                            })
+                        }
                     }
                 }
             }
@@ -95,6 +97,8 @@ struct HeaderView: View {
 
             Spacer()
 
+            ProfileButton()
+            
             switch loginState {
             case .login:
                 LogoutButton {
@@ -116,6 +120,21 @@ struct HeaderView: View {
         }
         .padding()
         .backgroundStyle(.gray)
+    }
+    
+    @ViewBuilder
+    func ProfileButton() -> some View {
+        NavigationLink(destination: ProfileView()) {
+                    HStack {
+                        Image(systemName: "person.circle")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                    }
+                    .padding(10)
+                    .foregroundColor(.blue)
+                    .cornerRadius(10)
+                }
     }
 
     @ViewBuilder
