@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Spends: Identifiable, Encodable {
+public struct Spends: Identifiable, Encodable, Hashable {
     public let id: String?
     public let spendDate: Date?
     public let category: String

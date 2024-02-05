@@ -1,11 +1,12 @@
 import Api
 import SwiftUI
 
-struct AddSpendView: View {
+struct DetailSpendView: View {
     @EnvironmentObject var api: Api
 
     @Binding var spends: [Spends]
     let onAddSpend: () -> Void
+    var editSpendView: Spends?
 
     let categories: [String] = ["Рыбалка", "Бары", "Рестораны",
                                 "Кино", "Автозаправки",
@@ -18,9 +19,12 @@ struct AddSpendView: View {
     @FocusState private var keyboardFocused: Bool
 
     init(spends: Binding<[Spends]>,
-         onAddSpend: @escaping () -> Void) {
+         onAddSpend: @escaping () -> Void,
+         editSpendView: Spends? = nil
+    ) {
         _spends = spends
         self.onAddSpend = onAddSpend
+        self.editSpendView = editSpendView
     }
 
     func addSpend(_ spend: Spends) {
@@ -35,7 +39,7 @@ struct AddSpendView: View {
     }
 }
 
-extension AddSpendView {
+extension DetailSpendView {
     var body: some View {
         ScrollView(.vertical) {
             VStack(spacing: 15) {
@@ -55,7 +59,7 @@ extension AddSpendView {
                     .font(.caption)
                     .foregroundStyle(.gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                
+
                 TextField("Amount", text: $amount)
                     .keyboardType(.numberPad)
                     .focused($keyboardFocused)
@@ -74,7 +78,7 @@ extension AddSpendView {
                     .font(.caption)
                     .foregroundStyle(.gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                
+
                 Picker(
                     "Select category",
                     selection: $selectedCategory) {
@@ -104,7 +108,7 @@ extension AddSpendView {
                     .font(.caption)
                     .foregroundStyle(.gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                
+
                 DatePicker("", selection: $spendDate, displayedComponents: [.date])
                     .datePickerStyle(.graphical)
                     .padding(.horizontal, 15)
@@ -112,6 +116,18 @@ extension AddSpendView {
                     .background(.background, in: .rect(cornerRadius: 10))
             }
         }
+        .navigationTitle("\(editSpendView == nil ? "Add": "Edit") Spend")
+        .toolbar(content: {
+            SendSpendFormButton()
+        })
+        .onAppear(perform: {
+            if let editSpendView {
+                amount = String(editSpendView.amount)
+                spendDate = editSpendView.spendDate!
+                description = editSpendView.description
+                selectedCategory = editSpendView.category
+            }
+        })
     }
 
     @ViewBuilder
@@ -128,9 +144,13 @@ extension AddSpendView {
                     description: description,
                     username: "stage" // прикапывать user name
                 )
-                addSpend(spend)
+                if let editSpendView {
+                    
+                } else {
+                    addSpend(spend)
+                }
             }) {
-                Text("Add spend")
+                Text("\(editSpendView == nil ? "Add": "Edit") Spend")
             }
             .padding()
         }
@@ -138,7 +158,7 @@ extension AddSpendView {
 }
 
 #Preview {
-    AddSpendView(spends: .constant([Spends(
+    DetailSpendView(spends: .constant([Spends(
         spendDate: DateFormatterHelper.shared
             .dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
         category: "Рыбалка",

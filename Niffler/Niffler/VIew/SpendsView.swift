@@ -30,7 +30,10 @@ extension SpendsView {
                 } else {
                     LazyVStack {
                         ForEach(spends) { spend in
-                            SpendCard(spend: spend)
+                            NavigationLink(value: spend) {
+                                SpendCard(spend: spend)
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
                     .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
@@ -38,6 +41,9 @@ extension SpendsView {
                     .padding(.vertical, 10)
                     .background(.gray.opacity(0.15))
                 }
+            }
+            .navigationDestination(for: Spends.self) { spend in
+                DetailSpendView(spends: $spends, onAddSpend: {},editSpendView: spend)
             }
             .onAppear {
                 isLoading = true
@@ -69,7 +75,7 @@ extension SpendsView {
         }
         .padding()
         .sheet(isPresented: $isPresentAddSpendView) {
-            AddSpendView(
+            DetailSpendView(
                 spends: $spends,
                 onAddSpend: {
                     self.isPresentAddSpendView = false

@@ -50,7 +50,7 @@ extension NifflerApp {
                     self.isPresentLoginOnStart = false
                 })
             } else {
-                NavigationView {
+                NavigationStack {
                     VStack {
                         Section {
                             SpendsView()
