@@ -1,5 +1,6 @@
 import SwiftUI
 
+// for debug, get data for environment
 struct Defaults {
     static var username: String {
         ProcessInfo.processInfo.environment["username"] ?? ""
