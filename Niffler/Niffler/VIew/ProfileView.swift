@@ -10,6 +10,8 @@ struct ProfileView: View {
     @State private var categories: [String] = ["Рыбалка", "Бары", "Рестораны",
                                                "Кино", "Автозаправки",
                                                "Спорт", "Кальян", "Продукты"]
+
+    @EnvironmentObject var userData: UserData
 }
 
 extension ProfileView {
@@ -53,9 +55,16 @@ extension ProfileView {
             .cornerRadius(10)
         }
         .padding()
-        
+        .onAppear {
+            setUserInfo()
+        }
     }
 
+    func setUserInfo() {
+        name = userData.firstname
+        surname = userData.surname
+    }
+    
     @ViewBuilder
     func Categories() -> some View {
         VStack {

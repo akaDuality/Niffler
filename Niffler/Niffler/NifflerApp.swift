@@ -12,6 +12,7 @@ import SwiftUI
 @main
 struct NifflerApp: App {
     let api = Api()
+    let userData = UserData()
 
     @State var isPresentLoginOnStart: Bool
     @State var isPresentLoginInModalScreen: Bool = false
@@ -40,6 +41,16 @@ struct NifflerApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+    
+    func fetchData() {
+        Task {
+            let (userDataModel, _) = try await api.currentUser()
+
+            await MainActor.run {
+                self.userData.setValues(from: userDataModel)
+            }
+        }
+    }
 }
 
 extension NifflerApp {
@@ -73,15 +84,20 @@ extension NifflerApp {
                         }
                     }
                 }
+                .onAppear {
+                    fetchData()
+                }
             }
         }
         .environmentObject(api)
+        .environmentObject(userData)
         .modelContainer(sharedModelContainer)
     }
 }
 
 struct HeaderView: View {
     @EnvironmentObject var api: Api
+    @EnvironmentObject var userData: UserData
     @State private var loginState: LoginState = .login
     var onPress: () -> Void
 
@@ -92,7 +108,7 @@ struct HeaderView: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Text("Welcome!")
+            Text("Welcome \(userData.firstname)!")
                 .font(.title.bold())
 
             Spacer()

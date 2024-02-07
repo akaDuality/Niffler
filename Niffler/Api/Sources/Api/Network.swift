@@ -35,6 +35,11 @@ public class Api: Network {
         return request
     }
     
+    public func currentUser() async throws -> (UserDataModel, HTTPURLResponse) {
+        let request = request(method: "GET", path: "currentUser")
+        return try await performWithJsonResult(request)
+    }
+    
     public func getSpends() async throws -> ([SpendsDTO], HTTPURLResponse) {
         let request = request(method: "GET", path: "spends")
         return try await performWithJsonResult(request)
@@ -64,6 +69,7 @@ public class Api: Network {
         if urlResponse.statusCode == 401 {
             do {
                 try await auth.authorize()
+                try await currentUser()
                 
                 var newRequest = request.copy()
                 updateAuthorizationHeader(in: &newRequest)

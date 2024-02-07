@@ -9,7 +9,7 @@ struct SpendsView: View {
 
     func fetchData() {
         Task {
-            let (spends, response) = try await api.getSpends()
+            let (spends, _) = try await api.getSpends()
 
             await MainActor.run {
                 self.spends = spends.map { Spends(dto: $0) }

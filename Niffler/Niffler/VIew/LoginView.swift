@@ -10,6 +10,8 @@ struct LoginView: View {
     @State private var isLoadingForSignUp: Bool = false
 
     @EnvironmentObject var api: Api
+    @EnvironmentObject var userData: UserData
+
     let onLogin: () -> Void
 }
 
@@ -65,7 +67,9 @@ extension LoginView {
             Task {
                 do {
                     try await api.auth.authorize(user: username, password: password)
+                    let (userDataModel, response) = try await api.currentUser()
                     await MainActor.run {
+                        userData.setValues(from: userDataModel)
                         onLogin()
                     }
                 } catch let error {
