@@ -82,6 +82,7 @@ extension LoginView {
             HStack {
                 if isLoadingForLogin {
                     ProgressView()
+                        .tint(.white)
                 } else {
                     Text("Login")
                 }
@@ -111,6 +112,7 @@ extension LoginView {
             HStack {
                 if isLoadingForSignUp {
                     ProgressView()
+                        .tint(.white)
                 } else {
                     Text("Sign Up")
                 }

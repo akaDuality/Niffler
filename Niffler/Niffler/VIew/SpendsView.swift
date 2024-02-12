@@ -46,6 +46,7 @@ extension SpendsView {
                 DetailSpendView(spends: $spends, onAddSpend: {},editSpendView: spend)
             }
             .onAppear {
+                // TODO обернуть в ифчик чтобы не крутилось
                 isLoading = true
                 fetchData()
             }
