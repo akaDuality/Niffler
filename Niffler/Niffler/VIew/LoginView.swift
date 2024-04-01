@@ -19,7 +19,25 @@ extension LoginView {
     var body: some View {
         VStack {
             VStack {
-                CoinN()
+                HStack {
+                    CoinN()
+                    Text("Niffler")
+                        .font(.custom("YoungSerif-Regular", size: 24))
+                    // TODO: Add YoungSerif-Regular to Project
+                        .bold()
+                }
+                
+                VStack {
+                    Text("Log in")
+                        .font(.system(size: 48))
+                    HStack {
+                        Text("Don't have an account?")
+                           
+                        Text("Sign up")
+                            .foregroundStyle(AppColors.blue_100)
+                            .underline()
+                    }
+                }
 
                 VStack(alignment: .leading) {
                     Text("Username")
@@ -38,12 +56,14 @@ extension LoginView {
                         .padding(.bottom, 20)
                         .accessibilityIdentifier(LoginViewIDs.passwordTextField.rawValue)
                 }
+                .padding()
+                
+                
                 HStack {
                     LoginButton()
-                    SignUpButton()
+//                    SignUpButton()
                 }
             }
-            .padding()
             .navigationBarTitle("Login")
         }
         .interactiveDismissDisabled()
@@ -55,7 +75,7 @@ extension LoginView {
             Image("LogoNiffler")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100)
+                .frame(width: 48, height: 48)
         }
     }
 
@@ -88,7 +108,8 @@ extension LoginView {
                 }
             }
             .foregroundColor(.white)
-            .padding()
+            .padding(.horizontal, 12)
+            .padding(.vertical, 16)
             .frame(maxWidth: .infinity)
             .background(isLoginSuccessful ? Color.gray : AppColors.blue_100)
             .cornerRadius(8)
@@ -139,6 +160,6 @@ extension UIColor {
     }
 }
 
-// #Preview {
-//    LoginView()
-// }
+ #Preview {
+     LoginView( onLogin: {})
+ }
