@@ -90,7 +90,7 @@ extension LoginView {
             .foregroundColor(.white)
             .padding()
             .frame(maxWidth: .infinity)
-            .background(isLoginSuccessful ? Color.gray : Color.blue)
+            .background(isLoginSuccessful ? Color.gray : AppColors.blue_100)
             .cornerRadius(8)
         }
         .disabled(isLoadingForLogin)
