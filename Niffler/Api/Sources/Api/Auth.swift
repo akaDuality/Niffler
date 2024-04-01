@@ -169,15 +169,20 @@ public class Auth: Network {
     ) -> URLRequest {
         var request = request(
             method: "POST",
-            path: "token",
-            query: [
-                URLQueryItem(name: "client_id", value: "client"),
-                
-                URLQueryItem(name: "redirect_uri", value: "https://niffler-stage.qa.guru/authorized".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
-                URLQueryItem(name: "code", value: code),
-                URLQueryItem(name: "code_verifier", value: verifier),
-                URLQueryItem(name: "grant_type", value: "authorization_code"),
-            ])
+            path: "token"
+        )
+        var components = URLComponents()
+        
+        components.queryItems = [
+                        URLQueryItem(name: "client_id", value: "client"),
+                        URLQueryItem(name: "redirect_uri", value: "https://niffler-stage.qa.guru/authorized".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
+                        URLQueryItem(name: "code", value: code),
+                        URLQueryItem(name: "code_verifier", value: verifier),
+                        URLQueryItem(name: "grant_type", value: "authorization_code"),
+                    ]
+
+        request.httpBody = components.query?.data(using: .utf8)
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         
         let token = "Basic " + "client:secret".toBase64()
         request.addValue(token,forHTTPHeaderField: "Authorization")
