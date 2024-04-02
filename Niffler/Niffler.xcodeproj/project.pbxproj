@@ -141,7 +141,6 @@
 				74AA2FBC2B10C9F90070B8D9 /* Info.plist */,
 				A90083582BBA8CD100EB9D32 /* YoungSerif-Regular.ttf */,
 				746853792B0CAE9700E48DFE /* NifflerApp.swift */,
-				A90083542BBA870400EB9D32 /* AppColors.swift */,
 				7468537B2B0CAE9700E48DFE /* ContentView.swift */,
 				A94CFBFD2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift */,
 				A967D07E2B0CB20500410674 /* VIew */,
@@ -202,6 +201,7 @@
 				A9620BE02B579A7200602D2C /* View+Extensions.swift */,
 				A9D238722B60EDEA00251316 /* Defaults.swift */,
 				A9DAF9022BBBD5C400B941BE /* CoinNView.swift */,
+				A90083542BBA870400EB9D32 /* AppColors.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
