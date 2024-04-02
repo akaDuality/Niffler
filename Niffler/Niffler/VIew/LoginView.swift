@@ -5,9 +5,9 @@ struct LoginView: View {
     @State private var username: String = Defaults.username
     @State private var password: String = Defaults.password
     @State private var isLoginSuccessful: Bool = false
-    @State private var isSignUpSuccessful: Bool = false
+
     @State private var isLoadingForLogin: Bool = false
-    @State private var isLoadingForSignUp: Bool = false
+    @State private var isSignUpViewPresent: Bool = false
 
     @EnvironmentObject var api: Api
     @EnvironmentObject var userData: UserData
@@ -20,7 +20,7 @@ extension LoginView {
         VStack {
             VStack {
                 HStack {
-                    CoinN()
+                    CoinNView()
                     Text("Niffler")
                         .font(.custom("YoungSerif-Regular", size: 24))
                     // TODO: Add YoungSerif-Regular to Project
@@ -36,6 +36,12 @@ extension LoginView {
                         Text("Sign up")
                             .foregroundStyle(AppColors.blue_100)
                             .underline()
+                            .onTapGesture {
+                                self.isSignUpViewPresent = true
+                            }
+                            .sheet(isPresented: $isSignUpViewPresent, content: {
+                                SignUpView()
+                            })
                     }
                 }
 
@@ -58,25 +64,11 @@ extension LoginView {
                 }
                 .padding()
                 
-                
-                HStack {
-                    LoginButton()
-//                    SignUpButton()
-                }
+                LoginButton()
             }
             .navigationBarTitle("Login")
         }
         .interactiveDismissDisabled()
-    }
-
-    @ViewBuilder
-    func CoinN() -> some View {
-        VStack {
-            Image("LogoNiffler")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 48, height: 48)
-        }
     }
 
     @ViewBuilder
@@ -111,41 +103,12 @@ extension LoginView {
             .padding(.horizontal, 12)
             .padding(.vertical, 16)
             .frame(maxWidth: .infinity)
-            .background(isLoginSuccessful ? Color.gray : AppColors.blue_100)
+            .background(isLoginSuccessful ? AppColors.green : AppColors.blue_100)
             .cornerRadius(8)
         }
         .disabled(isLoadingForLogin)
         .padding(.horizontal, 20)
         .accessibilityIdentifier(LoginViewIDs.loginButton.rawValue)
-    }
-
-    @ViewBuilder
-    func SignUpButton() -> some View {
-        Button(action: {
-            if !username.isEmpty && !password.isEmpty {
-                isSignUpSuccessful = true
-            }
-            isLoadingForSignUp.toggle()
-
-            // #TODO add logic for sigh up
-
-        }) {
-            HStack {
-                if isLoadingForSignUp {
-                    ProgressView()
-                        .tint(.white)
-                } else {
-                    Text("Sign Up")
-                }
-            }
-            .foregroundColor(.white)
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(isSignUpSuccessful ? Color.gray : Color.purple)
-            .cornerRadius(8)
-        }
-        .disabled(isSignUpSuccessful)
-        .padding(.horizontal, 20)
     }
 }
 
