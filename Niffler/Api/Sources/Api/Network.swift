@@ -36,17 +36,17 @@ public class Api: Network {
     }
     
     public func currentUser() async throws -> (UserDataModel, HTTPURLResponse) {
-        let request = request(method: "GET", path: "currentUser")
+        let request = request(method: "GET", path: "api/users/current")
         return try await performWithJsonResult(request)
     }
     
-    public func getSpends() async throws -> ([SpendsDTO], HTTPURLResponse) {
-        let request = request(method: "GET", path: "spends")
+    public func getSpends() async throws -> (SpendsDTO, HTTPURLResponse) {
+        let request = request(method: "GET", path: "/api/v2/spends/all")
         return try await performWithJsonResult(request)
     }
     
-    public func addSpend(_ spend: Spends) async throws -> (SpendsDTO, HTTPURLResponse) {
-        let request = request(method: "POST", path: "addSpend", body: spend)
+    public func addSpend(_ spend: Spends) async throws -> (SpendsContentDTO, HTTPURLResponse) {
+        let request = request(method: "POST", path: "/api/spends/add", body: spend)
         return try await performWithJsonResult(request)
     }
     

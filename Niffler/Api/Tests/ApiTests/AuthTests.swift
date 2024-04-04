@@ -38,6 +38,7 @@ final class AuthTests: XCTestCase {
         XCTAssertNotNil(network.authorizationHeader)
     }
     
+    // TODO: Узнать зачем этот endpoint
     func test_registerAndAuthorize() async throws {
         let username = UUID().uuidString
         

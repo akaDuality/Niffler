@@ -12,7 +12,7 @@ struct SpendsView: View {
             let (spends, _) = try await api.getSpends()
 
             await MainActor.run {
-                self.spends = spends.map { Spends(dto: $0) }
+                self.spends = spends.content.map { Spends(dto: $0) }
                 isLoading = false
             }
         }
