@@ -19,20 +19,14 @@ extension LoginView {
     var body: some View {
         VStack {
             VStack {
-                HStack {
-                    CoinNView()
-                    Text("Niffler")
-                        .font(.custom("YoungSerif-Regular", size: 24))
-                    // TODO: Add YoungSerif-Regular to Project
-                        .bold()
-                }
-                
+                LogoView()
+
                 VStack {
                     Text("Log in")
                         .font(.system(size: 48))
                     HStack {
                         Text("Don't have an account?")
-                           
+
                         Text("Sign up")
                             .foregroundStyle(AppColors.blue_100)
                             .underline()
@@ -63,10 +57,9 @@ extension LoginView {
                         .accessibilityIdentifier(LoginViewIDs.passwordTextField.rawValue)
                 }
                 .padding()
-                
+
                 LoginButton()
             }
-            .navigationBarTitle("Login")
         }
         .interactiveDismissDisabled()
     }
@@ -96,7 +89,7 @@ extension LoginView {
                     ProgressView()
                         .tint(.white)
                 } else {
-                    Text("Login")
+                    Text("Log in")
                 }
             }
             .foregroundColor(.white)
@@ -123,6 +116,6 @@ extension UIColor {
     }
 }
 
- #Preview {
-     LoginView( onLogin: {})
- }
+#Preview {
+    LoginView(onLogin: {})
+}

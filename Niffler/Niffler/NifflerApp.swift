@@ -41,7 +41,7 @@ struct NifflerApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-    
+
     func fetchData() {
         Task {
             let (userDataModel, _) = try await api.currentUser()
@@ -57,9 +57,9 @@ extension NifflerApp {
     var body: some Scene {
         WindowGroup {
             if isPresentLoginOnStart {
-                LoginView(onLogin: {
-                    self.isPresentLoginOnStart = false
-                })
+                StartPage(
+                    onEnd: { self.isPresentLoginOnStart = false }
+                )
             } else {
                 NavigationStack {
                     VStack {
@@ -71,7 +71,6 @@ extension NifflerApp {
                                         isPresentLoginInModalScreen = true
                                     }
                                 }
-                            // TODO: Present in fullscreen or deprecate swipe down
                                 .sheet(isPresented: $isPresentLoginInModalScreen) {
                                     LoginView(onLogin: {
                                         self.isPresentLoginInModalScreen = false
@@ -114,7 +113,7 @@ struct HeaderView: View {
             Spacer()
 
             ProfileButton()
-            
+
             switch loginState {
             case .login:
                 LogoutButton {
@@ -137,20 +136,20 @@ struct HeaderView: View {
         .padding()
         .backgroundStyle(.gray)
     }
-    
+
     @ViewBuilder
     func ProfileButton() -> some View {
         NavigationLink(destination: ProfileView()) {
-                    HStack {
-                        Image(systemName: "person.circle")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30)
-                    }
-                    .padding(10)
-                    .foregroundColor(.blue)
-                    .cornerRadius(10)
-                }
+            HStack {
+                Image(systemName: "person.circle")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 30, height: 30)
+            }
+            .padding(10)
+            .foregroundColor(.blue)
+            .cornerRadius(10)
+        }
     }
 
     @ViewBuilder

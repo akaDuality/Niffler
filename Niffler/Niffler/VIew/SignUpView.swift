@@ -13,20 +13,14 @@ struct SignUpView: View {
 extension SignUpView {
     var body: some View {
         VStack {
-            HStack {
-                CoinNView()
-                Text("Niffler")
-                    .font(.custom("YoungSerif-Regular", size: 24))
-                // TODO: Add YoungSerif-Regular to Project
-                    .bold()
-            }
-            
+            LogoView()
+
             VStack {
                 Text("Sign Up")
                     .font(.system(size: 48))
                 HStack {
                     Text("Already have an account?")
-                       
+
                     // TODO: Update Logic for open Login View
                     Text("Log in")
                         .foregroundStyle(AppColors.blue_100)
@@ -39,7 +33,7 @@ extension SignUpView {
                         })
                 }
             }
-            
+
             VStack(alignment: .leading) {
                 Text("Username")
                 TextField("Type your username", text: $username)
@@ -56,7 +50,7 @@ extension SignUpView {
                     .cornerRadius(8)
                     .padding(.bottom, 20)
                     .accessibilityIdentifier(SignUpViewIDs.passwordTextField.rawValue)
-                
+
                 Text("Confirm password")
                 SecureField("Type your password", text: $confirmPassword)
                     .padding()
@@ -64,12 +58,12 @@ extension SignUpView {
                     .cornerRadius(8)
                     .padding(.bottom, 20)
                     .accessibilityIdentifier(SignUpViewIDs.confirmPasswordTextField.rawValue)
-                
             }
             .padding()
-            
+
             SignUpButton()
         }
+        .interactiveDismissDisabled()
     }
 }
 
