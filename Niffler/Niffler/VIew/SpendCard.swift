@@ -2,32 +2,44 @@ import Api
 import SwiftUI
 
 struct SpendCard: View {
+    @State private var isChecked: Bool = false
     var spend: Spends
     var body: some View {
-        HStack(spacing: 12) {
-            VStack(alignment: .leading) {
+        HStack {
+            Toggle(isOn: $isChecked) {
+            }
+            .toggleStyle(CheckboxToggleStyle())
+            .padding()
+
+            VStack(alignment: .leading, spacing: 4) {
                 Text("\(spend.description)")
+                    .font(.system(size: 16))
                     .foregroundStyle(.primary)
 
                 Text("\(spend.category)")
                     .font(.caption)
+                    .font(.system(size: 16))
                     .foregroundStyle(Color.primary.secondary)
+            }
 
+//            Spacer()
+
+            VStack(spacing: 4) {
+                HStack(spacing: 5) {
+                    Text(currencyString(spend.amount, allowDigits: 0))
+                        .foregroundStyle(.primary)
+                }
                 Text(spend.spendDate.map(DateFormatterHelper.shared.formatForUser) ?? "No data")
-                    .font(.caption2)
-                    .foregroundStyle(.gray)
-            }
-            
-            Spacer()
-            
-            HStack(spacing: 5) {
-                Text(currencyString(spend.amount, allowDigits: 2))
-                    .fontWeight(.semibold)
-            }
+                    .font(.caption)
+                    .foregroundStyle(Color.primary.secondary)
+            }.frame(maxWidth: .infinity, alignment: .trailing)
+
+            Image("ic_edit")
+                .foregroundStyle(AppColors.gray_700)
         }
-        .padding(.horizontal, 15)
-        .padding(.vertical, 10)
-        .background(.background, in: .rect(cornerRadius: 10))
+        .padding(.trailing, 8)
+        .padding(.top, 16)
+//        .background(.background, in: .rect(cornerRadius: 10))
     }
 }
 

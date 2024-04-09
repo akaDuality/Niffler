@@ -37,9 +37,9 @@ extension SpendsView {
                         }
                     }
                     .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 10)
-                    .background(.gray.opacity(0.15))
+//                    .padding(.horizontal, 12)
+//                    .padding(.vertical, 10)
+//                    .background(.gray.opacity(0.15))
                 }
             }
             .navigationDestination(for: Spends.self) { spend in
