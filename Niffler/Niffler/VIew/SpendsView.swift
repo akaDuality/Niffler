@@ -37,16 +37,13 @@ extension SpendsView {
                         }
                     }
                     .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
-//                    .padding(.horizontal, 12)
-//                    .padding(.vertical, 10)
-//                    .background(.gray.opacity(0.15))
                 }
             }
             .navigationDestination(for: Spends.self) { spend in
-                DetailSpendView(spends: $spends, onAddSpend: {},editSpendView: spend)
+                DetailSpendView(spends: $spends, onAddSpend: {}, editSpendView: spend)
             }
             .onAppear {
-                // TODO обернуть в ифчик чтобы не крутилось
+                // TODO: обернуть в ифчик чтобы не крутилось
                 isLoading = true
                 fetchData()
             }

@@ -22,24 +22,28 @@ struct SpendCard: View {
                     .foregroundStyle(Color.primary.secondary)
             }
 
-//            Spacer()
-
-            VStack(spacing: 4) {
-                HStack(spacing: 5) {
+            VStack {
+                HStack {
+                    Spacer()
                     Text(currencyString(spend.amount, allowDigits: 0))
                         .foregroundStyle(.primary)
                 }
-                Text(spend.spendDate.map(DateFormatterHelper.shared.formatForUser) ?? "No data")
-                    .font(.caption)
-                    .foregroundStyle(Color.primary.secondary)
-            }.frame(maxWidth: .infinity, alignment: .trailing)
+
+                HStack {
+                    Spacer()
+                    Text(spend.spendDate.map(DateFormatterHelper.shared.formatForUser) ?? "No data")
+                        .font(.caption)
+                        .font(.system(size: 16))
+                        .foregroundStyle(Color.primary.secondary)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(.horizontal, 16)
 
             Image("ic_edit")
                 .foregroundStyle(AppColors.gray_700)
         }
         .padding(.trailing, 8)
-        .padding(.top, 16)
-//        .background(.background, in: .rect(cornerRadius: 10))
     }
 }
 
