@@ -57,8 +57,8 @@ extension NifflerApp {
     var body: some Scene {
         WindowGroup {
             if isPresentLoginOnStart {
-                StartPage(
-                    onEnd: { self.isPresentLoginOnStart = false }
+                LoginView(
+                    onLogin: { self.isPresentLoginOnStart = false }
                 )
             } else {
                 NavigationStack {

@@ -17,11 +17,11 @@ extension SignUpView {
 
             VStack {
                 Text("Sign Up")
-                    .font(.system(size: 48))
+                    .font(.custom("YoungSerif-Regular", size: 48))
+
                 HStack {
                     Text("Already have an account?")
 
-                    // TODO: Update Logic for open Login View
                     Text("Log in")
                         .foregroundStyle(AppColors.blue_100)
                         .underline()
@@ -76,7 +76,7 @@ extension SignUpView {
             }
             isLoadingForSignUp.toggle()
 
-            // #TODO add logic for sigh up
+            // #TODO: add logic for sigh up
 
         }) {
             HStack {

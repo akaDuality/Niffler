@@ -17,13 +17,14 @@ struct LoginView: View {
 
 extension LoginView {
     var body: some View {
-        VStack {
+        NavigationView {
             VStack {
                 LogoView()
 
                 VStack {
                     Text("Log in")
-                        .font(.system(size: 48))
+                        .font(Font.custom("YoungSerif-Regular",size: 48))
+
                     HStack {
                         Text("Don't have an account?")
 
@@ -59,6 +60,12 @@ extension LoginView {
                 .padding()
 
                 LoginButton()
+                Divider()
+                    .padding(.top, 16)
+
+                NavigationLink(destination: SignUpView()) {
+                    CreateNewAccountButton()
+                }
             }
         }
         .interactiveDismissDisabled()
@@ -103,6 +110,20 @@ extension LoginView {
         .padding(.horizontal, 20)
         .accessibilityIdentifier(LoginViewIDs.loginButton.rawValue)
     }
+    
+    @ViewBuilder
+    func CreateNewAccountButton() -> some View {
+        Text("Create new account")
+            .foregroundColor(.white)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity)
+            .background(AppColors.green)
+            .cornerRadius(8)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 16)
+    }
+    
 }
 
 extension UIColor {
