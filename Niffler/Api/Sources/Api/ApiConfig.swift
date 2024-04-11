@@ -1,33 +1,10 @@
 import Foundation
 
 class ApiConfig {
-    var baseAuthURL: URL
-    var baseApiURL: URL
-    var baseURL: URL
+    var urls: ApiUrls
     
     init() {
-        baseAuthURL = ApiUrls.stage.authURL
-        baseApiURL = ApiUrls.stage.apiURL
-        baseURL = ApiUrls.stage.baseURL
-        switchConfig(to: .stage)
-    }
-    
-    func switchConfig(to type: TypeEnvironment) {
-        switch type {
-        case .stage:
-            baseAuthURL = ApiUrls.stage.authURL
-            baseApiURL = ApiUrls.stage.apiURL
-            baseURL = ApiUrls.stage.baseURL
-        case .local:
-            baseAuthURL = ApiUrls.local.authURL
-            baseApiURL = ApiUrls.local.apiURL
-            baseURL = ApiUrls.local.baseURL
-        }
-    }
-    
-    enum TypeEnvironment {
-        case stage
-        case local
+        urls = .stage
     }
 }
 

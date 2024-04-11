@@ -8,7 +8,7 @@
 import Foundation
 
 public class Api: Network {
-    private let base = ApiConfig().baseApiURL
+    private let base = ApiConfig().urls.apiURL
     
     
     public override init() { super.init() }

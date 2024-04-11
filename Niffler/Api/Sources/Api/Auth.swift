@@ -18,8 +18,8 @@ struct UserDefault<Value> {
 
 /// https://github.com/qa-guru/niffler-st3/blob/00705308d259607c30447103cb7b9834afdf8209/niffler-e-2-e-tests/src/test/java/guru/qa/niffler/api/AuthService.java#L30
 public class Auth: Network {
-    let base = ApiConfig().baseAuthURL
-    let baseOauth = ApiConfig().baseAuthURL.appendingPathComponent("oauth2")
+    let base = ApiConfig().urls.authURL
+    let baseOauth = ApiConfig().urls.authURL.appendingPathComponent("oauth2")
     
     let challenge: String
     let verifier: PKCE.PKCECode
@@ -122,7 +122,7 @@ public class Auth: Network {
                     URLQueryItem(name: "client_id", value: "client"),
                     URLQueryItem(name: "scope", value: "openid"),
                     URLQueryItem(name: "redirect_uri",
-                                 value: ApiConfig().baseURL.appendingPathComponent("authorized")
+                                 value: ApiConfig().urls.baseURL.appendingPathComponent("authorized")
                                      .absoluteString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
                     URLQueryItem(name: "code_challenge", value: challenge),
                     URLQueryItem(name: "code_challenge_method", value: "S256"),
@@ -179,7 +179,7 @@ public class Auth: Network {
         components.queryItems = [
             URLQueryItem(name: "client_id", value: "client"),
             URLQueryItem(name: "redirect_uri",
-                         value: ApiConfig().baseURL.appendingPathComponent("authorized")
+                         value: ApiConfig().urls.baseURL.appendingPathComponent("authorized")
                              .absoluteString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
             URLQueryItem(name: "code", value: code),
             URLQueryItem(name: "code_verifier", value: verifier),

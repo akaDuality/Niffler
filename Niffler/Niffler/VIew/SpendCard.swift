@@ -43,7 +43,7 @@ struct SpendCard: View {
             Image("ic_edit")
                 .foregroundStyle(AppColors.gray_700)
         }
-        .padding(.trailing, 8)
+        .padding(.trailing, 16)
     }
 }
 

@@ -32,6 +32,7 @@ extension SpendsView {
                         ForEach(spends) { spend in
                             NavigationLink(value: spend) {
                                 SpendCard(spend: spend)
+                                    .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
                         }
