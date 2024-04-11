@@ -8,7 +8,7 @@
 import Foundation
 
 public class Api: Network {
-    private let base = URL(string: "https://api.niffler-stage.qa.guru")!
+    private let base = ApiConfig().baseApiURL
     
     
     public override init() { super.init() }
