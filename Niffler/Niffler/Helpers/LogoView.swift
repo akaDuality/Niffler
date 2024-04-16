@@ -1,12 +1,14 @@
 import SwiftUI
 
 struct LogoView: View {
+    @State var width: CGFloat = 48
+    @State var height: CGFloat = 48
     var body: some View {
         HStack {
             Image("LogoNiffler")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 48, height: 48)
+                .frame(width: width, height: height)
             
             Text("Niffler")
                 .font(.custom("YoungSerif-Regular", size: 24))

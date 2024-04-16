@@ -63,6 +63,10 @@ extension NifflerApp {
             } else {
                 NavigationStack {
                     VStack {
+                        HeaderView(onPress: {
+                            isPresentLoginInModalScreen = true
+                        })
+
                         Section {
                             SpendsView()
                                 .onAppear {
@@ -76,10 +80,6 @@ extension NifflerApp {
                                         self.isPresentLoginInModalScreen = false
                                     })
                                 }
-                        } header: {
-                            HeaderView(onPress: {
-                                isPresentLoginInModalScreen = true
-                            })
                         }
                     }
                 }
@@ -107,8 +107,9 @@ struct HeaderView: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Text("Welcome \(userData.firstname)!")
-                .font(.title.bold())
+            Image("ic_menu")
+            Spacer()
+            LogoView(width: 32, height: 32)
 
             Spacer()
 
