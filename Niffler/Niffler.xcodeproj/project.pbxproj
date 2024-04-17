@@ -19,6 +19,7 @@
 		A90083552BBA870400EB9D32 /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90083542BBA870400EB9D32 /* AppColors.swift */; };
 		A90083592BBA8CD100EB9D32 /* YoungSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A90083582BBA8CD100EB9D32 /* YoungSerif-Regular.ttf */; };
 		A93B91C22B21977D001B6DF3 /* DetailSpendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B91C12B21977D001B6DF3 /* DetailSpendView.swift */; };
+		A93D7D8E2BCFACE700AD8919 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93D7D8D2BCFACE700AD8919 /* MenuView.swift */; };
 		A93EDB892BC50E52005454A0 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93EDB882BC50E52005454A0 /* CheckboxToggleStyle.swift */; };
 		A94CFBFE2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CFBFD2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift */; };
 		A94CFBFF2B204CF100BFD09F /* SharedAccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CFBFD2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift */; };
@@ -71,6 +72,7 @@
 		A90083542BBA870400EB9D32 /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
 		A90083582BBA8CD100EB9D32 /* YoungSerif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YoungSerif-Regular.ttf"; sourceTree = "<group>"; };
 		A93B91C12B21977D001B6DF3 /* DetailSpendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailSpendView.swift; sourceTree = "<group>"; };
+		A93D7D8D2BCFACE700AD8919 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		A93EDB882BC50E52005454A0 /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
 		A94CFBFD2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAccessibilityIdentifier.swift; sourceTree = "<group>"; };
 		A94CFC022B204F8C00BFD09F /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				A93B91C12B21977D001B6DF3 /* DetailSpendView.swift */,
 				A9620BDD2B5795B100602D2C /* SpendCard.swift */,
 				A9CE1B4F2B68CF7900FBF15C /* ProfileView.swift */,
+				A93D7D8D2BCFACE700AD8919 /* MenuView.swift */,
 			);
 			path = VIew;
 			sourceTree = "<group>";
@@ -374,6 +377,7 @@
 				A967D0802B0CB22400410674 /* LoginView.swift in Sources */,
 				A93B91C22B21977D001B6DF3 /* DetailSpendView.swift in Sources */,
 				7468537A2B0CAE9700E48DFE /* NifflerApp.swift in Sources */,
+				A93D7D8E2BCFACE700AD8919 /* MenuView.swift in Sources */,
 				A93EDB892BC50E52005454A0 /* CheckboxToggleStyle.swift in Sources */,
 				A9880A0A2B735DA70088E892 /* UserData.swift in Sources */,
 				A94CFBFE2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift in Sources */,

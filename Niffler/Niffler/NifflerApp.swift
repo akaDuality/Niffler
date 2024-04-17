@@ -16,6 +16,7 @@ struct NifflerApp: App {
 
     @State var isPresentLoginOnStart: Bool
     @State var isPresentLoginInModalScreen: Bool = false
+    @State var showMenu: Bool = false
 
     init() {
         isPresentLoginOnStart = !api.auth.isAuthorized()
@@ -63,24 +64,29 @@ extension NifflerApp {
             } else {
                 NavigationStack {
                     VStack {
-                        HeaderView(onPress: {
-                            isPresentLoginInModalScreen = true
-                        })
-
-                        Section {
-                            SpendsView()
-                                .onAppear {
-                                    // TODO: Check that is called on main queue
-                                    api.auth.requestCredentialsFromUser = {
-                                        isPresentLoginInModalScreen = true
+                        HeaderView(
+                            onPressLogout: { isPresentLoginInModalScreen = true },
+                            onPressMenu: { showMenu.toggle() }
+                        )
+                        if showMenu {
+                            MenuView()
+                        } else {
+                            Section {
+                                SpendsView()
+                                    .onAppear {
+                                        // TODO: Check that is called on main queue
+                                        api.auth.requestCredentialsFromUser = {
+                                            isPresentLoginInModalScreen = true
+                                        }
                                     }
-                                }
-                                .sheet(isPresented: $isPresentLoginInModalScreen) {
-                                    LoginView(onLogin: {
-                                        self.isPresentLoginInModalScreen = false
-                                    })
-                                }
+                                    .sheet(isPresented: $isPresentLoginInModalScreen) {
+                                        LoginView(onLogin: {
+                                            self.isPresentLoginInModalScreen = false
+                                        })
+                                    }
+                            }
                         }
+                        Spacer()
                     }
                 }
                 .onAppear {
@@ -98,7 +104,8 @@ struct HeaderView: View {
     @EnvironmentObject var api: Api
     @EnvironmentObject var userData: UserData
     @State private var loginState: LoginState = .login
-    var onPress: () -> Void
+    var onPressLogout: () -> Void
+    var onPressMenu: () -> Void
 
     enum LoginState {
         case login
@@ -107,8 +114,10 @@ struct HeaderView: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Image("ic_menu")
+            MenuButton()
+
             Spacer()
+
             LogoView(width: 32, height: 32)
 
             Spacer()
@@ -123,7 +132,7 @@ struct HeaderView: View {
                         try await api.auth.logout()
                         UserDefaults.standard.removeObject(forKey: "UserAuthToken")
                         await MainActor.run {
-                            onPress()
+                            onPressLogout()
                             loginState = .login
                         }
                     }
@@ -136,6 +145,17 @@ struct HeaderView: View {
         }
         .padding()
         .backgroundStyle(.gray)
+    }
+
+    @ViewBuilder
+    func MenuButton() -> some View {
+        VStack {
+            Image("ic_menu")
+                .aspectRatio(contentMode: .fit)
+                .onTapGesture {
+                    onPressMenu()
+                }
+        }
     }
 
     @ViewBuilder
