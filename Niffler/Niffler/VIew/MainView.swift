@@ -72,6 +72,9 @@ extension MainView {
                         Spacer()
                     }
                 }
+                .onAppear {
+                    fetchData()
+                }
             }
         }
     }
