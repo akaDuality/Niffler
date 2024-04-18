@@ -26,10 +26,9 @@ public class Auth: Network {
     
     public var requestCredentialsFromUser: () -> Void = {}
     func authorize() async throws {
-        requestCredentialsFromUser()
-        
         try await withUnsafeThrowingContinuation { loginContinuation in
             self.loginContinuation = loginContinuation
+            requestCredentialsFromUser()
         }
     }
     

@@ -15,8 +15,6 @@ struct NifflerApp: App {
     let userData = UserData()
 
     @State var isPresentLoginOnStart: Bool
-    @State var isPresentLoginInModalScreen: Bool = false
-    @State var showMenu: Bool = false
 
     init() {
         isPresentLoginOnStart = !api.auth.isAuthorized()
@@ -63,35 +61,12 @@ extension NifflerApp {
                 )
             } else {
                 NavigationStack {
-                    VStack {
-                        HeaderView(
-                            onPressLogout: { isPresentLoginInModalScreen = true },
-                            onPressMenu: { showMenu.toggle() }
-                        )
-                        if showMenu {
-                            MenuView()
-                        } else {
-                            Section {
-                                SpendsView()
-                                    .onAppear {
-                                        // TODO: Check that is called on main queue
-                                        api.auth.requestCredentialsFromUser = {
-                                            isPresentLoginInModalScreen = true
-                                        }
-                                    }
-                                    .sheet(isPresented: $isPresentLoginInModalScreen) {
-                                        LoginView(onLogin: {
-                                            self.isPresentLoginInModalScreen = false
-                                        })
-                                    }
-                            }
-                        }
-                        Spacer()
-                    }
+                    MainView()
                 }
                 .onAppear {
                     fetchData()
                 }
+                
             }
         }
         .environmentObject(api)
