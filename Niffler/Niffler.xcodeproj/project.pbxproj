@@ -19,6 +19,7 @@
 		A90083552BBA870400EB9D32 /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90083542BBA870400EB9D32 /* AppColors.swift */; };
 		A90083592BBA8CD100EB9D32 /* YoungSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A90083582BBA8CD100EB9D32 /* YoungSerif-Regular.ttf */; };
 		A91CF2C22BD1491700FDA3D7 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91CF2C12BD1491700FDA3D7 /* MainView.swift */; };
+		A91CF2C42BD14C2800FDA3D7 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91CF2C32BD14C2800FDA3D7 /* HeaderView.swift */; };
 		A93B91C22B21977D001B6DF3 /* DetailSpendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B91C12B21977D001B6DF3 /* DetailSpendView.swift */; };
 		A93D7D8E2BCFACE700AD8919 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93D7D8D2BCFACE700AD8919 /* MenuView.swift */; };
 		A93EDB892BC50E52005454A0 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93EDB882BC50E52005454A0 /* CheckboxToggleStyle.swift */; };
@@ -73,6 +74,7 @@
 		A90083542BBA870400EB9D32 /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
 		A90083582BBA8CD100EB9D32 /* YoungSerif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YoungSerif-Regular.ttf"; sourceTree = "<group>"; };
 		A91CF2C12BD1491700FDA3D7 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		A91CF2C32BD14C2800FDA3D7 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		A93B91C12B21977D001B6DF3 /* DetailSpendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailSpendView.swift; sourceTree = "<group>"; };
 		A93D7D8D2BCFACE700AD8919 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		A93EDB882BC50E52005454A0 /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				A9CE1B4F2B68CF7900FBF15C /* ProfileView.swift */,
 				A93D7D8D2BCFACE700AD8919 /* MenuView.swift */,
 				A91CF2C12BD1491700FDA3D7 /* MainView.swift */,
+				A91CF2C32BD14C2800FDA3D7 /* HeaderView.swift */,
 			);
 			path = VIew;
 			sourceTree = "<group>";
@@ -379,6 +382,7 @@
 				7468537E2B0CAE9700E48DFE /* Item.swift in Sources */,
 				A90083552BBA870400EB9D32 /* AppColors.swift in Sources */,
 				A967D0802B0CB22400410674 /* LoginView.swift in Sources */,
+				A91CF2C42BD14C2800FDA3D7 /* HeaderView.swift in Sources */,
 				A93B91C22B21977D001B6DF3 /* DetailSpendView.swift in Sources */,
 				7468537A2B0CAE9700E48DFE /* NifflerApp.swift in Sources */,
 				A93D7D8E2BCFACE700AD8919 /* MenuView.swift in Sources */,

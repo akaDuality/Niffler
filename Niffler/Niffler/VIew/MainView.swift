@@ -1,37 +1,78 @@
-import SwiftUI
 import Api
+import SwiftUI
 
 struct MainView: View {
+    @State var isPresentLoginOnStart: Bool = false
     @State var isPresentLoginInModalScreen = false
     @State var showMenu: Bool = false
-    @EnvironmentObject var api: Api
+    @EnvironmentObject var api: Api {
+        didSet {
+            isPresentLoginOnStart = !api.auth.isAuthorized()
+            
+        }
+    }
     
+    init() {
+        setupForUITests()
+    }
+
+    let userData = UserData()
+
+
+    func setupForUITests() {
+        if CommandLine.arguments.contains("UITests") {
+            UserDefaults.standard.removeObject(forKey: "UserAuthToken")
+            isPresentLoginOnStart = false
+        }
+    }
+
+    func fetchData() {
+        Task {
+            let (userDataModel, _) = try await api.currentUser()
+
+            await MainActor.run {
+                self.userData.setValues(from: userDataModel)
+            }
+        }
+    }
+}
+
+extension MainView {
     var body: some View {
         VStack {
-            HeaderView(
-                onPressLogout: { isPresentLoginInModalScreen = true },
-                onPressMenu: { showMenu.toggle() }
-            )
-            if showMenu {
-                MenuView()
+            if isPresentLoginOnStart {
+                LoginView(
+                    onLogin: { self.isPresentLoginOnStart = false }
+                )
             } else {
-                Section {
-                    SpendsView()
-                        .onAppear {
-                            // TODO: Check that is called on main queue
-                            api.auth.requestCredentialsFromUser = {
-                                isPresentLoginInModalScreen = true
+                NavigationStack {
+                    VStack {
+                        HeaderView(
+                            onPressLogout: { isPresentLoginInModalScreen = true },
+                            onPressMenu: { showMenu.toggle() }
+                        )
+                        if showMenu {
+                            MenuView()
+                        } else {
+                            Section {
+                                SpendsView()
+                                    .onAppear {
+                                        // TODO: Check that is called on main queue
+                                        api.auth.requestCredentialsFromUser = {
+                                            isPresentLoginInModalScreen = true
+                                        }
+                                    }
+                                    .sheet(isPresented: $isPresentLoginInModalScreen) {
+                                        LoginView(onLogin: {
+                                            self.isPresentLoginInModalScreen = false
+                                        })
+                                    }
                             }
                         }
-                        .sheet(isPresented: $isPresentLoginInModalScreen) {
-                            LoginView(onLogin: {
-                                self.isPresentLoginInModalScreen = false
-                            })
-                        }
+                        Spacer()
+                    }
                 }
-               
             }
-            Spacer()
         }
     }
 }
