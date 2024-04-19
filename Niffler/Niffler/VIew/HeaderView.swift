@@ -24,8 +24,6 @@ struct HeaderView: View {
 
             Spacer()
 
-            ProfileButton()
-
             switch loginState {
             case .login:
                 LogoutButton {
@@ -58,21 +56,6 @@ struct HeaderView: View {
                     switchMenuIcon.toggle()
                     onPressMenu()
                 }
-        }
-    }
-
-    @ViewBuilder
-    func ProfileButton() -> some View {
-        NavigationLink(destination: ProfileView()) {
-            HStack {
-                Image(systemName: "person.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 30, height: 30)
-            }
-            .padding(10)
-            .foregroundColor(.blue)
-            .cornerRadius(10)
         }
     }
 

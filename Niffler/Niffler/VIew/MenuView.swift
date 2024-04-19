@@ -1,15 +1,27 @@
 import SwiftUI
 
 struct MenuView: View {
+    @State private var showingProfile: Bool = false
+}
+
+extension MenuView {
     var body: some View {
         VStack(alignment: .leading) {
             Text("Menu")
                 .font(.custom("YoungSerif-regular", size: 24))
 
             HStack {
-                Image("ic_user_gray")
-                    .tint(Color.gray)
-                Text("Profile")
+                Button {
+                    showingProfile = true
+                } label: {
+                    Image("ic_user_gray")
+                        .tint(Color.gray)
+                    Text("Profile")
+                }
+                .sheet(isPresented: $showingProfile) {
+                    ProfileView()
+                }
+                .buttonStyle(.plain)
             }
             .padding(.top, 30)
 
