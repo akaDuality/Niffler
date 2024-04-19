@@ -48,11 +48,16 @@ extension MainView {
                 NavigationStack {
                     VStack {
                         HeaderView(
-                            onPressLogout: { isPresentLoginInModalScreen = true },
+                            switchMenuIcon: false,
                             onPressMenu: { showMenu.toggle() }
                         )
                         if showMenu {
-                            MenuView()
+                            MenuView(
+                                onPressLogout: {
+                                    showMenu = false
+                                    isPresentLoginInModalScreen = true
+                                }
+                            )
                         } else {
                             Section {
                                 SpendsView()
@@ -80,6 +85,6 @@ extension MainView {
     }
 }
 
-#Preview {
-    MainView()
-}
+//#Preview {
+//    MainView()
+//}

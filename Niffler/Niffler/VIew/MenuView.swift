@@ -1,7 +1,17 @@
+import Api
 import SwiftUI
 
 struct MenuView: View {
+    @EnvironmentObject var api: Api
     @State private var showingProfile: Bool = false
+    @State private var loginState: LoginState = .login
+
+    var onPressLogout: () -> Void
+
+    enum LoginState {
+        case login
+        case logouting
+    }
 }
 
 extension MenuView {
@@ -10,10 +20,10 @@ extension MenuView {
             Text("Menu")
                 .font(.custom("YoungSerif-regular", size: 24))
 
-            HStack {
-                Button {
-                    showingProfile = true
-                } label: {
+            Button {
+                showingProfile = true
+            } label: {
+                HStack {
                     Image("ic_user_gray")
                         .tint(Color.gray)
                     Text("Profile")
@@ -23,7 +33,6 @@ extension MenuView {
                 }
                 .buttonStyle(.plain)
             }
-            .padding(.top, 30)
 
             Divider()
                 .padding(.vertical)
@@ -45,8 +54,24 @@ extension MenuView {
                 .frame(maxWidth: .infinity)
 
             HStack {
-                Image("ic_signout_gray")
-                Text("Sign out")
+                switch loginState {
+                case .login:
+                    LogoutButton {
+                        loginState = .logouting
+                        Task {
+                            try await api.auth.logout()
+                            UserDefaults.standard.removeObject(forKey: "UserAuthToken")
+                            await MainActor.run {
+                                onPressLogout()
+                                loginState = .login
+                            }
+                        }
+                    }
+                case .logouting:
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .padding(.horizontal, 12)
+                }
             }
             .padding(.vertical)
 
@@ -55,8 +80,20 @@ extension MenuView {
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
     }
+
+    @ViewBuilder
+    func LogoutButton(
+        onPress: @escaping () -> Void
+    ) -> some View {
+        Button(action: onPress) {
+            HStack {
+                Image("ic_signout_gray")
+                Text("Sign out")
+            }
+        }
+    }
 }
 
 #Preview {
-    MenuView()
+    MenuView(onPressLogout: {})
 }
