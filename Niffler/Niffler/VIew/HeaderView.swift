@@ -1,10 +1,11 @@
-import SwiftUI
 import Api
+import SwiftUI
 
 struct HeaderView: View {
     @EnvironmentObject var api: Api
     @EnvironmentObject var userData: UserData
     @State private var loginState: LoginState = .login
+    @State private var switchMenuIcon: Bool = false
     var onPressLogout: () -> Void
     var onPressMenu: () -> Void
 
@@ -51,9 +52,10 @@ struct HeaderView: View {
     @ViewBuilder
     func MenuButton() -> some View {
         VStack {
-            Image("ic_menu")
+            Image(switchMenuIcon ? "ic_cross" : "ic_menu")
                 .aspectRatio(contentMode: .fit)
                 .onTapGesture {
+                    switchMenuIcon.toggle()
                     onPressMenu()
                 }
         }
@@ -87,6 +89,6 @@ struct HeaderView: View {
     }
 }
 
-//#Preview {
+// #Preview {
 //    HeaderView()
-//}
+// }

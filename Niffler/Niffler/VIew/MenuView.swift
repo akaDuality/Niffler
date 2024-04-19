@@ -7,12 +7,9 @@ struct MenuView: View {
                 .font(.custom("YoungSerif-regular", size: 24))
 
             HStack {
-                Image(systemName: "person")
-                    .foregroundStyle(.gray)
-                    .imageScale(.large)
+                Image("ic_user_gray")
+                    .tint(Color.gray)
                 Text("Profile")
-                    .foregroundStyle(.gray)
-                    .font(.headline)
             }
             .padding(.top, 30)
 
@@ -20,22 +17,14 @@ struct MenuView: View {
                 .padding(.vertical)
 
             HStack {
-                Image(systemName: "person.2")
-                    .foregroundStyle(.gray)
-                    .imageScale(.large)
+                Image("ic_friends_gray")
                 Text("Friends")
-                    .foregroundStyle(.gray)
-                    .font(.headline)
             }
             .padding(.vertical)
 
             HStack {
-                Image(systemName: "globe")
-                    .foregroundStyle(.gray)
-                    .imageScale(.large)
+                Image("ic_all_gray")
                 Text("All people")
-                    .foregroundStyle(.gray)
-                    .font(.headline)
             }
             .padding(.vertical)
 
@@ -44,12 +33,8 @@ struct MenuView: View {
                 .frame(maxWidth: .infinity)
 
             HStack {
-                Image(systemName: "person.crop.circle.badge.minus")
-                    .foregroundStyle(.gray)
-                    .imageScale(.large)
+                Image("ic_signout_gray")
                 Text("Sign out")
-                    .foregroundStyle(.gray)
-                    .font(.headline)
             }
             .padding(.vertical)
 
