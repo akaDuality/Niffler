@@ -42,41 +42,72 @@ struct DetailSpendView: View {
 extension DetailSpendView {
     var body: some View {
         ScrollView(.vertical) {
-            VStack(spacing: 15) {
+            VStack {
+                HStack {
+                    Text("\(editSpendView == nil ? "Add new spending" : "Edit spending")")
+                        .font(.custom("YoungSerif-Regular", size: 24))
+                        .padding()
+
+                    Spacer()
+                }
                 SpendForm()
                 SendSpendFormButton()
             }
-            .padding(15)
         }
-        .background(.gray.opacity(0.15))
     }
 
     @ViewBuilder
     func SpendForm() -> some View {
-        VStack {
-            VStack(alignment: .leading, spacing: 10) {
+        VStack(spacing: 16) {
+            HStack {
+                VStack {
+                    Text("Amount")
+                        .font(.caption)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    TextField("0", text: $amount)
+                        .padding()
+                        .cornerRadius(8)
+                        .background(AppColors.gray_50)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(AppColors.gray_300, lineWidth: 1)
+                        }
+                        .keyboardType(.numberPad)
+                        .focused($keyboardFocused)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                keyboardFocused = true
+                            }
+                        }
+                }
+
+                VStack {
+                    Text("Currency")
+                        .font(.caption)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    Picker(
+                        "Select category",
+                        selection: $selectedCategory) {
+                            ForEach(categories, id: \.self) { category in
+                                Text(category).tag(category)
+                            }
+                        }
+                        .padding()
+                        .cornerRadius(8)
+                        .background(AppColors.gray_50)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(AppColors.gray_300, lineWidth: 1)
+                        }
+                }
+            }
+            .padding()
+
+            VStack {
                 Text("Category")
                     .font(.caption)
-                    .foregroundStyle(.gray)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                TextField("Amount", text: $amount)
-                    .keyboardType(.numberPad)
-                    .focused($keyboardFocused)
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            keyboardFocused = true
-                        }
-                    }
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 12)
-                    .background(.background, in: .rect(cornerRadius: 10))
-            }
-
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Amount")
-                    .font(.caption)
-                    .foregroundStyle(.gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 Picker(
@@ -86,22 +117,31 @@ extension DetailSpendView {
                             Text(category).tag(category)
                         }
                     }
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 12)
-                    .background(.background, in: .rect(cornerRadius: 10))
+                    .padding()
+                    .cornerRadius(8)
+                    .background(AppColors.gray_50)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(AppColors.gray_300, lineWidth: 1)
+                    }
             }
+            .padding()
 
-            VStack(alignment: .leading, spacing: 10) {
+            VStack {
                 Text("Description")
                     .font(.caption)
-                    .foregroundStyle(.gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 TextField("Description", text: $description)
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 12)
-                    .background(.background, in: .rect(cornerRadius: 10))
+                    .padding()
+                    .cornerRadius(8)
+                    .background(AppColors.gray_50)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(AppColors.gray_300, lineWidth: 1)
+                    }
             }
+            .padding()
 
             VStack(alignment: .leading, spacing: 10) {
                 Text("Spend Date")
@@ -116,7 +156,7 @@ extension DetailSpendView {
                     .background(.background, in: .rect(cornerRadius: 10))
             }
         }
-        .navigationTitle("\(editSpendView == nil ? "Add": "Edit") Spend")
+        .navigationTitle("\(editSpendView == nil ? "Add" : "Edit") Spend")
         .toolbar(content: {
             SendSpendFormButton()
         })
@@ -145,12 +185,11 @@ extension DetailSpendView {
                     username: "stage" // прикапывать user name
                 )
                 if let editSpendView {
-                    
                 } else {
                     addSpend(spend)
                 }
             }) {
-                Text("\(editSpendView == nil ? "Add": "Edit") Spend")
+                Text("\(editSpendView == nil ? "Add" : "Edit") Spend")
             }
             .padding()
         }
