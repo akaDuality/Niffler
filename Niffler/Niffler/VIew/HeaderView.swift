@@ -41,6 +41,10 @@ extension HeaderView {
                     switchMenuIcon.toggle()
                     onPressMenu()
                 }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(AppColors.gray_300, lineWidth: 1)
+                )
         }
     }
 
