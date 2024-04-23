@@ -51,6 +51,7 @@ extension MainView {
                             switchMenuIcon: false,
                             onPressMenu: { showMenu.toggle() }
                         )
+                        Divider()
                         if showMenu {
                             MenuView(
                                 onPressLogout: {

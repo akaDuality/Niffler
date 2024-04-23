@@ -4,7 +4,6 @@ import SwiftUI
 struct SpendsView: View {
     @State var spends: [Spends] = []
     @State var isLoading = false
-    @State var isPresentAddSpendView = false
     @EnvironmentObject var api: Api
 
     func fetchData() {
@@ -50,50 +49,6 @@ extension SpendsView {
             }
             .refreshable {
                 fetchData()
-            }
-
-            VStack {
-                AddSpendButton()
-            }
-        }
-    }
-}
-
-extension SpendsView {
-    @ViewBuilder
-    func AddSpendButton() -> some View {
-        HStack {
-            Spacer()
-            Button(action: {
-                isPresentAddSpendView.toggle()
-            }) {
-                Image(systemName: "plus.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundColor(.blue)
-            }
-        }
-        .padding()
-        .sheet(isPresented: $isPresentAddSpendView) {
-            DetailSpendView(
-                spends: $spends,
-                onAddSpend: {
-                    self.isPresentAddSpendView = false
-                }
-            )
-        }
-        .accessibilityIdentifier(SpendsViewIDs.addSpendButton.rawValue)
-    }
-
-    @ViewBuilder
-    func RetrySpendsButton() -> some View {
-        HStack {
-            Button(action: {
-                fetchData()
-                isLoading.toggle()
-            }) {
-                Image(systemName: "arrow.clockwise.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundColor(.blue)
             }
         }
     }

@@ -4,6 +4,8 @@ import SwiftUI
 struct HeaderView: View {
     @EnvironmentObject var api: Api
     @EnvironmentObject var userData: UserData
+    @State var spends: [Spends] = []
+    @State var isPresentAddSpendView = false
     @State var switchMenuIcon: Bool
     var onPressMenu: () -> Void
 
@@ -13,24 +15,60 @@ struct HeaderView: View {
 
             Spacer()
 
-            LogoView(width: 32, height: 32)
+            LogoView(width: 36, height: 36)
 
             Spacer()
-        }
-        .padding()
-        .backgroundStyle(.gray)
-    }
 
+            AddSpendButton()
+        }
+        .padding(.horizontal)
+    }
+}
+
+extension HeaderView {
     @ViewBuilder
     func MenuButton() -> some View {
-        VStack {
-            Image(switchMenuIcon ? "ic_cross" : "ic_menu")
-                .aspectRatio(contentMode: .fit)
+        HStack {
+            Rectangle()
+                .frame(width: 48, height: 48)
+                .foregroundStyle(AppColors.gray_100)
+                .cornerRadius(10)
+                .overlay {
+                    Image(switchMenuIcon ? "ic_cross" : "ic_menu")
+                        .padding()
+                }
                 .onTapGesture {
                     switchMenuIcon.toggle()
                     onPressMenu()
                 }
         }
+    }
+
+    @ViewBuilder
+    func AddSpendButton() -> some View {
+        HStack {
+            Button(action: {
+                isPresentAddSpendView = true
+            }) {
+                Rectangle()
+                    .frame(width: 48, height: 48)
+                    .foregroundStyle(AppColors.blue_100)
+                    .cornerRadius(10)
+                    .overlay {
+                        Image("ic_plus")
+                            .padding()
+                    }
+            }
+        }
+        .sheet(isPresented: $isPresentAddSpendView) {
+            DetailSpendView(
+                spends: $spends,
+                onAddSpend: {
+                    self.isPresentAddSpendView = false
+                }
+            )
+        }
+        .accessibilityIdentifier(SpendsViewIDs.addSpendButton.rawValue)
     }
 }
 

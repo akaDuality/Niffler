@@ -5,6 +5,8 @@ struct AppColors {
     static let blue_100 = Color(hex: "#2941CC")
     static let green = Color(hex: "35AD7B")
     static let gray_50 = Color(hex: "#FAFAFD")
+    static let gray_100 = Color(hex: "#F5F6FA")
+    static let gray_300 = Color(hex: "#E4E6F1")
     static let gray_700 = Color(hex: "#84889A")
     static let gray_1000 = Color(hex: "#242527")
 }
