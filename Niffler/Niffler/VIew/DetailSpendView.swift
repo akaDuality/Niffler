@@ -13,6 +13,7 @@ struct DetailSpendView: View {
                                 "Спорт", "Кальян", "Продукты"]
 
     @State private var amount: String = Defaults.amount
+    @State private var currency: String = "₽"
     @State private var spendDate: Date = Date()
     @State private var description: String = Defaults.description
     @State private var selectedCategory: String = Defaults.selectedCategory
@@ -60,50 +61,24 @@ extension DetailSpendView {
     func SpendForm() -> some View {
         VStack(spacing: 16) {
             HStack {
-                VStack {
-                    Text("Amount")
-                        .font(.caption)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    TextField("0", text: $amount)
-                        .padding()
-                        .cornerRadius(8)
-                        .background(AppColors.gray_50)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(AppColors.gray_300, lineWidth: 1)
-                        }
-                        .keyboardType(.numberPad)
-                        .focused($keyboardFocused)
-                        .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                keyboardFocused = true
-                            }
-                        }
+                CustomTextField(
+                    title: "Amount",
+                    placeholder: "0",
+                    text: $amount
+                )
+                .keyboardType(.numberPad)
+                .focused($keyboardFocused)
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        keyboardFocused = true
+                    }
                 }
 
-                VStack {
-                    Text("Currency")
-                        .font(.caption)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    Picker(
-                        "Select category",
-                        selection: $selectedCategory) {
-                            ForEach(categories, id: \.self) { category in
-                                Text(category).tag(category)
-                            }
-                        }
-                        .padding()
-                        .cornerRadius(8)
-                        .background(AppColors.gray_50)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(AppColors.gray_300, lineWidth: 1)
-                        }
-                }
+                CustomTextField(
+                    title: "Currency",
+                    placeholder: "₽",
+                    text: $currency)
             }
-            .padding()
 
             VStack {
                 Text("Category")
@@ -127,21 +102,10 @@ extension DetailSpendView {
             }
             .padding()
 
-            VStack {
-                Text("Description")
-                    .font(.caption)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                TextField("Description", text: $description)
-                    .padding()
-                    .cornerRadius(8)
-                    .background(AppColors.gray_50)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(AppColors.gray_300, lineWidth: 1)
-                    }
-            }
-            .padding()
+            CustomTextField(
+                title: "Description",
+                placeholder: "Description",
+                text: $description)
 
             VStack(alignment: .leading, spacing: 10) {
                 Text("Spend Date")
@@ -193,6 +157,29 @@ extension DetailSpendView {
             }
             .padding()
         }
+    }
+
+    @ViewBuilder
+    func CustomTextField(
+        title: String,
+        placeholder: String,
+        text: Binding<String>
+    ) -> some View {
+        VStack {
+            Text(title)
+                .font(.caption)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            TextField(placeholder, text: text)
+                .padding()
+                .cornerRadius(8)
+                .background(AppColors.gray_50)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(AppColors.gray_300, lineWidth: 1)
+                }
+        }
+        .padding(.horizontal)
     }
 }
 
