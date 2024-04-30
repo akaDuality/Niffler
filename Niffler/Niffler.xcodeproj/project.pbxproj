@@ -13,8 +13,6 @@
 		746853802B0CAE9900E48DFE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7468537F2B0CAE9900E48DFE /* Assets.xcassets */; };
 		746853832B0CAE9900E48DFE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 746853822B0CAE9900E48DFE /* Preview Assets.xcassets */; };
 		7468538D2B0CAE9900E48DFE /* NifflerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7468538C2B0CAE9900E48DFE /* NifflerTests.swift */; };
-		746853972B0CAE9900E48DFE /* NifflerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746853962B0CAE9900E48DFE /* NifflerUITests.swift */; };
-		746853992B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746853982B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift */; };
 		749E20F62B0CB0070045F4E3 /* Api in Frameworks */ = {isa = PBXBuildFile; productRef = 749E20F52B0CB0070045F4E3 /* Api */; };
 		A90083552BBA870400EB9D32 /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90083542BBA870400EB9D32 /* AppColors.swift */; };
 		A90083592BBA8CD100EB9D32 /* YoungSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A90083582BBA8CD100EB9D32 /* YoungSerif-Regular.ttf */; };
@@ -24,10 +22,6 @@
 		A93D7D8E2BCFACE700AD8919 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93D7D8D2BCFACE700AD8919 /* MenuView.swift */; };
 		A93EDB892BC50E52005454A0 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93EDB882BC50E52005454A0 /* CheckboxToggleStyle.swift */; };
 		A94CFBFE2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CFBFD2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift */; };
-		A94CFBFF2B204CF100BFD09F /* SharedAccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CFBFD2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift */; };
-		A94CFC032B204F8C00BFD09F /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CFC022B204F8C00BFD09F /* LoginScreen.swift */; };
-		A94CFC052B204FC400BFD09F /* BaseScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CFC042B204FC400BFD09F /* BaseScreen.swift */; };
-		A94CFC072B204FE600BFD09F /* SpendsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CFC062B204FE600BFD09F /* SpendsScreen.swift */; };
 		A9620BDE2B5795B100602D2C /* SpendCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9620BDD2B5795B100602D2C /* SpendCard.swift */; };
 		A9620BE12B579A7200602D2C /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9620BE02B579A7200602D2C /* View+Extensions.swift */; };
 		A967D0802B0CB22400410674 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A967D07F2B0CB22400410674 /* LoginView.swift */; };
@@ -49,13 +43,6 @@
 			remoteGlobalIDString = 746853752B0CAE9700E48DFE;
 			remoteInfo = Niffler;
 		};
-		746853932B0CAE9900E48DFE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7468536E2B0CAE9700E48DFE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 746853752B0CAE9700E48DFE;
-			remoteInfo = Niffler;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -67,9 +54,6 @@
 		746853822B0CAE9900E48DFE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		746853882B0CAE9900E48DFE /* NifflerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NifflerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7468538C2B0CAE9900E48DFE /* NifflerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NifflerTests.swift; sourceTree = "<group>"; };
-		746853922B0CAE9900E48DFE /* NifflerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NifflerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		746853962B0CAE9900E48DFE /* NifflerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NifflerUITests.swift; sourceTree = "<group>"; };
-		746853982B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NifflerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		749E20F22B0CAF1D0045F4E3 /* Api */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Api; sourceTree = "<group>"; };
 		749E20F32B0CAFD60045F4E3 /* Niffler.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Niffler.xctestplan; sourceTree = "<group>"; };
 		74AA2FBC2B10C9F90070B8D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -81,9 +65,6 @@
 		A93D7D8D2BCFACE700AD8919 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		A93EDB882BC50E52005454A0 /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
 		A94CFBFD2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedAccessibilityIdentifier.swift; sourceTree = "<group>"; };
-		A94CFC022B204F8C00BFD09F /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
-		A94CFC042B204FC400BFD09F /* BaseScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseScreen.swift; sourceTree = "<group>"; };
-		A94CFC062B204FE600BFD09F /* SpendsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendsScreen.swift; sourceTree = "<group>"; };
 		A9620BDD2B5795B100602D2C /* SpendCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendCard.swift; sourceTree = "<group>"; };
 		A9620BE02B579A7200602D2C /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		A967D07F2B0CB22400410674 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -113,13 +94,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7468538F2B0CAE9900E48DFE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -130,7 +104,6 @@
 				749E20F22B0CAF1D0045F4E3 /* Api */,
 				746853782B0CAE9700E48DFE /* Niffler */,
 				7468538B2B0CAE9900E48DFE /* NifflerTests */,
-				746853952B0CAE9900E48DFE /* NifflerUITests */,
 				746853772B0CAE9700E48DFE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -140,7 +113,6 @@
 			children = (
 				746853762B0CAE9700E48DFE /* Niffler.app */,
 				746853882B0CAE9900E48DFE /* NifflerTests.xctest */,
-				746853922B0CAE9900E48DFE /* NifflerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -177,34 +149,6 @@
 				7468538C2B0CAE9900E48DFE /* NifflerTests.swift */,
 			);
 			path = NifflerTests;
-			sourceTree = "<group>";
-		};
-		746853952B0CAE9900E48DFE /* NifflerUITests */ = {
-			isa = PBXGroup;
-			children = (
-				A94CFC012B204F7D00BFD09F /* Screens */,
-				A94CFC002B204F7600BFD09F /* Base */,
-				746853962B0CAE9900E48DFE /* NifflerUITests.swift */,
-				746853982B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift */,
-			);
-			path = NifflerUITests;
-			sourceTree = "<group>";
-		};
-		A94CFC002B204F7600BFD09F /* Base */ = {
-			isa = PBXGroup;
-			children = (
-				A94CFC042B204FC400BFD09F /* BaseScreen.swift */,
-			);
-			path = Base;
-			sourceTree = "<group>";
-		};
-		A94CFC012B204F7D00BFD09F /* Screens */ = {
-			isa = PBXGroup;
-			children = (
-				A94CFC022B204F8C00BFD09F /* LoginScreen.swift */,
-				A94CFC062B204FE600BFD09F /* SpendsScreen.swift */,
-			);
-			path = Screens;
 			sourceTree = "<group>";
 		};
 		A9620BDF2B579A5500602D2C /* Helpers */ = {
@@ -286,24 +230,6 @@
 			productReference = 746853882B0CAE9900E48DFE /* NifflerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		746853912B0CAE9900E48DFE /* NifflerUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 746853A22B0CAE9900E48DFE /* Build configuration list for PBXNativeTarget "NifflerUITests" */;
-			buildPhases = (
-				7468538E2B0CAE9900E48DFE /* Sources */,
-				7468538F2B0CAE9900E48DFE /* Frameworks */,
-				746853902B0CAE9900E48DFE /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				746853942B0CAE9900E48DFE /* PBXTargetDependency */,
-			);
-			name = NifflerUITests;
-			productName = NifflerUITests;
-			productReference = 746853922B0CAE9900E48DFE /* NifflerUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -318,10 +244,6 @@
 						CreatedOnToolsVersion = 15.0;
 					};
 					746853872B0CAE9900E48DFE = {
-						CreatedOnToolsVersion = 15.0;
-						TestTargetID = 746853752B0CAE9700E48DFE;
-					};
-					746853912B0CAE9900E48DFE = {
 						CreatedOnToolsVersion = 15.0;
 						TestTargetID = 746853752B0CAE9700E48DFE;
 					};
@@ -345,7 +267,6 @@
 			targets = (
 				746853752B0CAE9700E48DFE /* Niffler */,
 				746853872B0CAE9900E48DFE /* NifflerTests */,
-				746853912B0CAE9900E48DFE /* NifflerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -362,13 +283,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		746853862B0CAE9900E48DFE /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		746853902B0CAE9900E48DFE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -414,19 +328,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7468538E2B0CAE9900E48DFE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				746853972B0CAE9900E48DFE /* NifflerUITests.swift in Sources */,
-				A94CFC032B204F8C00BFD09F /* LoginScreen.swift in Sources */,
-				A94CFC072B204FE600BFD09F /* SpendsScreen.swift in Sources */,
-				A94CFBFF2B204CF100BFD09F /* SharedAccessibilityIdentifier.swift in Sources */,
-				746853992B0CAE9900E48DFE /* NifflerUITestsLaunchTests.swift in Sources */,
-				A94CFC052B204FC400BFD09F /* BaseScreen.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -434,11 +335,6 @@
 			isa = PBXTargetDependency;
 			target = 746853752B0CAE9700E48DFE /* Niffler */;
 			targetProxy = 746853892B0CAE9900E48DFE /* PBXContainerItemProxy */;
-		};
-		746853942B0CAE9900E48DFE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 746853752B0CAE9700E48DFE /* Niffler */;
-			targetProxy = 746853932B0CAE9900E48DFE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -662,42 +558,6 @@
 			};
 			name = Release;
 		};
-		746853A32B0CAE9900E48DFE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = P67Q4Q7HA9;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.akaDuality.NifflerUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Niffler;
-			};
-			name = Debug;
-		};
-		746853A42B0CAE9900E48DFE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = P67Q4Q7HA9;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.akaDuality.NifflerUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Niffler;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -724,15 +584,6 @@
 			buildConfigurations = (
 				746853A02B0CAE9900E48DFE /* Debug */,
 				746853A12B0CAE9900E48DFE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		746853A22B0CAE9900E48DFE /* Build configuration list for PBXNativeTarget "NifflerUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				746853A32B0CAE9900E48DFE /* Debug */,
-				746853A42B0CAE9900E48DFE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
