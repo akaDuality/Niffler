@@ -34,10 +34,16 @@ public class Auth: Network {
     
     var loginContinuation: UnsafeContinuation<Void, Error>?
 
+    // MARK: - Persistence
+    public static var userDefaults: UserDefaults = .standard
     
-    @UserDefault(key: "UserAuthToken", defaultValue: nil)
+    @UserDefault(key: "UserAuthToken", defaultValue: nil, container: Auth.userDefaults)
     private(set) var authorizationHeader: String?
-                
+     
+    public static func removeAuth() {
+        userDefaults.removeObject(forKey: "UserAuthToken")
+    }
+    
     init(
         challenge: String? = nil
     ) {

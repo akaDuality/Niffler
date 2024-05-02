@@ -21,9 +21,8 @@ struct MainView: View {
 
 
     func setupForUITests() {
-        if CommandLine.arguments.contains("UITests") {
-            UserDefaults.standard.removeObject(forKey: "UserAuthToken")
-            isPresentLoginOnStart = false
+        if CommandLine.arguments.contains("RemoveAuthOnStart") {
+            Auth.removeAuth()
         }
     }
 
