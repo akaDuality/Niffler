@@ -13,6 +13,8 @@ struct LoginView: View {
     @EnvironmentObject var userData: UserData
 
     let onLogin: () -> Void
+    
+    @State private var errorText: String?
 }
 
 extension LoginView {
@@ -59,7 +61,25 @@ extension LoginView {
                 }
                 .padding()
 
-                LoginButton()
+                LoginButton {
+                    do {
+                        try await api.auth.authorize(user: username, password: password)
+                        let (userDataModel, response) = try await api.currentUser()
+                        await MainActor.run {
+                            userData.setValues(from: userDataModel)
+                            onLogin()
+                        }
+                    } catch let error {
+                        errorText = "Нет такого пользователя. Попробуйте другие данные"
+                    }
+                }
+                
+                if let errorText {
+                    Text(errorText)
+                        .font(.caption2)
+                        .foregroundStyle(.red)
+                }
+                
                 Divider()
                     .padding(.top, 16)
 
@@ -72,24 +92,13 @@ extension LoginView {
     }
 
     @ViewBuilder
-    func LoginButton() -> some View {
+    func LoginButton(_ action: @escaping () async -> Void) -> some View {
         Button(action: {
             isLoadingForLogin.toggle()
 
             Task {
-                do {
-                    try await api.auth.authorize(user: username, password: password)
-                    let (userDataModel, response) = try await api.currentUser()
-                    await MainActor.run {
-                        userData.setValues(from: userDataModel)
-                        onLogin()
-                    }
-                } catch let error {
-                    // TODO: Present error on screen
-                    print(error)
-                }
+                await action()
             }
-
         }) {
             HStack {
                 if isLoadingForLogin {
