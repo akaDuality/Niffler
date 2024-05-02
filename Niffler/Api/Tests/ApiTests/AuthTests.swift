@@ -38,6 +38,7 @@ final class AuthTests: XCTestCase {
         XCTAssertNotNil(network.authorizationHeader)
     }
     
+    // TODO: Узнать зачем этот endpoint
     func test_registerAndAuthorize() async throws {
         let username = UUID().uuidString
         
@@ -47,6 +48,18 @@ final class AuthTests: XCTestCase {
         
         try await network.authorize(user: username,
                                     password: "123")
+        XCTAssertNotNil(network.authorizationHeader)
+    }
+    
+    func test_logout() async throws {
+        try await network.authorize(user: "stage",
+                                    password: "12345")
+        
+        try await network.logout()
+        
+        try await network.authorize(user: "stage",
+                                    password: "12345")
+        
         XCTAssertNotNil(network.authorizationHeader)
     }
     

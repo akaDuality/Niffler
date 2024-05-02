@@ -1,33 +1,44 @@
 import Api
 import SwiftUI
 
-struct Defaults {
-    static var username: String {
-        ProcessInfo.processInfo.environment["username"] ?? ""
-    }
-
-    static var password: String {
-        ProcessInfo.processInfo.environment["password"] ?? ""
-    }
-}
-
 struct LoginView: View {
     @State private var username: String = Defaults.username
     @State private var password: String = Defaults.password
     @State private var isLoginSuccessful: Bool = false
-    @State private var isSignUpSuccessful: Bool = false
+
     @State private var isLoadingForLogin: Bool = false
-    @State private var isLoadingForSignUp: Bool = false
-    
+    @State private var isSignUpViewPresent: Bool = false
+
     @EnvironmentObject var api: Api
+    @EnvironmentObject var userData: UserData
+
     let onLogin: () -> Void
 }
 
 extension LoginView {
     var body: some View {
-        VStack {
+        NavigationView {
             VStack {
-                CoinN()
+                LogoView()
+
+                VStack {
+                    Text("Log in")
+                        .font(Font.custom("YoungSerif-Regular",size: 48))
+
+                    HStack {
+                        Text("Don't have an account?")
+
+                        Text("Sign up")
+                            .foregroundStyle(AppColors.blue_100)
+                            .underline()
+                            .onTapGesture {
+                                self.isSignUpViewPresent = true
+                            }
+                            .sheet(isPresented: $isSignUpViewPresent, content: {
+                                SignUpView()
+                            })
+                    }
+                }
 
                 VStack(alignment: .leading) {
                     Text("Username")
@@ -37,7 +48,7 @@ extension LoginView {
                         .cornerRadius(8)
                         .padding(.bottom, 20)
                         .accessibilityIdentifier(LoginViewIDs.userNameTextField.rawValue)
-                    
+
                     Text("Password")
                     SecureField("Type your password", text: $password)
                         .padding()
@@ -46,25 +57,18 @@ extension LoginView {
                         .padding(.bottom, 20)
                         .accessibilityIdentifier(LoginViewIDs.passwordTextField.rawValue)
                 }
-                HStack {
-                    LoginButton()
-                    SignUpButton()
+                .padding()
+
+                LoginButton()
+                Divider()
+                    .padding(.top, 16)
+
+                NavigationLink(destination: SignUpView()) {
+                    CreateNewAccountButton()
                 }
             }
-            .padding()
-            .navigationBarTitle("Login")
         }
         .interactiveDismissDisabled()
-    }
-
-    @ViewBuilder
-    func CoinN() -> some View {
-        VStack {
-            Image("LogoNiffler")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100)
-        }
     }
 
     @ViewBuilder
@@ -75,7 +79,9 @@ extension LoginView {
             Task {
                 do {
                     try await api.auth.authorize(user: username, password: password)
+                    let (userDataModel, response) = try await api.currentUser()
                     await MainActor.run {
+                        userData.setValues(from: userDataModel)
                         onLogin()
                     }
                 } catch let error {
@@ -88,48 +94,36 @@ extension LoginView {
             HStack {
                 if isLoadingForLogin {
                     ProgressView()
+                        .tint(.white)
                 } else {
-                    Text("Login")
+                    Text("Log in")
                 }
             }
             .foregroundColor(.white)
-            .padding()
+            .padding(.horizontal, 12)
+            .padding(.vertical, 16)
             .frame(maxWidth: .infinity)
-            .background(isLoginSuccessful ? Color.gray : Color.blue)
+            .background(isLoginSuccessful ? AppColors.green : AppColors.blue_100)
             .cornerRadius(8)
         }
         .disabled(isLoadingForLogin)
         .padding(.horizontal, 20)
         .accessibilityIdentifier(LoginViewIDs.loginButton.rawValue)
     }
-
+    
     @ViewBuilder
-    func SignUpButton() -> some View {
-        Button(action: {
-            if !username.isEmpty && !password.isEmpty {
-                isSignUpSuccessful = true
-            }
-            isLoadingForSignUp.toggle()
-
-            // #TODO add logic for sigh up
-
-        }) {
-            HStack {
-                if isLoadingForSignUp {
-                    ProgressView()
-                } else {
-                    Text("Sign Up")
-                }
-            }
+    func CreateNewAccountButton() -> some View {
+        Text("Create new account")
             .foregroundColor(.white)
-            .padding()
+            .padding(.horizontal, 12)
+            .padding(.vertical, 16)
             .frame(maxWidth: .infinity)
-            .background(isSignUpSuccessful ? Color.gray : Color.purple)
+            .background(AppColors.green)
             .cornerRadius(8)
-        }
-        .disabled(isSignUpSuccessful)
-        .padding(.horizontal, 20)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 16)
     }
+    
 }
 
 extension UIColor {
@@ -143,6 +137,6 @@ extension UIColor {
     }
 }
 
-// #Preview {
-//    LoginView()
-// }
+#Preview {
+    LoginView(onLogin: {})
+}

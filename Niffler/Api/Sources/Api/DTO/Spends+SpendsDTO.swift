@@ -2,7 +2,7 @@ import Foundation
 
 extension Spends {
     public init(
-        dto: SpendsDTO
+        dto: SpendsContentDTO
     ) {
         self.id = dto.id
         self.spendDate = dto.spendDate

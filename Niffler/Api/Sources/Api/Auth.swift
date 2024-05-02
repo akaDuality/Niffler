@@ -18,17 +18,17 @@ struct UserDefault<Value> {
 
 /// https://github.com/qa-guru/niffler-st3/blob/00705308d259607c30447103cb7b9834afdf8209/niffler-e-2-e-tests/src/test/java/guru/qa/niffler/api/AuthService.java#L30
 public class Auth: Network {
-    let base = URL(string: "https://auth.niffler-stage.qa.guru")!
-    let baseOauth = URL(string: "https://auth.niffler-stage.qa.guru/oauth2")!
+    let base = ApiConfig().urls.authURL
+    let baseOauth = ApiConfig().urls.authURL.appendingPathComponent("oauth2")
+    
     let challenge: String
     let verifier: PKCE.PKCECode
     
     public var requestCredentialsFromUser: () -> Void = {}
     func authorize() async throws {
-        requestCredentialsFromUser()
-        
         try await withUnsafeThrowingContinuation { loginContinuation in
             self.loginContinuation = loginContinuation
+            requestCredentialsFromUser()
         }
     }
     
@@ -76,6 +76,13 @@ public class Auth: Network {
         loginContinuation?.resume()
     }
     
+    public func logout() async throws {
+        let logoutRequest = logoutRequest()
+        let (_, logoutResponse) = try await perform(logoutRequest)
+        
+        print(logoutResponse)
+    }
+    
     public func isAuthorized() -> Bool {
         authorizationHeader != nil
     }
@@ -113,10 +120,12 @@ public class Auth: Network {
             query: [URLQueryItem(name: "response_type", value: "code"),
                     URLQueryItem(name: "client_id", value: "client"),
                     URLQueryItem(name: "scope", value: "openid"),
-                    URLQueryItem(name: "redirect_uri", value: "https://niffler-stage.qa.guru/authorized".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
+                    URLQueryItem(name: "redirect_uri",
+                                 value: ApiConfig().urls.baseURL.appendingPathComponent("authorized")
+                                     .absoluteString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
                     URLQueryItem(name: "code_challenge", value: challenge),
                     URLQueryItem(name: "code_challenge_method", value: "S256"),
-                   ],
+            ],
             addAcceptJsonHeader: false) // It brokes auth
         
         return request
@@ -147,20 +156,37 @@ public class Auth: Network {
         return request
     }
     
+    private func logoutRequest() -> URLRequest {
+        var request = URLRequest(url: base.appending(path: "logout"))
+        
+        request.httpMethod = "GET"
+        request.setValue("application/x-www-form-urlencoded",
+                         forHTTPHeaderField: "Content-Type")
+        
+        return request
+    }
+    
     private func tokenRequest(
         code: String
     ) -> URLRequest {
         var request = request(
             method: "POST",
-            path: "token",
-            query: [
-                URLQueryItem(name: "client_id", value: "client"),
-                
-                URLQueryItem(name: "redirect_uri", value: "https://niffler-stage.qa.guru/authorized".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
-                URLQueryItem(name: "code", value: code),
-                URLQueryItem(name: "code_verifier", value: verifier),
-                URLQueryItem(name: "grant_type", value: "authorization_code"),
-            ])
+            path: "token"
+        )
+        var components = URLComponents()
+        
+        components.queryItems = [
+            URLQueryItem(name: "client_id", value: "client"),
+            URLQueryItem(name: "redirect_uri",
+                         value: ApiConfig().urls.baseURL.appendingPathComponent("authorized")
+                             .absoluteString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
+            URLQueryItem(name: "code", value: code),
+            URLQueryItem(name: "code_verifier", value: verifier),
+            URLQueryItem(name: "grant_type", value: "authorization_code"),
+        ]
+
+        request.httpBody = components.query?.data(using: .utf8)
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         
         let token = "Basic " + "client:secret".toBase64()
         request.addValue(token,forHTTPHeaderField: "Authorization")

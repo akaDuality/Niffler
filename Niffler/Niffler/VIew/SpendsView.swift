@@ -4,16 +4,15 @@ import SwiftUI
 struct SpendsView: View {
     @State var spends: [Spends] = []
     @State var isLoading = false
-    @State var isPresentAddSpendView = false
     @EnvironmentObject var api: Api
 
     func fetchData() {
         Task {
-            let (spends, response) = try await api.getSpends()
+            let (spends, _) = try await api.getSpends()
 
             await MainActor.run {
-                self.spends = spends.map { Spends(dto: $0) }
-                isLoading.toggle()
+                self.spends = spends.content.map { Spends(dto: $0) }
+                isLoading = false
             }
         }
     }
@@ -21,84 +20,40 @@ struct SpendsView: View {
 
 extension SpendsView {
     var body: some View {
-        VStack {
-            HStack {
-                AddSpendButton()
-                RetrySpendsButton()
-            }
-
-            if isLoading {
-                ProgressView("Loading...")
-                    .progressViewStyle(CircularProgressViewStyle())
-                    .padding()
-            } else {
-                SpendsList()
-            }
-        }
-        
-        .onAppear {
-            isLoading.toggle()
-            fetchData()
-        }
-    }
-}
-
-extension SpendsView {
-    @ViewBuilder
-    func SpendsList() -> some View {
-        List(spends) { spend in
-
-            VStack(alignment: .leading) {
-                Text(spend.spendDate.map(DateFormatterHelper.shared.formatForUser) ?? "No data")
-                    .font(.headline)
-
-                Text("\(spend.amount)")
-                    .font(.subheadline)
-                Text("\(spend.currency)")
-                Text("\(spend.category)")
-                Text("\(spend.description)")
-            }
-        }
-        .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
-    }
-    
-    @ViewBuilder
-    func AddSpendButton() -> some View {
-        HStack {
-            Button(action: {
-                isPresentAddSpendView.toggle()
-            }) {
-                Image(systemName: "plus.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundColor(.blue)
-            }
-        }
-        .sheet(isPresented: $isPresentAddSpendView) {
-            AddSpendView(
-                spends: $spends,
-                onAddSpend: {
-                    self.isPresentAddSpendView = false
+        ZStack(alignment: .bottom) {
+            ScrollView(.vertical) {
+                if isLoading {
+                    ProgressView("Loading...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .padding()
+                } else {
+                    LazyVStack {
+                        ForEach(spends) { spend in
+                            NavigationLink(value: spend) {
+                                SpendCard(spend: spend)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
                 }
-            )
-        }
-        .accessibilityIdentifier(SpendsViewIDs.addSpendButton.rawValue)
-    }
-
-    @ViewBuilder
-    func RetrySpendsButton() -> some View {
-        HStack {
-            Button(action: {
+            }
+            .navigationDestination(for: Spends.self) { spend in
+                DetailSpendView(spends: $spends, onAddSpend: {}, editSpendView: spend)
+            }
+            .onAppear {
+                // TODO: обернуть в ифчик чтобы не крутилось
+                isLoading = true
                 fetchData()
-                isLoading.toggle()
-            }) {
-                Image(systemName: "arrow.clockwise.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundColor(.blue)
+            }
+            .refreshable {
+                fetchData()
             }
         }
     }
 }
 
 #Preview {
-    SpendsView()
+    ContentView()
 }

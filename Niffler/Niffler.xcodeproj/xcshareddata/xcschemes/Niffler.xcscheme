@@ -89,6 +89,21 @@
             value = "12345"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "description"
+            value = "Hello kiity"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "amount"
+            value = "300"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "selectedCategory"
+            value = "&#x420;&#x44b;&#x431;&#x430;&#x43b;&#x43a;&#x430;"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction

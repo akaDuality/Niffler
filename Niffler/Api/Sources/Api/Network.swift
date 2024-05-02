@@ -8,7 +8,7 @@
 import Foundation
 
 public class Api: Network {
-    private let base = URL(string: "https://api.niffler-stage.qa.guru")!
+    private let base = ApiConfig().urls.apiURL
     
     
     public override init() { super.init() }
@@ -35,13 +35,18 @@ public class Api: Network {
         return request
     }
     
-    public func getSpends() async throws -> ([SpendsDTO], HTTPURLResponse) {
-        let request = request(method: "GET", path: "spends")
+    public func currentUser() async throws -> (UserDataModel, HTTPURLResponse) {
+        let request = request(method: "GET", path: "api/users/current")
         return try await performWithJsonResult(request)
     }
     
-    public func addSpend(_ spend: Spends) async throws -> (SpendsDTO, HTTPURLResponse) {
-        let request = request(method: "POST", path: "addSpend", body: spend)
+    public func getSpends() async throws -> (SpendsDTO, HTTPURLResponse) {
+        let request = request(method: "GET", path: "/api/v2/spends/all")
+        return try await performWithJsonResult(request)
+    }
+    
+    public func addSpend(_ spend: Spends) async throws -> (SpendsContentDTO, HTTPURLResponse) {
+        let request = request(method: "POST", path: "/api/spends/add", body: spend)
         return try await performWithJsonResult(request)
     }
     
@@ -64,6 +69,7 @@ public class Api: Network {
         if urlResponse.statusCode == 401 {
             do {
                 try await auth.authorize()
+                try await currentUser()
                 
                 var newRequest = request.copy()
                 updateAuthorizationHeader(in: &newRequest)

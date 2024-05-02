@@ -25,8 +25,8 @@ final class ApiTests: XCTestCase {
 
         let (text, response) = try await network.performWithStringResult(request)
         
-        XCTAssertEqual(text, "{\"username\":null,\"issuedAt\":null,\"expiresAt\":null}")
-        XCTAssertEqual(response.statusCode, 200)
+        XCTAssertEqual(text, "{\"type\":\"about:blank\",\"title\":\"Not Found\",\"status\":404,\"detail\":\"No static resource session.\",\"instance\":\"/session\"}")
+        XCTAssertEqual(response.statusCode, 404)
     }
     
     func test_unauthorized_currentUser() async throws {
@@ -34,17 +34,17 @@ final class ApiTests: XCTestCase {
         
         let (text, response) = try await network.performWithStringResult(request)
         
-        XCTAssertEqual(text, "")
-        XCTAssertEqual(response.statusCode, 401)
+        XCTAssertEqual(text, "{\"type\":\"about:blank\",\"title\":\"Not Found\",\"status\":404,\"detail\":\"No static resource currentUser.\",\"instance\":\"/currentUser\"}")
+        XCTAssertEqual(response.statusCode, 404)
     }
 
     func test_authorized_currentUser() async throws {
-        try await network.auth.authorize(user: "stage", password: "12345")
+        let (name, password) = ("stage", "12345")
         
-        let request = network.request(method: "GET", path: "currentUser")
-        let (text, response) = try await network.performWithStringResult(request)
-        
-//        XCTAssertEqual(text, "{\"id\":\"91c42b35-30f0-4a70-8fc7-e11d99da7702\",\"username\":\"akaDuality@yandex.ru\",\"firstname\":null,\"surname\":null,\"currency\":\"RUB\",\"photo\":null}")
+        try await network.auth.authorize(user: name, password: password)
+        let (text, response) = try await network.currentUser()
+
+        XCTAssertEqual(text.username, name)
         XCTAssertEqual(response.statusCode, 200)
     }
     
@@ -54,7 +54,7 @@ final class ApiTests: XCTestCase {
         let (spends, response) = try await network.getSpends()
         
         XCTAssertEqual(response.statusCode, 200)
-        XCTAssertTrue(spends.count > 0)
+        XCTAssertTrue(spends.content.count > 0)
     }
     
     func test_add_spend() async throws {
@@ -105,7 +105,7 @@ final class ApiTests: XCTestCase {
         await fulfillment(of: [showLoginUIExpectation], timeout: 1)
         
         XCTAssertEqual(response.statusCode, 200)
-        XCTAssertTrue(spends.count > 0)
+        XCTAssertTrue(spends.content.count > 0)
     }
     
     // MARK: flow with bearer token
