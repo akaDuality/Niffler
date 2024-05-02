@@ -14,6 +14,8 @@
 		746853832B0CAE9900E48DFE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 746853822B0CAE9900E48DFE /* Preview Assets.xcassets */; };
 		7468538D2B0CAE9900E48DFE /* NifflerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7468538C2B0CAE9900E48DFE /* NifflerTests.swift */; };
 		749E20F62B0CB0070045F4E3 /* Api in Frameworks */ = {isa = PBXBuildFile; productRef = 749E20F52B0CB0070045F4E3 /* Api */; };
+		74D55B7A2BE12B9600AEF67D /* NifflerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D55B792BE12B9600AEF67D /* NifflerUITests.swift */; };
+		74D55B7C2BE12B9600AEF67D /* NifflerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D55B7B2BE12B9600AEF67D /* NifflerUITestsLaunchTests.swift */; };
 		A90083552BBA870400EB9D32 /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90083542BBA870400EB9D32 /* AppColors.swift */; };
 		A90083592BBA8CD100EB9D32 /* YoungSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A90083582BBA8CD100EB9D32 /* YoungSerif-Regular.ttf */; };
 		A91CF2C22BD1491700FDA3D7 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91CF2C12BD1491700FDA3D7 /* MainView.swift */; };
@@ -43,6 +45,13 @@
 			remoteGlobalIDString = 746853752B0CAE9700E48DFE;
 			remoteInfo = Niffler;
 		};
+		74D55B7D2BE12B9600AEF67D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7468536E2B0CAE9700E48DFE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 746853752B0CAE9700E48DFE;
+			remoteInfo = Niffler;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +66,9 @@
 		749E20F22B0CAF1D0045F4E3 /* Api */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Api; sourceTree = "<group>"; };
 		749E20F32B0CAFD60045F4E3 /* Niffler.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Niffler.xctestplan; sourceTree = "<group>"; };
 		74AA2FBC2B10C9F90070B8D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		74D55B772BE12B9600AEF67D /* NifflerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NifflerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		74D55B792BE12B9600AEF67D /* NifflerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NifflerUITests.swift; sourceTree = "<group>"; };
+		74D55B7B2BE12B9600AEF67D /* NifflerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NifflerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A90083542BBA870400EB9D32 /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
 		A90083582BBA8CD100EB9D32 /* YoungSerif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YoungSerif-Regular.ttf"; sourceTree = "<group>"; };
 		A91CF2C12BD1491700FDA3D7 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -94,6 +106,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		74D55B742BE12B9600AEF67D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -104,6 +123,7 @@
 				749E20F22B0CAF1D0045F4E3 /* Api */,
 				746853782B0CAE9700E48DFE /* Niffler */,
 				7468538B2B0CAE9900E48DFE /* NifflerTests */,
+				74D55B782BE12B9600AEF67D /* NifflerUITests */,
 				746853772B0CAE9700E48DFE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -113,6 +133,7 @@
 			children = (
 				746853762B0CAE9700E48DFE /* Niffler.app */,
 				746853882B0CAE9900E48DFE /* NifflerTests.xctest */,
+				74D55B772BE12B9600AEF67D /* NifflerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -149,6 +170,15 @@
 				7468538C2B0CAE9900E48DFE /* NifflerTests.swift */,
 			);
 			path = NifflerTests;
+			sourceTree = "<group>";
+		};
+		74D55B782BE12B9600AEF67D /* NifflerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				74D55B792BE12B9600AEF67D /* NifflerUITests.swift */,
+				74D55B7B2BE12B9600AEF67D /* NifflerUITestsLaunchTests.swift */,
+			);
+			path = NifflerUITests;
 			sourceTree = "<group>";
 		};
 		A9620BDF2B579A5500602D2C /* Helpers */ = {
@@ -230,6 +260,24 @@
 			productReference = 746853882B0CAE9900E48DFE /* NifflerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		74D55B762BE12B9600AEF67D /* NifflerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 74D55B812BE12B9600AEF67D /* Build configuration list for PBXNativeTarget "NifflerUITests" */;
+			buildPhases = (
+				74D55B732BE12B9600AEF67D /* Sources */,
+				74D55B742BE12B9600AEF67D /* Frameworks */,
+				74D55B752BE12B9600AEF67D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				74D55B7E2BE12B9600AEF67D /* PBXTargetDependency */,
+			);
+			name = NifflerUITests;
+			productName = NifflerUITests;
+			productReference = 74D55B772BE12B9600AEF67D /* NifflerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -237,7 +285,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1520;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					746853752B0CAE9700E48DFE = {
@@ -245,6 +293,10 @@
 					};
 					746853872B0CAE9900E48DFE = {
 						CreatedOnToolsVersion = 15.0;
+						TestTargetID = 746853752B0CAE9700E48DFE;
+					};
+					74D55B762BE12B9600AEF67D = {
+						CreatedOnToolsVersion = 15.2;
 						TestTargetID = 746853752B0CAE9700E48DFE;
 					};
 				};
@@ -267,6 +319,7 @@
 			targets = (
 				746853752B0CAE9700E48DFE /* Niffler */,
 				746853872B0CAE9900E48DFE /* NifflerTests */,
+				74D55B762BE12B9600AEF67D /* NifflerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -283,6 +336,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		746853862B0CAE9900E48DFE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D55B752BE12B9600AEF67D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -328,6 +388,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		74D55B732BE12B9600AEF67D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				74D55B7A2BE12B9600AEF67D /* NifflerUITests.swift in Sources */,
+				74D55B7C2BE12B9600AEF67D /* NifflerUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -335,6 +404,11 @@
 			isa = PBXTargetDependency;
 			target = 746853752B0CAE9700E48DFE /* Niffler */;
 			targetProxy = 746853892B0CAE9900E48DFE /* PBXContainerItemProxy */;
+		};
+		74D55B7E2BE12B9600AEF67D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 746853752B0CAE9700E48DFE /* Niffler */;
+			targetProxy = 74D55B7D2BE12B9600AEF67D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -558,6 +632,40 @@
 			};
 			name = Release;
 		};
+		74D55B7F2BE12B9600AEF67D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.niffler.NifflerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Niffler;
+			};
+			name = Debug;
+		};
+		74D55B802BE12B9600AEF67D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.niffler.NifflerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Niffler;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -584,6 +692,15 @@
 			buildConfigurations = (
 				746853A02B0CAE9900E48DFE /* Debug */,
 				746853A12B0CAE9900E48DFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		74D55B812BE12B9600AEF67D /* Build configuration list for PBXNativeTarget "NifflerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				74D55B7F2BE12B9600AEF67D /* Debug */,
+				74D55B802BE12B9600AEF67D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
