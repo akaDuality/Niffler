@@ -4,7 +4,7 @@ import SwiftUI
 struct HeaderView: View {
     @EnvironmentObject var api: Api
     @EnvironmentObject var userData: UserData
-    @State var spends: [Spends] = []
+    @Binding var spends: [Spends]
     @State var isPresentAddSpendView = false
     @State var switchMenuIcon: Bool
     var onPressMenu: () -> Void

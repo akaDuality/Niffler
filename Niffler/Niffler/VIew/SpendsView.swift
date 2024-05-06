@@ -2,7 +2,7 @@ import Api
 import SwiftUI
 
 struct SpendsView: View {
-    @State var spends: [Spends] = []
+    @Binding var spends: [Spends]
     @State var isLoading = false
     @EnvironmentObject var api: Api
 
@@ -28,7 +28,7 @@ extension SpendsView {
                         .padding()
                 } else {
                     LazyVStack {
-                        ForEach(spends) { spend in
+                        ForEach(sortedByDateDesc(spends)) { spend in
                             NavigationLink(value: spend) {
                                 SpendCard(spend: spend)
                                     .contentShape(Rectangle())
@@ -52,6 +52,7 @@ extension SpendsView {
             }
         }
     }
+
 }
 
 #Preview {

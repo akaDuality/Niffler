@@ -5,6 +5,7 @@ struct MainView: View {
     @State var isPresentLoginOnStart: Bool = false
     @State var isPresentLoginInModalScreen = false
     @State var showMenu: Bool = false
+    @State var spends: [Spends] = []
     @EnvironmentObject var api: Api {
         didSet {
             isPresentLoginOnStart = !api.auth.isAuthorized()
@@ -48,6 +49,7 @@ extension MainView {
                 NavigationStack {
                     VStack {
                         HeaderView(
+                            spends: $spends,
                             switchMenuIcon: false,
                             onPressMenu: { showMenu.toggle() }
                         )
@@ -61,7 +63,7 @@ extension MainView {
                             )
                         } else {
                             Section {
-                                SpendsView()
+                                SpendsView(spends: $spends)
                                     .onAppear {
                                         // TODO: Check that is called on main queue
                                         api.auth.requestCredentialsFromUser = {

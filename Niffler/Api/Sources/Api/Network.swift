@@ -15,10 +15,16 @@ public class Api: Network {
     
     private let dateFormatters = DateFormatterHelper.shared
     
-    func request(method: String, path: String, body: Encodable? = nil) -> URLRequest {
-        let url = base.appendingPathComponent(path)
-        
+    func request(method: String, path: String,  queryParams: [String:String] = [:], body: Encodable? = nil) -> URLRequest {
+        let baseUrl = base.appendingPathComponent(path)
+        var urlComponents = URLComponents(url: baseUrl, resolvingAgainstBaseURL: false)!
+        urlComponents.queryItems = queryParams.map { URLQueryItem(name: $0.key, value: $0.value) }
+        guard let url = urlComponents.url else {
+            fatalError("Invalid URL")
+        }
+
         var request = URLRequest(url: url)
+        
         request.httpMethod = method
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "accept")
@@ -41,7 +47,10 @@ public class Api: Network {
     }
     
     public func getSpends() async throws -> (SpendsDTO, HTTPURLResponse) {
-        let request = request(method: "GET", path: "/api/v2/spends/all")
+        let queryParams = [
+            "sort": "spendDate,desc"
+        ]
+        let request = request(method: "GET", path: "/api/v2/spends/all", queryParams: queryParams)
         return try await performWithJsonResult(request)
     }
     
