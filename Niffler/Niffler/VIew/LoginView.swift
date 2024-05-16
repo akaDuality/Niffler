@@ -4,16 +4,17 @@ import SwiftUI
 struct LoginView: View {
     @State private var username: String = Defaults.username
     @State private var password: String = Defaults.password
-    @State private var isLoginSuccessful: Bool = false
 
+    @State private var isLoginSuccessful: Bool = false
     @State private var isLoadingForLogin: Bool = false
     @State private var isSignUpViewPresent: Bool = false
+    @State private var isSecured: Bool = true
 
     @EnvironmentObject var api: Api
     @EnvironmentObject var userData: UserData
 
     let onLogin: () -> Void
-    
+
     @State private var errorText: String?
 }
 
@@ -25,7 +26,7 @@ extension LoginView {
 
                 VStack {
                     Text("Log in")
-                        .font(Font.custom("YoungSerif-Regular",size: 48))
+                        .font(Font.custom("YoungSerif-Regular", size: 48))
 
                     HStack {
                         Text("Don't have an account?")
@@ -52,12 +53,13 @@ extension LoginView {
                         .accessibilityIdentifier(LoginViewIDs.userNameTextField.rawValue)
 
                     Text("Password")
-                    SecureField("Type your password", text: $password)
-                        .padding()
-                        .background(Color(UIColor.systemGray6))
-                        .cornerRadius(8)
-                        .padding(.bottom, 20)
-                        .accessibilityIdentifier(LoginViewIDs.passwordTextField.rawValue)
+                    PasswordField(
+                        title: "Type your password",
+                        text: $password,
+                        isSecured: isSecured,
+                        onPress: { self.isSecured.toggle() }
+                    )
+                    .accessibilityIdentifier(LoginViewIDs.passwordTextField.rawValue)
                 }
                 .padding()
 
@@ -73,13 +75,13 @@ extension LoginView {
                         errorText = "Нет такого пользователя. Попробуйте другие данные"
                     }
                 }
-                
+
                 if let errorText {
                     Text(errorText)
                         .font(.caption2)
                         .foregroundStyle(.red)
                 }
-                
+
                 Divider()
                     .padding(.top, 16)
 
@@ -119,7 +121,7 @@ extension LoginView {
         .padding(.horizontal, 20)
         .accessibilityIdentifier(LoginViewIDs.loginButton.rawValue)
     }
-    
+
     @ViewBuilder
     func CreateNewAccountButton() -> some View {
         Text("Create new account")
@@ -132,7 +134,6 @@ extension LoginView {
             .padding(.horizontal, 16)
             .padding(.vertical, 16)
     }
-    
 }
 
 extension UIColor {

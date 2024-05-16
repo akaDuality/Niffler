@@ -37,6 +37,7 @@
 		A9DAF9012BBBD3B200B941BE /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DAF9002BBBD3B200B941BE /* SignUpView.swift */; };
 		A9DAF9032BBBD5C400B941BE /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DAF9022BBBD5C400B941BE /* LogoView.swift */; };
 		A9F0B4642B1066AF00E33941 /* SpendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F0B4632B1066AF00E33941 /* SpendsView.swift */; };
+		A9FCA79E2BEB760700A5A1D2 /* PasswordField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FCA79D2BEB760700A5A1D2 /* PasswordField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 		A9DAF9002BBBD3B200B941BE /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		A9DAF9022BBBD5C400B941BE /* LogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
 		A9F0B4632B1066AF00E33941 /* SpendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendsView.swift; sourceTree = "<group>"; };
+		A9FCA79D2BEB760700A5A1D2 /* PasswordField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,6 +209,7 @@
 			isa = PBXGroup;
 			children = (
 				A9620BE02B579A7200602D2C /* View+Extensions.swift */,
+				A9FCA79D2BEB760700A5A1D2 /* PasswordField.swift */,
 				A9D238722B60EDEA00251316 /* Defaults.swift */,
 				A9DAF9022BBBD5C400B941BE /* LogoView.swift */,
 				A90083542BBA870400EB9D32 /* AppColors.swift */,
@@ -389,6 +392,7 @@
 				A93EDB892BC50E52005454A0 /* CheckboxToggleStyle.swift in Sources */,
 				A9880A0A2B735DA70088E892 /* UserData.swift in Sources */,
 				A94CFBFE2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift in Sources */,
+				A9FCA79E2BEB760700A5A1D2 /* PasswordField.swift in Sources */,
 				A9D238732B60EDEA00251316 /* Defaults.swift in Sources */,
 				A9DAF9012BBBD3B200B941BE /* SignUpView.swift in Sources */,
 				A9620BDE2B5795B100602D2C /* SpendCard.swift in Sources */,

@@ -8,6 +8,8 @@ struct SignUpView: View {
     @State private var isLoadingForSignUp: Bool = false
     @State private var isSignUpSuccessful: Bool = false
     @State private var isLoginViewPresent: Bool = false
+    @State private var isSecuredPassword: Bool = true
+    @State private var isSecuredConfirm: Bool = true
 }
 
 extension SignUpView {
@@ -44,20 +46,22 @@ extension SignUpView {
                     .accessibilityIdentifier(SignUpViewIDs.userNameTextField.rawValue)
 
                 Text("Password")
-                SecureField("Type your password", text: $password)
-                    .padding()
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(8)
-                    .padding(.bottom, 20)
-                    .accessibilityIdentifier(SignUpViewIDs.passwordTextField.rawValue)
+                PasswordField(
+                    title: "Type your password",
+                    text: $password,
+                    isSecured: isSecuredPassword,
+                    onPress: { self.isSecuredPassword.toggle() }
+                )
+                .accessibilityIdentifier(SignUpViewIDs.passwordTextField.rawValue)
 
                 Text("Confirm password")
-                SecureField("Type your password", text: $confirmPassword)
-                    .padding()
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(8)
-                    .padding(.bottom, 20)
-                    .accessibilityIdentifier(SignUpViewIDs.confirmPasswordTextField.rawValue)
+                PasswordField(
+                    title: "Type your password",
+                    text: $confirmPassword,
+                    isSecured: isSecuredConfirm,
+                    onPress: { self.isSecuredConfirm.toggle() }
+                )
+                .accessibilityIdentifier(SignUpViewIDs.confirmPasswordTextField.rawValue)
             }
             .padding()
 

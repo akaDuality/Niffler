@@ -8,7 +8,7 @@ public struct Spends: Identifiable, Encodable, Hashable {
     public let amount: Double
     public let description: String
     public let username: String
-    
+
     enum CodingKeys: CodingKey {
         case spendDate
         case category
@@ -17,10 +17,10 @@ public struct Spends: Identifiable, Encodable, Hashable {
         case description
         case username
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        
+
         try container.encode(spendDate, forKey: .spendDate)
         try container.encode(category, forKey: .category)
         try container.encode(currency, forKey: .currency)
@@ -32,6 +32,10 @@ public struct Spends: Identifiable, Encodable, Hashable {
 
 // without id
 extension Spends {
+    public var dateForSort: Date {
+        spendDate ?? .now
+    }
+    
     public init(
         spendDate: Date,
         category: String,
@@ -40,7 +44,7 @@ extension Spends {
         description: String,
         username: String
     ) {
-        self.id = nil
+        id = nil
         self.spendDate = spendDate
         self.category = category
         self.currency = currency
@@ -48,4 +52,9 @@ extension Spends {
         self.description = description
         self.username = username
     }
+}
+
+
+public func sortedByDateDesc(_ spends: [Spends]) -> [Spends] {
+    return spends.sorted { $0.dateForSort > $1.dateForSort }
 }

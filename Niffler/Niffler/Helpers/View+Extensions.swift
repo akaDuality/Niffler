@@ -5,7 +5,7 @@ extension View {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.maximumFractionDigits = allowDigits
-        
+
         return formatter.string(from: .init(value: value)) ?? ""
     }
 }
