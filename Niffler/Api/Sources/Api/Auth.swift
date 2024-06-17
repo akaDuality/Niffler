@@ -76,6 +76,16 @@ public class Auth: Network {
         loginContinuation?.resume()
     }
     
+    // Sign Up
+    public func register(username: String, password: String, passwordSubmit: String) async throws  -> Int{
+        let xsrf = try await getRegisterXSRF()
+        
+        let registerRequest = registerRequest(login: username, password: password, passwordSubmit: passwordSubmit, xsrf: xsrf)
+        let (_, registerResponse) = try await perform(registerRequest)
+
+        return registerResponse.statusCode
+    }
+    
     public func logout() async throws {
         let logoutRequest = logoutRequest()
         let (_, logoutResponse) = try await perform(logoutRequest)
@@ -156,6 +166,31 @@ public class Auth: Network {
         return request
     }
     
+    private func registerRequest(
+        login: String,
+        password: String,
+        passwordSubmit: String,
+        xsrf: String
+    ) -> URLRequest {
+        var request = URLRequest(url: base.appending(path: "register"))
+        
+        request.httpMethod = "POST"
+        request.setValue("application/x-www-form-urlencoded",
+                         forHTTPHeaderField: "Content-Type")
+        
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name: "username", value: login),
+            URLQueryItem(name: "password", value: password),
+            URLQueryItem(name: "passwordSubmit", value: passwordSubmit),
+            URLQueryItem(name: "_csrf", value: xsrf),
+        ]
+        
+        request.httpBody = components.query?.data(using: .utf8)
+
+        return request
+    }
+    
     private func logoutRequest() -> URLRequest {
         var request = URLRequest(url: base.appending(path: "logout"))
         
@@ -194,15 +229,6 @@ public class Auth: Network {
         return request
     }
     
-    public func register(username: String, password: String) async throws -> Int {
-        let xsrf = try await getRegisterXSRF()
-        
-        let statusCode = try await postRegister(username: username,
-                                                password: password,
-                                                xsrf: xsrf)
-        return statusCode
-    }
-    
     private func getRegisterXSRF() async throws -> String {
         var getRequest = URLRequest(url: base.appending(path: "register"))
         getRequest.httpMethod = "GET"
@@ -211,31 +237,6 @@ public class Auth: Network {
         
         let xsrf = (getResponse.allHeaderFields["x-xsrf-token"] as! String)
         return xsrf
-    }
-    
-    private func postRegister(
-        username: String,
-        password: String,
-        xsrf: String
-    ) async throws -> Int {
-        var postRequest = URLRequest(url: base.appending(path: "register"))
-        
-        postRequest.httpMethod = "POST"
-        postRequest.setValue("application/x-www-form-urlencoded",
-                             forHTTPHeaderField: "Content-Type")
-        
-        var components = URLComponents()
-        components.queryItems = [
-            URLQueryItem(name: "username", value: username),
-            URLQueryItem(name: "password", value: password),
-            URLQueryItem(name: "passwordSubmit", value: password),
-            URLQueryItem(name: "_csrf", value: xsrf),
-        ]
-        
-        postRequest.httpBody = components.query?.data(using: .utf8)
-        
-        let (_, postResponse) = try await perform(postRequest)
-        return postResponse.statusCode
     }
     
     enum AuthorizationError: Error {

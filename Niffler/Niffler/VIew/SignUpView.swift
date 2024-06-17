@@ -10,6 +10,11 @@ struct SignUpView: View {
     @State private var isLoginViewPresent: Bool = false
     @State private var isSecuredPassword: Bool = true
     @State private var isSecuredConfirm: Bool = true
+    
+    @EnvironmentObject var api: Api
+
+    @State private var presentAler: Bool = false
+    @State private var errorText: String?
 }
 
 extension SignUpView {
@@ -65,7 +70,43 @@ extension SignUpView {
             }
             .padding()
 
-            SignUpButton()
+            SignUpButton {
+                do {
+                    let responseCode = try await api.auth.register(
+                        username: username,
+                        password: password,
+                        passwordSubmit: confirmPassword
+                    )
+
+                    await MainActor.run {
+                        if responseCode == 201 {
+                            presentAler = true
+                        } else {
+                            errorText = "Не удалось создать пользователя"
+                        }
+                        isLoadingForSignUp = false
+                    }
+                } catch let error {
+                    errorText = "Не удалось создать пользователя"
+                }
+            }
+            .alert("Congratulations!", isPresented: $presentAler) {
+                Button {
+                    self.isLoginViewPresent = true
+                } label: {
+                    Text("Log in")
+                }
+                
+            } message: {
+                Text(" You've registered!")
+            }
+
+            
+            if let errorText {
+                Text(errorText)
+                    .font(.caption2)
+                    .foregroundStyle(.red)
+            }
         }
         .interactiveDismissDisabled()
     }
@@ -73,15 +114,16 @@ extension SignUpView {
 
 extension SignUpView {
     @ViewBuilder
-    func SignUpButton() -> some View {
+    func SignUpButton(_ action: @escaping () async -> Void) -> some View {
         Button(action: {
             if !username.isEmpty && !password.isEmpty {
                 isSignUpSuccessful = true
             }
-            isLoadingForSignUp.toggle()
+            isLoadingForSignUp = true
 
-            // #TODO: add logic for sigh up
-
+            Task {
+                await action()
+            }
         }) {
             HStack {
                 if isLoadingForSignUp {
