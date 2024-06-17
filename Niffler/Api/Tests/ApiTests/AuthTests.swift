@@ -38,12 +38,13 @@ final class AuthTests: XCTestCase {
         XCTAssertNotNil(network.authorizationHeader)
     }
     
-    // TODO: Узнать зачем этот endpoint
+    // TODO: Узнать зачем этот endpoint -> Для Sign Up
     func test_registerAndAuthorize() async throws {
         let username = UUID().uuidString
         
         let response = try await network.register(username: username,
-                                                  password: "123")
+                                                  password: "123",
+                                                  passwordSubmit: "123")
         XCTAssertEqual(response, 201)
         
         try await network.authorize(user: username,

@@ -27,20 +27,6 @@ extension LoginView {
                 VStack {
                     Text("Log in")
                         .font(Font.custom("YoungSerif-Regular", size: 48))
-
-                    HStack {
-                        Text("Don't have an account?")
-
-                        Text("Sign up")
-                            .foregroundStyle(AppColors.blue_100)
-                            .underline()
-                            .onTapGesture {
-                                self.isSignUpViewPresent = true
-                            }
-                            .sheet(isPresented: $isSignUpViewPresent, content: {
-                                SignUpView()
-                            })
-                    }
                 }
 
                 VStack(alignment: .leading) {
