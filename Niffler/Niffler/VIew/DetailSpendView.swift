@@ -184,14 +184,16 @@ extension DetailSpendView {
 }
 
 #Preview {
-    DetailSpendView(spends: .constant([Spends(
-        spendDate: DateFormatterHelper.shared
-            .dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
+    DetailSpendView(spends: .constant(
+        [
+    Spends(
+        spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
         category: "Рыбалка",
         currency: "RUB",
         amount: 69,
         description: "Test Spend",
         username: "stage"
-    )]),
+    )]
+    ),
     onAddSpend: {})
 }
