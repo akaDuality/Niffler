@@ -27,6 +27,7 @@ extension SpendsView {
                         .progressViewStyle(CircularProgressViewStyle())
                         .padding()
                 } else {
+                    StatisticView(spends: $spends)
                     LazyVStack {
                         ForEach(sortedByDateDesc(spends)) { spend in
                             NavigationLink(value: spend) {

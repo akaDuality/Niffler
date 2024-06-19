@@ -3,7 +3,7 @@ import Charts
 import SwiftUI
 
 struct StatisticView: View {
-    let spends: [Spends]
+    @Binding var spends: [Spends]
     let totalAmount: Double = 30400
 
     var body: some View {
@@ -70,6 +70,7 @@ extension Color {
 
 #Preview {
     StatisticView(spends:
+            .constant(
         [
             Spends(
                 spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
@@ -96,5 +97,6 @@ extension Color {
                 username: "stage"
             ),
         ]
+        )
     )
 }
