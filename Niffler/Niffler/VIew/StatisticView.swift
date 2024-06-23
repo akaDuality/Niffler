@@ -8,7 +8,9 @@ struct StatisticView: View {
 
     init(spends: Binding<[Spends]>) {
         _spends = spends
-        _groupedSpendsWithColor = State(initialValue: GroupedSpendsWithColor(spends: spends.wrappedValue))
+        _groupedSpendsWithColor = State(
+            initialValue: GroupedSpendsWithColor(spends: spends.wrappedValue)
+        )
     }
 
     var totalAmount: Double { spends.reduce(0.0) { result, spend in
@@ -16,14 +18,14 @@ struct StatisticView: View {
     }}
 
     var body: some View {
-        VStack {
+        VStack(alignment: .trailing) {
             HStack {
-                Text("Statistic")
+                Text("Statistics")
                     .font(Font.custom("YoungSerif-Regular", size: 24))
                     .padding()
                 Spacer()
             }
-
+            
             HStack {
                 CustomChart(spends: spends)
                 Legend(spends: spends)
@@ -51,11 +53,14 @@ struct StatisticView: View {
     func Legend(spends: [Spends]) -> some View {
         VStack {
             ForEach(groupedSpendsWithColor.array) { spend in
-                CategoryLabel(spend.category,
-                              spend.amount,
-                              spend.color)
+                CategoryLabel(
+                    spend.category,
+                    spend.amount,
+                    spend.color
+                )
             }
         }
+        .padding(.horizontal, 8)
     }
 
     @ViewBuilder

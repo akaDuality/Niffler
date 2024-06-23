@@ -27,17 +27,20 @@ extension SpendsView {
                         .progressViewStyle(CircularProgressViewStyle())
                         .padding()
                 } else {
-                    StatisticView(spends: $spends)
-                    LazyVStack {
-                        ForEach(sortedByDateDesc(spends)) { spend in
-                            NavigationLink(value: spend) {
-                                SpendCard(spend: spend)
-                                    .contentShape(Rectangle())
+                    VStack {
+                        StatisticView(spends: $spends)
+
+                        LazyVStack {
+                            ForEach(sortedByDateDesc(spends)) { spend in
+                                NavigationLink(value: spend) {
+                                    SpendCard(spend: spend)
+                                        .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain)
                             }
-                            .buttonStyle(.plain)
                         }
+                        .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
                     }
-                    .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
                 }
             }
             .navigationDestination(for: Spends.self) { spend in
