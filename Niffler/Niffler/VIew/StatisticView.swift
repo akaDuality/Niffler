@@ -4,7 +4,9 @@ import SwiftUI
 
 struct StatisticView: View {
     @Binding var spends: [Spends]
-    let totalAmount: Double = 30400
+    var totalAmount: Double { spends.reduce(0.0) { result, spend in
+        result + spend.amount
+    }}
 
     var body: some View {
         VStack {
@@ -29,27 +31,27 @@ struct StatisticView: View {
                         .bold()
                         .foregroundColor(.black)
                 )
-                .padding(.horizontal)
 
-                // Legend
-                VStack {
-                    ForEach(spends) { spend in
-                        CategoryLabel(spend)
-                    }
-                }
-                .padding(.horizontal)
+                Legend(spends: spends)
             }
         }
     }
 
     @ViewBuilder
-    func CategoryLabel(_ spend: Spends) -> some View {
+    func Legend(spends: [Spends]) -> some View {
+        VStack {
+            ForEach(sortedCategory(spends: spends), id: \.0) { key, value in
+                CategoryLabel(key, value)
+            }
+        }
+    }
+
+    @ViewBuilder
+    func CategoryLabel(_ category: String, _ amount: Double) -> some View {
         HStack {
-            Text(spend.category)
+            Text("\(category) \(amount, specifier: "%.0f") ₽")
                 .foregroundColor(.white)
-            Spacer()
-            Text("\(spend.amount, specifier: "%.0f") ₽")
-                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
@@ -68,35 +70,49 @@ extension Color {
     }
 }
 
+extension StatisticView {
+    func sortedCategory(spends: [Spends]) -> [(String, Double)] {
+        var categoryTotals: [String: Double] = [:]
+
+        for spend in spends {
+            categoryTotals[spend.category, default: 0.0] += spend.amount
+        }
+
+        let sortedCategoryTotals = categoryTotals.sorted(by: { $0.key < $1.key })
+
+        return sortedCategoryTotals
+    }
+}
+
 #Preview {
     StatisticView(spends:
-            .constant(
-        [
-            Spends(
-                spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
-                category: "Рыбалка",
-                currency: "RUB",
-                amount: 180,
-                description: "Test Spend",
-                username: "stage"
-            ),
-            Spends(
-                spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
-                category: "Кальян",
-                currency: "RUB",
-                amount: 120,
-                description: "Test Spend",
-                username: "stage"
-            ),
-            Spends(
-                spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
-                category: "Не рыбалка",
-                currency: "RUB",
-                amount: 500,
-                description: "Test Spend",
-                username: "stage"
-            ),
-        ]
+        .constant(
+            [
+                Spends(
+                    spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
+                    category: "Рыбалка",
+                    currency: "RUB",
+                    amount: 180,
+                    description: "Test Spend",
+                    username: "stage"
+                ),
+                Spends(
+                    spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
+                    category: "Кальян",
+                    currency: "RUB",
+                    amount: 120,
+                    description: "Test Spend",
+                    username: "stage"
+                ),
+                Spends(
+                    spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
+                    category: "Не рыбалка",
+                    currency: "RUB",
+                    amount: 500,
+                    description: "Test Spend",
+                    username: "stage"
+                ),
+            ]
         )
     )
 }
