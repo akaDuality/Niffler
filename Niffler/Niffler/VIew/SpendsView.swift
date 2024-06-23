@@ -59,3 +59,30 @@ extension SpendsView {
 #Preview {
     ContentView()
 }
+
+let preveiwSpends: [Spends] = [
+    Spends(
+        spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
+        category: "Рыбалка",
+        currency: "RUB",
+        amount: 180,
+        description: "Test Spend",
+        username: "stage"
+    ),
+    Spends(
+        spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
+        category: "Кальян",
+        currency: "RUB",
+        amount: 120,
+        description: "Test Spend",
+        username: "stage"
+    ),
+    Spends(
+        spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
+        category: "Не рыбалка",
+        currency: "RUB",
+        amount: 500,
+        description: "Test Spend",
+        username: "stage"
+    ),
+]
