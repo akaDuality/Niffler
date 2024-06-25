@@ -18,7 +18,7 @@ struct StatisticView: View {
     }}
 
     var body: some View {
-        VStack(alignment: .trailing) {
+        VStack {
             HStack {
                 Text("Statistics")
                     .font(Font.custom("YoungSerif-Regular", size: 24))
@@ -28,9 +28,13 @@ struct StatisticView: View {
             
             HStack {
                 CustomChart(spends: spends)
+//                    .frame(width: UIScreen.main.bounds.width * 0.6)
+                
                 Legend(spends: spends)
+//                    .frame(width: UIScreen.main.bounds.width * 0.5)
             }
         }
+        .padding(.horizontal, 8)
     }
 
     @ViewBuilder
@@ -60,7 +64,6 @@ struct StatisticView: View {
                 )
             }
         }
-        .padding(.horizontal, 8)
     }
 
     @ViewBuilder
@@ -68,10 +71,8 @@ struct StatisticView: View {
         HStack {
             Text("\(category) \(amount, specifier: "%.0f") ₽")
                 .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
+                .padding(8)
         }
-        .padding(.horizontal)
-        .padding(.vertical, 8)
         .background(color)
         .cornerRadius(25)
     }
