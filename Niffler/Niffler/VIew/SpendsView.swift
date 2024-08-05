@@ -3,22 +3,35 @@ import SwiftUI
 
 struct SpendsView: View {
     @Binding var spends: [Spends]
-    @State var isLoading = false
     @EnvironmentObject var api: Api
+
     @State var statByCategories: [StatByCategories] = []
     @State var totalStat: Int = .zero
-   
+    @State var isLoading = false
+    @State var errorText: String?
+    
     func fetchData() {
         Task {
-            let (spends, _) = try await api.getSpends()
-            let (statData, _) = try await api.getStat()
-
-            await MainActor.run {
-                self.spends = spends.content.map { Spends(dto: $0) }
-                let stat = Stat(from: statData)
-                self.totalStat = stat.total
-                self.statByCategories = stat.statByCategories
-                isLoading = false
+            do {
+                isLoading = true
+                errorText = nil
+                
+                let (spends, _) = try await api.getSpends()
+                let (statData, _) = try await api.getStat()
+                
+                await MainActor.run {
+                    self.spends = spends.content.map { Spends(dto: $0) }
+                    isLoading = false
+                    
+                    let stat = Stat(from: statData)
+                    self.totalStat = stat.total
+                    self.statByCategories = stat.statByCategories
+                }
+            } catch let error {
+                await MainActor.run {
+                    isLoading = false
+                    errorText = "Не смогли получить список трат"
+                }
             }
         }
     }

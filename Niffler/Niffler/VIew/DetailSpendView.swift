@@ -64,7 +64,8 @@ extension DetailSpendView {
                 CustomTextField(
                     title: "Amount",
                     placeholder: "0",
-                    text: $amount
+                    text: $amount,
+                    accessibilityIdentifier: "amountField"
                 )
                 .keyboardType(.numberPad)
                 .focused($keyboardFocused)
@@ -77,7 +78,8 @@ extension DetailSpendView {
                 CustomTextField(
                     title: "Currency",
                     placeholder: "₽",
-                    text: $currency)
+                    text: $currency,
+                    accessibilityIdentifier: "currencyField")
             }
 
             VStack {
@@ -99,13 +101,15 @@ extension DetailSpendView {
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(AppColors.gray_300, lineWidth: 1)
                     }
+                    .accessibilityIdentifier("Select category")
             }
             .padding()
 
             CustomTextField(
                 title: "Description",
                 placeholder: "Description",
-                text: $description)
+                text: $description,
+                accessibilityIdentifier: "descriptionField")
 
             VStack(alignment: .leading, spacing: 10) {
                 Text("Spend Date")
@@ -163,7 +167,8 @@ extension DetailSpendView {
     func CustomTextField(
         title: String,
         placeholder: String,
-        text: Binding<String>
+        text: Binding<String>,
+        accessibilityIdentifier: String
     ) -> some View {
         VStack {
             Text(title)
@@ -174,10 +179,11 @@ extension DetailSpendView {
                 .padding()
                 .cornerRadius(8)
                 .background(AppColors.gray_50)
-                .overlay {
+                .background(content: {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(AppColors.gray_300, lineWidth: 1)
-                }
+                })
+                .accessibilityIdentifier(accessibilityIdentifier)
         }
         .padding(.horizontal)
     }
