@@ -65,7 +65,10 @@ extension SpendsView {
                 }
             }
             .navigationDestination(for: Spends.self) { spend in
-                DetailSpendView(spends: $spends, onAddSpend: {}, editSpendView: spend)
+                DetailSpendView(spends: $spends, onAddSpend: {
+                    
+                    
+                }, editSpendView: spend)
             }
             .onAppear {
                 if isLoading == false {

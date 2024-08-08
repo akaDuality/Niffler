@@ -30,11 +30,16 @@ struct DetailSpendView: View {
 
     func addSpend(_ spend: Spends) {
         Task {
-            let (spendDto, response) = try await api.addSpend(spend)
-            let spend = Spends(dto: spendDto)
-            await MainActor.run {
-                spends.append(spend)
-                onAddSpend()
+            do {
+                let (spendDto, response) = try await api.addSpend(spend)
+                let spend = Spends(dto: spendDto)
+                
+                await MainActor.run {
+                    spends.append(spend)
+                    onAddSpend()
+                }
+            } catch {
+                print(error)
             }
         }
     }

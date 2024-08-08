@@ -138,6 +138,8 @@ public class Network: ObservableObject {
         return (dto, response)
     }
     
+//    "{\"type\":\"about:blank\",\"title\":\"Bad Request\",\"status\":400,\"detail\":\"Spending currency should be same with user currency\",\"instance\":\"/api/spends/add\"}"
+    
     func perform(
         _ request: URLRequest
     ) async throws -> (Data, HTTPURLResponse) {
