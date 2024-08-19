@@ -48,7 +48,7 @@ public class Auth: Network {
     public func authorize(user: String, password: String) async throws {
         let authorizeRequest = authorizeRequest()
         let (_, authResponse) = try await perform(authorizeRequest)
-        guard let xsrf = authResponse.allHeaderFields["x-xsrf-token"] as? String else {
+        guard let xsrf = authResponse.allHeaderFields["X-XSRF-TOKEN"] as? String else {
             throw AuthorizationError.noXsrfToken
         }
         
@@ -223,9 +223,6 @@ public class Auth: Network {
         request.httpBody = components.query?.data(using: .utf8)
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         
-        let token = "Basic " + "client:secret".toBase64()
-        request.addValue(token,forHTTPHeaderField: "Authorization")
-        
         return request
     }
     
@@ -235,7 +232,7 @@ public class Auth: Network {
         
         let (_, getResponse) = try await perform(getRequest)
         
-        let xsrf = (getResponse.allHeaderFields["x-xsrf-token"] as! String)
+        let xsrf = (getResponse.allHeaderFields["X-XSRF-TOKEN"] as! String)
         return xsrf
     }
     
