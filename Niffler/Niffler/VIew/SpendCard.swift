@@ -16,7 +16,7 @@ struct SpendCard: View {
                     .font(.system(size: 16))
                     .foregroundStyle(.primary)
 
-                Text("\(spend.category)")
+                Text("\(spend.category.name)")
                     .font(.caption)
                     .font(.system(size: 16))
                     .foregroundStyle(Color.primary.secondary)
@@ -49,7 +49,7 @@ struct SpendCard: View {
 
 let testSpend = Spends(
     spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
-    category: "Рыбалка",
+    category: CategoryDTO(name: "test", archived: false),
     currency: "RUB",
     amount: 69.00,
     description: "Test Spend",

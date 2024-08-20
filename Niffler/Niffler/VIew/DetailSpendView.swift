@@ -129,7 +129,7 @@ extension DetailSpendView {
                 amount = String(editSpendView.amount)
                 spendDate = editSpendView.spendDate!
                 description = editSpendView.description
-                selectedCategory = editSpendView.category
+                selectedCategory = editSpendView.category.name
             }
         })
     }
@@ -142,7 +142,7 @@ extension DetailSpendView {
 
                 let spend = Spends(
                     spendDate: spendDate,
-                    category: selectedCategory,
+                    category: CategoryDTO(name: selectedCategory, archived: false),
                     currency: "RUB",
                     amount: amountDouble, // брать из amount amount string to double?
                     description: description,

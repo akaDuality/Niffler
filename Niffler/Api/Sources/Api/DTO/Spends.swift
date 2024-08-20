@@ -3,12 +3,12 @@ import Foundation
 public struct Spends: Identifiable, Encodable, Hashable {
     public let id: String?
     public let spendDate: Date?
-    public let category: String
+    public let category: CategoryDTO
     public let currency: String
     public let amount: Double
     public let description: String
     public let username: String
-
+    
     enum CodingKeys: CodingKey {
         case spendDate
         case category
@@ -38,7 +38,7 @@ extension Spends {
     
     public init(
         spendDate: Date,
-        category: String,
+        category: CategoryDTO,
         currency: String,
         amount: Double,
         description: String,

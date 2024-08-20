@@ -66,7 +66,7 @@ extension SpendsView {
 let preveiwSpends: [Spends] = [
     Spends(
         spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
-        category: "Рыбалка",
+        category: CategoryDTO(name: "test", archived: false),
         currency: "RUB",
         amount: 180,
         description: "Test Spend",
@@ -74,7 +74,7 @@ let preveiwSpends: [Spends] = [
     ),
     Spends(
         spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
-        category: "Кальян",
+        category: CategoryDTO(name: "test", archived: false),
         currency: "RUB",
         amount: 120,
         description: "Test Spend",
@@ -82,7 +82,7 @@ let preveiwSpends: [Spends] = [
     ),
     Spends(
         spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
-        category: "Не рыбалка",
+        category: CategoryDTO(name: "test", archived: false),
         currency: "RUB",
         amount: 500,
         description: "Test Spend",

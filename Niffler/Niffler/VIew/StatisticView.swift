@@ -111,7 +111,7 @@ private func sortedCategory(spends: [Spends]) -> [(String, Double, Color)] {
     var categoryTotals: [String: Double] = [:]
 
     for spend in spends {
-        categoryTotals[spend.category, default: 0.0] += spend.amount
+        categoryTotals[spend.category.name, default: 0.0] += spend.amount
     }
 
     let sortedCategoryTotals = categoryTotals.sorted(by: { $0.key < $1.key })
