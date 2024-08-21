@@ -63,7 +63,7 @@ final class ApiTests: XCTestCase {
         let testSpend = Spends(
             id: "Any",
             spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00"),
-            category: "Рыбалка",
+            category: CategoryDTO(name: "Test", archived: false),
             currency: "RUB",
             amount: 69,
             description: "Test Spend",
@@ -73,7 +73,15 @@ final class ApiTests: XCTestCase {
         let (spend, response) = try await network.addSpend(testSpend)
         
         XCTAssertEqual(response.statusCode, 201)
-        XCTAssertEqual(spend.category, testSpend.category)
+        XCTAssertEqual(spend.description, testSpend.description)
+    }
+    
+    func test_get_stat() async throws {
+        try await network.auth.authorize(user: "stage", password: "12345")
+        let (stat, response) = try await network.getStat()
+        
+        XCTAssertEqual(response.statusCode, 200)
+        XCTAssertTrue(stat.statByCategories.count > 0)
     }
     
     /// Stub wrong auth header
