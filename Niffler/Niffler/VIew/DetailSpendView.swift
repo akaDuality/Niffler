@@ -129,7 +129,7 @@ extension DetailSpendView {
                 amount = String(editSpendView.amount)
                 spendDate = editSpendView.spendDate!
                 description = editSpendView.description
-                selectedCategory = editSpendView.category
+                selectedCategory = editSpendView.category.name
             }
         })
     }
@@ -142,7 +142,7 @@ extension DetailSpendView {
 
                 let spend = Spends(
                     spendDate: spendDate,
-                    category: selectedCategory,
+                    category: CategoryDTO(name: selectedCategory, archived: false),
                     currency: "RUB",
                     amount: amountDouble, // брать из amount amount string to double?
                     description: description,
@@ -184,14 +184,8 @@ extension DetailSpendView {
 }
 
 #Preview {
-    DetailSpendView(spends: .constant([Spends(
-        spendDate: DateFormatterHelper.shared
-            .dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
-        category: "Рыбалка",
-        currency: "RUB",
-        amount: 69,
-        description: "Test Spend",
-        username: "stage"
-    )]),
+    DetailSpendView(spends: .constant(
+        preveiwSpends
+    ),
     onAddSpend: {})
 }

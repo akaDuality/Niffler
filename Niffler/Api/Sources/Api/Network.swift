@@ -59,6 +59,15 @@ public class Api: Network {
         return try await performWithJsonResult(request)
     }
     
+    public func getStat() async throws -> (StatDTO, HTTPURLResponse) {
+        let queryParams = [
+            "filterCurrency": "",
+            "statCurrency": "",
+            "filterPeriod": ""
+        ]
+        let request = request(method: "GET", path: "/api/v2/stat/total", queryParams: queryParams)
+        return try await performWithJsonResult(request)
+    }
     
     // MARK: - Authorization
     

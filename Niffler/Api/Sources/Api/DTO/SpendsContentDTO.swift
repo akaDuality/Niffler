@@ -4,10 +4,10 @@ public struct SpendsDTO: Decodable {
     public let content: [SpendsContentDTO]
 }
 
-public struct SpendsContentDTO: Identifiable, Decodable {
+public struct SpendsContentDTO: Identifiable, Codable {
     public let id: String
     public let spendDate: Date?
-    public let category: String
+    public let category: CategoryDTO
     public let currency: String
     public let amount: Double
     public let description: String
