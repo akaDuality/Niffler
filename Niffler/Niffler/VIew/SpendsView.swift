@@ -5,13 +5,18 @@ struct SpendsView: View {
     @Binding var spends: [Spends]
     @State var isLoading = false
     @EnvironmentObject var api: Api
-
+    @State var stat: Stat = Stat(
+        currency: "", total: 0, statByCategories: []
+    )
+   
     func fetchData() {
         Task {
             let (spends, _) = try await api.getSpends()
+            let (statData, _) = try await api.getStat()
 
             await MainActor.run {
                 self.spends = spends.content.map { Spends(dto: $0) }
+                self.stat = Stat(from: statData)
                 isLoading = false
             }
         }
@@ -28,7 +33,7 @@ extension SpendsView {
                         .padding()
                 } else {
                     VStack {
-                        StatisticView(spends: $spends)
+                        StatisticView(stat: $stat)
 
                         LazyVStack {
                             ForEach(sortedByDateDesc(spends)) { spend in

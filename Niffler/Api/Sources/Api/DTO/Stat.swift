@@ -1,11 +1,12 @@
 import Foundation
 
-public struct StatDTO: Decodable {    
+public struct Stat {
     public let currency: String
     public let total: Int
-    public let statByCategories: [StatByCategoriesDTO]
+    public let statByCategories: [StatByCategories]
     
-    public struct StatByCategoriesDTO: Decodable {
+    public struct StatByCategories: Identifiable {
+        public let id: UUID
         public let categoryName: String
         public let currency: String
         public let firstSpendDate: Date
@@ -13,6 +14,7 @@ public struct StatDTO: Decodable {
         public let sum: Double
         
         public init(categoryName: String, currency: String, firstSpendDate: Date, lastSpendDate: Date, sum: Double) {
+            self.id = UUID()
             self.categoryName = categoryName
             self.currency = currency
             self.firstSpendDate = firstSpendDate
@@ -21,7 +23,7 @@ public struct StatDTO: Decodable {
         }
     }
     
-    public init(currency: String, total: Int, statByCategories: [StatByCategoriesDTO]) {
+    public init(currency: String, total: Int, statByCategories: [StatByCategories]) {
         self.currency = currency
         self.total = total
         self.statByCategories = statByCategories

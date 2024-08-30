@@ -3,20 +3,10 @@ import Charts
 import SwiftUI
 
 struct StatisticView: View {
-    @Binding var spends: [Spends]
-    @State private var groupedSpendsWithColor: GroupedSpendsWithColor
+    @Binding var stat: Stat
+}
 
-    init(spends: Binding<[Spends]>) {
-        _spends = spends
-        _groupedSpendsWithColor = State(
-            initialValue: GroupedSpendsWithColor(spends: spends.wrappedValue)
-        )
-    }
-
-    var totalAmount: Double { spends.reduce(0.0) { result, spend in
-        result + spend.amount
-    }}
-
+extension StatisticView {
     var body: some View {
         VStack {
             HStack {
@@ -27,10 +17,10 @@ struct StatisticView: View {
             }
             
             HStack {
-                CustomChart(spends: spends)
+                CustomChart(stat: stat)
 //                    .frame(width: UIScreen.main.bounds.width * 0.6)
                 
-                Legend(spends: spends)
+                Legend(stat: stat)
 //                    .frame(width: UIScreen.main.bounds.width * 0.5)
             }
         }
@@ -38,29 +28,29 @@ struct StatisticView: View {
     }
 
     @ViewBuilder
-    func CustomChart(spends: [Spends]) -> some View {
-        Chart(groupedSpendsWithColor.array) { spend in
+    func CustomChart(stat: Stat) -> some View {
+        Chart(stat.statByCategories) { category in
             SectorMark(
-                angle: .value("Amount", spend.amount),
+                angle: .value("Amount", category.sum),
                 innerRadius: .ratio(0.8),
                 outerRadius: .inset(10)
             )
-            .foregroundStyle(spend.color)
+            .foregroundStyle(.black)
         }.overlay(
-            Text("\(totalAmount, specifier: "%.0f") ₽")
+            Text("\(stat.total, specifier: "%.0f") ₽")
                 .bold()
                 .foregroundColor(.black)
         )
     }
 
     @ViewBuilder
-    func Legend(spends: [Spends]) -> some View {
+    func Legend(stat: Stat) -> some View {
         VStack {
-            ForEach(groupedSpendsWithColor.array) { spend in
+            ForEach(stat.statByCategories, id: \.id) { category in
                 CategoryLabel(
-                    spend.category,
-                    spend.amount,
-                    spend.color
+                    category.categoryName,
+                    category.sum,
+                    .random
                 )
             }
         }
@@ -88,25 +78,6 @@ extension Color {
     }
 }
 
-struct GroupedSpendsWithColor {
-    var array: [GroupedSpends]
-    struct GroupedSpends: Identifiable {
-        var id: UUID
-
-        var category: String
-        var amount: Double
-        var color: Color
-    }
-
-    init(spends: [Spends]) {
-        let staticSpends = sortedCategory(spends: spends)
-
-        array = staticSpends.map { category, amount, color in
-            GroupedSpends(id: UUID(), category: category, amount: amount, color: color)
-        }
-    }
-}
-
 private func sortedCategory(spends: [Spends]) -> [(String, Double, Color)] {
     var categoryTotals: [String: Double] = [:]
 
@@ -124,10 +95,10 @@ private func sortedCategory(spends: [Spends]) -> [(String, Double, Color)] {
     return categorizedData
 }
 
-#Preview {
-    StatisticView(spends:
-        .constant(
-            preveiwSpends
-        )
-    )
-}
+//#Preview {
+//    StatisticView(spends:
+//        .constant(
+//            preveiwSpends
+//        )
+//    )
+//}
