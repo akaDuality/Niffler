@@ -3,7 +3,8 @@ import Charts
 import SwiftUI
 
 struct StatisticView: View {
-    @Binding var stat: Stat
+    @Binding var statByCategories: [StatByCategories]
+    @Binding var totalStat: Int
 }
 
 extension StatisticView {
@@ -15,42 +16,39 @@ extension StatisticView {
                     .padding()
                 Spacer()
             }
-            
+
             HStack {
-                CustomChart(stat: stat)
-//                    .frame(width: UIScreen.main.bounds.width * 0.6)
-                
-                Legend(stat: stat)
-//                    .frame(width: UIScreen.main.bounds.width * 0.5)
+                CustomChart()
+                Legend()
             }
         }
         .padding(.horizontal, 8)
     }
 
     @ViewBuilder
-    func CustomChart(stat: Stat) -> some View {
-        Chart(stat.statByCategories) { category in
+    func CustomChart() -> some View {
+        Chart(statByCategories, id: \.id) { category in
             SectorMark(
                 angle: .value("Amount", category.sum),
                 innerRadius: .ratio(0.8),
                 outerRadius: .inset(10)
             )
-            .foregroundStyle(.black)
+            .foregroundStyle(category.color)
         }.overlay(
-            Text("\(stat.total, specifier: "%.0f") ₽")
+            Text("\(totalStat, specifier: "%.0f") ₽")
                 .bold()
                 .foregroundColor(.black)
         )
     }
 
     @ViewBuilder
-    func Legend(stat: Stat) -> some View {
-        VStack {
-            ForEach(stat.statByCategories, id: \.id) { category in
+    func Legend() -> some View {
+        VStack(alignment: .leading) {
+            ForEach(statByCategories, id: \.id) { category in
                 CategoryLabel(
                     category.categoryName,
                     category.sum,
-                    .random
+                    category.color
                 )
             }
         }
@@ -95,10 +93,10 @@ private func sortedCategory(spends: [Spends]) -> [(String, Double, Color)] {
     return categorizedData
 }
 
-//#Preview {
+// #Preview {
 //    StatisticView(spends:
 //        .constant(
 //            preveiwSpends
 //        )
 //    )
-//}
+// }
