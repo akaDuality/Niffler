@@ -5,9 +5,8 @@ struct SpendsView: View {
     @Binding var spends: [Spends]
     @State var isLoading = false
     @EnvironmentObject var api: Api
-    @State var stat: Stat = Stat(
-        currency: "", total: 0, statByCategories: []
-    )
+    @State var statByCategories: [StatByCategories] = []
+    @State var totalStat: Int = .zero
    
     func fetchData() {
         Task {
@@ -16,7 +15,9 @@ struct SpendsView: View {
 
             await MainActor.run {
                 self.spends = spends.content.map { Spends(dto: $0) }
-                self.stat = Stat(from: statData)
+                let stat = Stat(from: statData)
+                self.totalStat = stat.total
+                self.statByCategories = stat.statByCategories
                 isLoading = false
             }
         }
@@ -33,7 +34,9 @@ extension SpendsView {
                         .padding()
                 } else {
                     VStack {
-                        StatisticView(stat: $stat)
+                        LazyVStack {
+                            StatisticView(statByCategories: $statByCategories, totalStat: $totalStat)
+                        }
 
                         LazyVStack {
                             ForEach(sortedByDateDesc(spends)) { spend in
@@ -52,9 +55,10 @@ extension SpendsView {
                 DetailSpendView(spends: $spends, onAddSpend: {}, editSpendView: spend)
             }
             .onAppear {
-                // TODO: обернуть в ифчик чтобы не крутилось
-                isLoading = true
-                fetchData()
+                if isLoading == false {
+                    isLoading = true
+                    fetchData()
+                }
             }
             .refreshable {
                 fetchData()
