@@ -53,8 +53,3 @@ extension Spends {
         self.username = username
     }
 }
-
-
-public func sortedByDateDesc(_ spends: [Spends]) -> [Spends] {
-    return spends.sorted { $0.dateForSort > $1.dateForSort }
-}

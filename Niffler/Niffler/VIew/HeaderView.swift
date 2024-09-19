@@ -2,13 +2,17 @@ import Api
 import SwiftUI
 
 struct HeaderView: View {
+    
+    let spendsRepository: SpendsRepository
+    
     @EnvironmentObject var api: Api
     @EnvironmentObject var userData: UserData
-    @Binding var spends: [Spends]
+    
     @State var isPresentAddSpendView = false
     @State var switchMenuIcon: Bool
+    
     var onPressMenu: () -> Void
-
+    
     var body: some View {
         HStack(spacing: 10) {
             MenuButton()
@@ -66,7 +70,7 @@ extension HeaderView {
         }
         .sheet(isPresented: $isPresentAddSpendView) {
             DetailSpendView(
-                spends: $spends,
+                spendsRepository: spendsRepository,
                 onAddSpend: {
                     self.isPresentAddSpendView = false
                 }

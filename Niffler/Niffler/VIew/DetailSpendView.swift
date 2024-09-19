@@ -4,7 +4,7 @@ import SwiftUI
 struct DetailSpendView: View {
     @EnvironmentObject var api: Api
 
-    @Binding var spends: [Spends]
+    let spendsRepository: SpendsRepository
     let onAddSpend: () -> Void
     var editSpendView: Spends?
 
@@ -19,11 +19,11 @@ struct DetailSpendView: View {
     @State private var selectedCategory: String = Defaults.selectedCategory
     @FocusState private var keyboardFocused: Bool
 
-    init(spends: Binding<[Spends]>,
+    init(spendsRepository: SpendsRepository,
          onAddSpend: @escaping () -> Void,
          editSpendView: Spends? = nil
     ) {
-        _spends = spends
+        self.spendsRepository = spendsRepository
         self.onAddSpend = onAddSpend
         self.editSpendView = editSpendView
     }
@@ -31,11 +31,11 @@ struct DetailSpendView: View {
     func addSpend(_ spend: Spends) {
         Task {
             do {
-                let (spendDto, response) = try await api.addSpend(spend)
+                let (spendDto, _) = try await api.addSpend(spend)
                 let spend = Spends(dto: spendDto)
                 
                 await MainActor.run {
-                    spends.append(spend)
+                    spendsRepository.add(spend)
                     onAddSpend()
                 }
             } catch {
@@ -135,31 +135,38 @@ extension DetailSpendView {
         })
         .onAppear(perform: {
             if let editSpendView {
-                amount = String(editSpendView.amount)
-                spendDate = editSpendView.spendDate!
-                description = editSpendView.description
-                selectedCategory = editSpendView.category.name
+                prefillForEditing(editSpendView)
             }
         })
+    }
+    
+    private func prefillForEditing(_ spend: Spends) {
+        amount = String(spend.amount)
+        spendDate = spend.spendDate!
+        description = spend.description
+        selectedCategory = spend.category.name
+    }
+    
+    private func spendFromUI() -> Spends {
+        Spends(
+            spendDate: spendDate,
+            category: CategoryDTO(name: selectedCategory, archived: false),
+            currency: "RUB",
+            amount: Double(amount)!, // брать из amount amount string to double?
+            description: description,
+            username: "stage" // прикапывать user name
+        )
     }
 
     @ViewBuilder
     func SendSpendFormButton() -> some View {
         VStack {
             Button(action: {
-                let amountDouble = Double(amount)!
-
-                let spend = Spends(
-                    spendDate: spendDate,
-                    category: CategoryDTO(name: selectedCategory, archived: false),
-                    currency: "RUB",
-                    amount: amountDouble, // брать из amount amount string to double?
-                    description: description,
-                    username: "stage" // прикапывать user name
-                )
+                let newSpend = spendFromUI()
                 if let editSpendView {
+                    // TODO: Improve?
                 } else {
-                    addSpend(spend)
+                    addSpend(newSpend)
                 }
             }) {
                 Text("\(editSpendView == nil ? "Add" : "Edit") Spend")
@@ -195,8 +202,17 @@ extension DetailSpendView {
 }
 
 #Preview {
-    DetailSpendView(spends: .constant(
-        preveiwSpends
-    ),
-    onAddSpend: {})
+    let testSpend = Spends(
+        spendDate: DateFormatterHelper.shared
+            .dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
+        category: CategoryDTO(name: "Рыбалка", archived: false),
+        currency: "RUB",
+        amount: 69,
+        description: "Test Spend",
+        username: "stage"
+    )
+    let repository = SpendsRepository()
+    repository.add(testSpend)
+    
+    return DetailSpendView(spendsRepository: repository, onAddSpend: {})
 }
