@@ -10,6 +10,7 @@ final class LoginUITests: TestCase {
         
         // Assert
         spendsPage.assertIsSpendsViewAppeared()
+        loginPage.assertNoErrorShown()
     }
     
     func test_loginFailure() throws {

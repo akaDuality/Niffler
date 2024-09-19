@@ -1,10 +1,12 @@
 import XCTest
 
 class SpendsPage: BasePage {
-    func assertIsSpendsViewAppeared() {
+    func assertIsSpendsViewAppeared(file: StaticString = #filePath, line: UInt = #line) {
         XCTContext.runActivity(named: "Жду экран с тратами") { _ in
-            waitSpendsScreen()
-            XCTAssertGreaterThanOrEqual(app.scrollViews.switches.count, 1)
+            waitSpendsScreen(file: file, line: line)
+            XCTAssertGreaterThanOrEqual(app.scrollViews.switches.count, 1,
+                                        "Не нашел трат в списке",
+                                        file: file, line: line)
         }
     }
     
