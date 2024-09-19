@@ -86,13 +86,9 @@ public class Api: Network {
         
         if urlResponse.statusCode == 401 {
             do {
-                try await auth.authorize()
-                try await currentUser()
-                
-                var newRequest = request.copy()
-                updateAuthorizationHeader(in: &newRequest)
-                return try await super.perform(newRequest)
+                return try await authorizeAndRetry(request)
             } catch {
+                print("Auth failed, return original data")
                 return (data, urlResponse)
             }
         }
@@ -100,6 +96,21 @@ public class Api: Network {
         print("Did receive in the end \(urlResponse.url!)")
         return (data, urlResponse)
     }
+    
+    private func authorizeAndRetry(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+        let url = request.url!
+        print("Got 401 for \(url), show auth UI")
+        
+        try await auth.authorize()
+        
+        print("Retry request \(url)")
+        var newRequest = request.copy()
+        updateAuthorizationHeader(in: &newRequest)
+        return try await super.perform(newRequest)
+        
+    }
+    
+//    private var loginContinuations: [UnsafeContinuation<Void, Error>] = []
 }
 
 extension URLRequest {
@@ -108,6 +119,14 @@ extension URLRequest {
         newRequest.httpMethod = httpMethod
         newRequest.httpBody = httpBody
         newRequest.allHTTPHeaderFields = allHTTPHeaderFields
+        return newRequest
+    }
+    
+    func withAuthorizationHeader(_ header: String?) -> URLRequest {
+        var newRequest = copy()
+        if let authorization = header {
+            newRequest.allHTTPHeaderFields?["Authorization"] = authorization
+        }
         return newRequest
     }
 }
@@ -143,12 +162,13 @@ public class Network: ObservableObject {
     func perform(
         _ request: URLRequest
     ) async throws -> (Data, HTTPURLResponse) {
-        print("Manually call \(request.httpMethod!) \(request.url!))")
+        print("Will call \(request.httpMethod!) \(request.url!))")
+        
         let (data, response) = try await urlSession.data(for: request)
         
         let urlResponse = response as! HTTPURLResponse
-        
-        print("Did receive in the end \(urlResponse.url!)")
+        let statusCode = urlResponse.statusCode
+        print("Did call \(urlResponse.url!), \(statusCode)")
         return (data, urlResponse)
     }
 }

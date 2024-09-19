@@ -13,11 +13,27 @@ final class ApiTests: XCTestCase {
     var network: Api!
     
     override func setUpWithError() throws {
+        try super.setUpWithError()
+        
+        HTTPCookieStorage.shared.removeCookies(since: Date().addingTimeInterval(-2))
+        
         network = Api()
+        network.auth.requestCredentialsFromUser = {
+            throw TestError.shouldNotRequestInfoFromUser
+        }
+        
+        enum TestError: Error {
+            case shouldNotRequestInfoFromUser
+        }
     }
 
     override func tearDownWithError() throws {
         network = nil
+        
+        HTTPCookieStorage.shared.removeCookies(since: Date().addingTimeInterval(-2))
+        Auth.removeAuth()
+        
+        try super.tearDownWithError()
     }
 
     func test_unauthorizedSession() async throws {
@@ -29,13 +45,13 @@ final class ApiTests: XCTestCase {
         XCTAssertEqual(response.statusCode, 404)
     }
     
-    func test_unauthorized_currentUser() async throws {
+    func test_unauthorized_whenGetCurrentUser_shouldFail() async throws {
         let request = network.request(method: "GET", path: "currentUser")
         
         let (text, response) = try await network.performWithStringResult(request)
         
-        XCTAssertEqual(text, "{\"type\":\"about:blank\",\"title\":\"Not Found\",\"status\":404,\"detail\":\"No static resource currentUser.\",\"instance\":\"/currentUser\"}")
-        XCTAssertEqual(response.statusCode, 404)
+        XCTAssertTrue(text.isEmpty)
+        XCTAssertEqual(response.statusCode, 401)
     }
 
     func test_authorized_currentUser() async throws {
@@ -91,17 +107,17 @@ final class ApiTests: XCTestCase {
     func test_whenReceive401_andPassLogin_shouldRetryRequest() async throws {
         // Arrange
         UserDefaults.standard.set("explicitly wrong token", forKey: "UserAuthToken")
+        
         let showLoginUIExpectation = expectation(description: "show UI")
         network.auth.requestCredentialsFromUser = {
-            showLoginUIExpectation.fulfill()
-            
             Task {
                 do {
-                    try await self.network.auth.authorize(user: "stage",
-                                                          password: "12345")
-                } catch let error {
-                    // TODO: Fail test if authorize has failed
-//                    XCTFail("Wrong credentials")
+                    try await self.network.auth.authorize(user: "stage", password: "12345")
+                    showLoginUIExpectation.fulfill()
+                } catch {
+                    XCTFail("Got error \(error)")
+                    
+                    showLoginUIExpectation.fulfill()
                 }
             }
         }

@@ -24,15 +24,20 @@ public class Auth: Network {
     let challenge: String
     let verifier: PKCE.PKCECode
     
-    public var requestCredentialsFromUser: () -> Void = {}
+    public var requestCredentialsFromUser: () throws -> Void = {}
     func authorize() async throws {
         try await withUnsafeThrowingContinuation { loginContinuation in
-            self.loginContinuation = loginContinuation
-            requestCredentialsFromUser()
+            self.loginContinuations.append(loginContinuation)
+            do {
+                try requestCredentialsFromUser()
+            } catch {
+                // TODO: Remove continuation
+                loginContinuation.resume(throwing: error)
+            }
         }
     }
     
-    var loginContinuation: UnsafeContinuation<Void, Error>?
+    var loginContinuations: [UnsafeContinuation<Void, Error>] = []
 
     // MARK: - Persistence
     public static var userDefaults: UserDefaults = .standard
@@ -54,7 +59,7 @@ public class Auth: Network {
     public func authorize(user: String, password: String) async throws {
         let authorizeRequest = authorizeRequest()
         let (_, authResponse) = try await perform(authorizeRequest)
-        guard let xsrf = authResponse.allHeaderFields["X-XSRF-TOKEN"] as? String else {
+        guard let xsrf = authResponse.allHeaderFields["x-xsrf-token"] as? String else {
             throw AuthorizationError.noXsrfToken
         }
         
@@ -69,17 +74,21 @@ public class Auth: Network {
             throw AuthorizationError.noCode
         } 
         
-        let request3 = tokenRequest(code: code)
-        let (data3, _) = try await perform(request3)
+        let tokenRequest = tokenRequest(code: code)
+        let (tokenData, _) = try await perform(tokenRequest)
         
         struct TokenDto: Decodable {
             let id_token: String
         }
         
         let decoder = JSONDecoder()
-        let tokenDto = try decoder.decode(TokenDto.self, from: data3)
+        let tokenDto = try decoder.decode(TokenDto.self, from: tokenData)
         self.authorizationHeader = "Bearer " + tokenDto.id_token
-        loginContinuation?.resume()
+        
+        for continuation in loginContinuations {
+            continuation.resume()
+            loginContinuations.removeAll()
+        }
     }
     
     // Sign Up
