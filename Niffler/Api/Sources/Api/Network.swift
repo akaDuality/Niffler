@@ -99,9 +99,9 @@ public class Api: Network {
     
     private func authorizeAndRetry(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         let url = request.url!
-        print("Got 401 for \(url), show auth UI")
+        print("Got 401 for \(url)")
         
-        try await auth.authorize()
+        try await waitForAuthorizationResult()
         
         print("Retry request \(url)")
         var newRequest = request.copy()
@@ -110,7 +110,21 @@ public class Api: Network {
         
     }
     
-//    private var loginContinuations: [UnsafeContinuation<Void, Error>] = []
+    private func waitForAuthorizationResult() async throws {
+        if let loginTask = loginTask {
+            print("Wait for login, add to queue")
+            try await loginTask.value
+        } else {
+            loginTask = Task {
+                print("Show auth UI")
+                try await auth.authorize()
+            }
+            
+            try await loginTask!.value
+        }
+    }
+    
+    private var loginTask: Task<Void, Error>?
 }
 
 extension URLRequest {
@@ -152,9 +166,14 @@ public class Network: ObservableObject {
         
         let (data, response) = try await perform(request)
         
-        let dto = try decoder.decode(T.self, from: data)
-        
-        return (dto, response)
+        do {
+            let dto = try decoder.decode(T.self, from: data)
+            return (dto, response)
+        } catch {
+            let text = String(data: data, encoding: .utf8)!
+            print("Can't decode\n\(text)")
+            throw error
+        }
     }
     
 //    "{\"type\":\"about:blank\",\"title\":\"Bad Request\",\"status\":400,\"detail\":\"Spending currency should be same with user currency\",\"instance\":\"/api/spends/add\"}"

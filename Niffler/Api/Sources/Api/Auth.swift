@@ -25,9 +25,10 @@ public class Auth: Network {
     let verifier: PKCE.PKCECode
     
     public var requestCredentialsFromUser: () throws -> Void = {}
+    
     func authorize() async throws {
         try await withUnsafeThrowingContinuation { loginContinuation in
-            self.loginContinuations.append(loginContinuation)
+            self.loginContinuation = loginContinuation
             do {
                 try requestCredentialsFromUser()
             } catch {
@@ -37,7 +38,7 @@ public class Auth: Network {
         }
     }
     
-    var loginContinuations: [UnsafeContinuation<Void, Error>] = []
+    var loginContinuation: UnsafeContinuation<Void, Error>?
 
     // MARK: - Persistence
     public static var userDefaults: UserDefaults = .standard
@@ -85,10 +86,8 @@ public class Auth: Network {
         let tokenDto = try decoder.decode(TokenDto.self, from: tokenData)
         self.authorizationHeader = "Bearer " + tokenDto.id_token
         
-        for continuation in loginContinuations {
-            continuation.resume()
-            loginContinuations.removeAll()
-        }
+        loginContinuation?.resume()
+        // TODO: Should set continuation to nil?
     }
     
     // Sign Up
