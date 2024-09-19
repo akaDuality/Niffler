@@ -132,12 +132,19 @@ final class ApiTests: XCTestCase {
         XCTAssertTrue(spends.content.count > 0)
     }
     
-    func test_twoRequests() async throws {
+    // MARK: - Concurrency
+    func test_notAuthorized_whenPerformTwoRequests_shouldPresentLoginUIOnce() async {
         // Not authorized
         Auth.removeAuth()
+        spyAuthUI()
         
-        // Fake auth UI
-        var numberOfLoginPresentations = 0
+        await callTwoRequestsSynchronously()
+        
+        XCTAssertEqual(numberOfLoginPresentations, 1)
+    }
+    
+    private var numberOfLoginPresentations = 0
+    private func spyAuthUI() {
         network.auth.requestCredentialsFromUser = { [unowned self] in
             numberOfLoginPresentations += 1
             
@@ -145,8 +152,9 @@ final class ApiTests: XCTestCase {
                 try await self.network.auth.authorize(user: "stage", password: "12345")
             }
         }
-        
-        // Call two requests synchonously
+    }
+    
+    private func callTwoRequestsSynchronously() async {
         let responseExpectations = expectation(description: "Success response")
         Task {
             async let userRequest = network.currentUser()
@@ -155,15 +163,7 @@ final class ApiTests: XCTestCase {
             responseExpectations.fulfill()
         }
         await fulfillment(of: [responseExpectations])
-        
-        // Check number of requests from UI
-        XCTAssertEqual(numberOfLoginPresentations, 1)
     }
-    
-    // TODO: Add case
-    // When two requests got 401 simultaneously,
-    // - should present login UI to user once
-    // - should restart both requests after login
     
     // MARK: flow with bearer token
     
