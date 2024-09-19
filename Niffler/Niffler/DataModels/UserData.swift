@@ -3,8 +3,8 @@ import SwiftUI
 
 class UserData: ObservableObject {
     @Published var username = ""
-    @Published var firstname = ""
-    @Published var surname = ""
+    @Published var firstname: String? = ""
+    @Published var surname: String? = ""
     @Published var currency = ""
     @Published var photo: String? = nil
 
