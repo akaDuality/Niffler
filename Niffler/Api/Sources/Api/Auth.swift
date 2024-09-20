@@ -60,7 +60,7 @@ public class Auth: Network {
     public func authorize(user: String, password: String) async throws {
         let authorizeRequest = authorizeRequest()
         let (_, authResponse) = try await perform(authorizeRequest)
-        guard let xsrf = authResponse.allHeaderFields["x-xsrf-token"] as? String else {
+        guard let xsrf = authResponse.value(forHTTPHeaderField: "x-xsrf-token") else {
             throw AuthorizationError.noXsrfToken
         }
         
@@ -246,7 +246,7 @@ public class Auth: Network {
         
         let (_, getResponse) = try await perform(getRequest)
         
-        let xsrf = (getResponse.allHeaderFields["X-XSRF-TOKEN"] as! String)
+        let xsrf = getResponse.value(forHTTPHeaderField: "x-xsrf-token")!
         return xsrf
     }
     
