@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @State private var name = "Name"
-    @State private var surname = "Surname"
+    @State private var name: String = "Name"
+    @State private var surname: String = "Surname"
     @State private var selectedCurrencyIndex = 0
     let currencies = ["USD", "EUR", "RUB", "KZT"]
 
@@ -61,8 +61,8 @@ extension ProfileView {
     }
 
     func setUserInfo() {
-        name = userData.firstname
-        surname = userData.surname
+        name = userData.firstname ?? ""
+        surname = userData.surname ?? ""
     }
     
     @ViewBuilder

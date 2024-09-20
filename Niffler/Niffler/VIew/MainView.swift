@@ -2,10 +2,12 @@ import Api
 import SwiftUI
 
 struct MainView: View {
+    let spendsRepository = SpendsRepository()
+    
     @State var isPresentLoginOnStart: Bool = false
     @State var isPresentLoginInModalScreen = false
     @State var showMenu: Bool = false
-    @State var spends: [Spends] = []
+
     @EnvironmentObject var api: Api {
         didSet {
             isPresentLoginOnStart = !api.auth.isAuthorized()
@@ -21,9 +23,8 @@ struct MainView: View {
 
 
     func setupForUITests() {
-        if CommandLine.arguments.contains("UITests") {
-            UserDefaults.standard.removeObject(forKey: "UserAuthToken")
-            isPresentLoginOnStart = false
+        if CommandLine.arguments.contains("RemoveAuthOnStart") {
+            Auth.removeAuth()
         }
     }
 
@@ -43,13 +44,16 @@ extension MainView {
         VStack {
             if isPresentLoginOnStart {
                 LoginView(
-                    onLogin: { self.isPresentLoginOnStart = false }
+                    onLogin: {
+                        // Just hide, login
+                        self.isPresentLoginOnStart = false
+                    }
                 )
             } else {
                 NavigationStack {
                     VStack {
                         HeaderView(
-                            spends: $spends,
+                            spendsRepository: spendsRepository,
                             switchMenuIcon: false,
                             onPressMenu: { showMenu.toggle() }
                         )
@@ -63,7 +67,7 @@ extension MainView {
                             )
                         } else {
                             Section {
-                                SpendsView(spends: $spends)
+                                SpendsView(spendsRepository: spendsRepository)
                                     .onAppear {
                                         // TODO: Check that is called on main queue
                                         api.auth.requestCredentialsFromUser = {

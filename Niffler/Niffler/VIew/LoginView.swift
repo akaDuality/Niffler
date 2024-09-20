@@ -52,12 +52,14 @@ extension LoginView {
                 LoginButton {
                     do {
                         try await api.auth.authorize(user: username, password: password)
-                        let (userDataModel, response) = try await api.currentUser()
+                        let (userDataModel, _) = try await api.currentUser()
                         await MainActor.run {
                             userData.setValues(from: userDataModel)
                             onLogin()
                         }
-                    } catch let error {
+                    } catch {
+                        print(error)
+                        isLoadingForLogin = false
                         errorText = "Нет такого пользователя. Попробуйте другие данные"
                     }
                 }
@@ -66,6 +68,7 @@ extension LoginView {
                     Text(errorText)
                         .font(.caption2)
                         .foregroundStyle(.red)
+                        .accessibilityIdentifier("LoginError")
                 }
 
                 Divider()

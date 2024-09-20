@@ -86,7 +86,7 @@ extension SignUpView {
                         }
                         isLoadingForSignUp = false
                     }
-                } catch let error {
+                } catch {
                     errorText = "Не удалось создать пользователя"
                 }
             }

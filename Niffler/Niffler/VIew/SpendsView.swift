@@ -1,25 +1,60 @@
 import Api
 import SwiftUI
 
+class SpendsRepository: ObservableObject {
+    
+    private(set) var spends: [Spends] = [] {
+        didSet {
+            sortedSpends = sortedByDateDesc(spends)
+        }
+    }
+    
+    @Published private(set) var sortedSpends: [Spends] = []
+    
+    func add(_ spend: Spends) {
+        spends.append(spend)
+    }
+    
+    func replace(_ spends: [Spends]) {
+        self.spends = spends
+    }
+    
+    private func sortedByDateDesc(_ spends: [Spends]) -> [Spends] {
+        return spends.sorted { $0.dateForSort > $1.dateForSort }
+    }
+}
+
 struct SpendsView: View {
-    @Binding var spends: [Spends]
-    @State var isLoading = false
     @EnvironmentObject var api: Api
+    
+    @StateObject var spendsRepository: SpendsRepository // StateObject allows to 
+    
+    @State var screenState: ScreenState = .loading
     @State var statByCategories: [StatByCategories] = []
     @State var totalStat: Int = .zero
-   
-    func fetchData() {
-        Task {
-            let (spends, _) = try await api.getSpends()
+    
+    enum ScreenState {
+        case loading
+        case data([Spends])
+        case error(String)
+    }
+    
+    func fetchData() async {
+        do {
+            screenState = .loading
+            
+            let (spendsDto, _) = try await api.getSpends()
+            let spendsModel = spendsDto.content.map { Spends(dto: $0) }
+            spendsRepository.replace(spendsModel)
+            
             let (statData, _) = try await api.getStat()
-
-            await MainActor.run {
-                self.spends = spends.content.map { Spends(dto: $0) }
-                let stat = Stat(from: statData)
-                self.totalStat = stat.total
-                self.statByCategories = stat.statByCategories
-                isLoading = false
-            }
+            let stat = Stat(from: statData)
+            self.totalStat = stat.total
+            self.statByCategories = stat.statByCategories
+            
+            screenState = .data(spendsRepository.sortedSpends)
+        } catch {
+            screenState = .error("Не смогли получить список трат")
         }
     }
 }
@@ -28,40 +63,52 @@ extension SpendsView {
     var body: some View {
         ZStack(alignment: .bottom) {
             ScrollView(.vertical) {
-                if isLoading {
+                switch screenState {
+                case .loading:
                     ProgressView("Loading...")
                         .progressViewStyle(CircularProgressViewStyle())
                         .padding()
-                } else {
-                    VStack {
-                        LazyVStack {
-                            StatisticView(statByCategories: $statByCategories, totalStat: $totalStat)
-                        }
-
-                        LazyVStack {
-                            ForEach(sortedByDateDesc(spends)) { spend in
-                                NavigationLink(value: spend) {
-                                    SpendCard(spend: spend)
-                                        .contentShape(Rectangle())
-                                }
-                                .buttonStyle(.plain)
+                    
+                case .data(let spends):
+                    LazyVStack {
+                        StatisticView(statByCategories: $statByCategories, totalStat: $totalStat)
+                        
+                        ForEach(spendsRepository.sortedSpends) { spend in
+                            NavigationLink(value: spend) {
+                                SpendCard(spend: spend)
+                                    .contentShape(Rectangle())
                             }
+                            .buttonStyle(.plain)
                         }
                         .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
+                    }
+                case .error(let errorText):
+                    Text(errorText)
+                    Button("Reload") {
+                        Task {
+                            await fetchData()
+                        }
                     }
                 }
             }
             .navigationDestination(for: Spends.self) { spend in
-                DetailSpendView(spends: $spends, onAddSpend: {}, editSpendView: spend)
+                DetailSpendView(spendsRepository: spendsRepository,
+                                onAddSpend: {
+                    // TODO: Edit spend
+                }, editSpendView: spend)
             }
             .onAppear {
-                if isLoading == false {
-                    isLoading = true
-                    fetchData()
-                }
+                // TODO: Restore check?
+//                if screenState != .loading {
+                    Task {
+                        await fetchData()
+                    }
+//                }
             }
             .refreshable {
-                fetchData()
+                Task {
+                    await fetchData()
+                }
             }
         }
     }

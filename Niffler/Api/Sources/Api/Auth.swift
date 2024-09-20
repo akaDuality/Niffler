@@ -24,20 +24,32 @@ public class Auth: Network {
     let challenge: String
     let verifier: PKCE.PKCECode
     
-    public var requestCredentialsFromUser: () -> Void = {}
+    public var requestCredentialsFromUser: () throws -> Void = {}
+    
     func authorize() async throws {
         try await withUnsafeThrowingContinuation { loginContinuation in
             self.loginContinuation = loginContinuation
-            requestCredentialsFromUser()
+            do {
+                try requestCredentialsFromUser()
+            } catch {
+                // TODO: Remove continuation
+                loginContinuation.resume(throwing: error)
+            }
         }
     }
     
     var loginContinuation: UnsafeContinuation<Void, Error>?
 
+    // MARK: - Persistence
+    public static var userDefaults: UserDefaults = .standard
     
-    @UserDefault(key: "UserAuthToken", defaultValue: nil)
+    @UserDefault(key: "UserAuthToken", defaultValue: nil, container: Auth.userDefaults)
     private(set) var authorizationHeader: String?
-                
+     
+    public static func removeAuth() {
+        userDefaults.removeObject(forKey: "UserAuthToken")
+    }
+    
     init(
         challenge: String? = nil
     ) {
@@ -48,7 +60,7 @@ public class Auth: Network {
     public func authorize(user: String, password: String) async throws {
         let authorizeRequest = authorizeRequest()
         let (_, authResponse) = try await perform(authorizeRequest)
-        guard let xsrf = authResponse.allHeaderFields["X-XSRF-TOKEN"] as? String else {
+        guard let xsrf = authResponse.value(forHTTPHeaderField: "x-xsrf-token") else {
             throw AuthorizationError.noXsrfToken
         }
         
@@ -63,17 +75,19 @@ public class Auth: Network {
             throw AuthorizationError.noCode
         } 
         
-        let request3 = tokenRequest(code: code)
-        let (data3, _) = try await perform(request3)
+        let tokenRequest = tokenRequest(code: code)
+        let (tokenData, _) = try await perform(tokenRequest)
         
         struct TokenDto: Decodable {
             let id_token: String
         }
         
         let decoder = JSONDecoder()
-        let tokenDto = try decoder.decode(TokenDto.self, from: data3)
+        let tokenDto = try decoder.decode(TokenDto.self, from: tokenData)
         self.authorizationHeader = "Bearer " + tokenDto.id_token
+        
         loginContinuation?.resume()
+        // TODO: Should set continuation to nil?
     }
     
     // Sign Up
@@ -232,7 +246,7 @@ public class Auth: Network {
         
         let (_, getResponse) = try await perform(getRequest)
         
-        let xsrf = (getResponse.allHeaderFields["X-XSRF-TOKEN"] as! String)
+        let xsrf = getResponse.value(forHTTPHeaderField: "x-xsrf-token")!
         return xsrf
     }
     

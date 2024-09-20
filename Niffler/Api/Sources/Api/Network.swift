@@ -75,6 +75,7 @@ public class Api: Network {
     
     func updateAuthorizationHeader(in request: inout URLRequest) {
         if let authorization = auth.authorizationHeader {
+            // Rewrite header, instead of appending to allow retry with different authorization
             request.allHTTPHeaderFields?["Authorization"] = authorization
         }
     }
@@ -86,13 +87,9 @@ public class Api: Network {
         
         if urlResponse.statusCode == 401 {
             do {
-                try await auth.authorize()
-                try await currentUser()
-                
-                var newRequest = request.copy()
-                updateAuthorizationHeader(in: &newRequest)
-                return try await super.perform(newRequest)
+                return try await authorizeAndRetry(request)
             } catch {
+                print("Auth failed, return original data")
                 return (data, urlResponse)
             }
         }
@@ -100,6 +97,35 @@ public class Api: Network {
         print("Did receive in the end \(urlResponse.url!)")
         return (data, urlResponse)
     }
+    
+    private func authorizeAndRetry(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+        let url = request.url!
+        print("Got 401 for \(url)")
+        
+        try await waitForAuthorizationResult()
+        
+        print("Retry request \(url)")
+        var newRequest = request.copy()
+        updateAuthorizationHeader(in: &newRequest)
+        return try await super.perform(newRequest)
+        
+    }
+    
+    private func waitForAuthorizationResult() async throws {
+        if let loginTask = loginTask {
+            print("Wait for login, add to queue")
+            try await loginTask.value
+        } else {
+            loginTask = Task {
+                print("Show auth UI")
+                try await auth.authorize()
+            }
+            
+            try await loginTask!.value
+        }
+    }
+    
+    private var loginTask: Task<Void, Error>?
 }
 
 extension URLRequest {
@@ -133,20 +159,28 @@ public class Network: ObservableObject {
         
         let (data, response) = try await perform(request)
         
-        let dto = try decoder.decode(T.self, from: data)
-        
-        return (dto, response)
+        do {
+            let dto = try decoder.decode(T.self, from: data)
+            return (dto, response)
+        } catch {
+            let text = String(data: data, encoding: .utf8)!
+            print("Can't decode\n\(text)")
+            throw error
+        }
     }
+    
+//    "{\"type\":\"about:blank\",\"title\":\"Bad Request\",\"status\":400,\"detail\":\"Spending currency should be same with user currency\",\"instance\":\"/api/spends/add\"}"
     
     func perform(
         _ request: URLRequest
     ) async throws -> (Data, HTTPURLResponse) {
-        print("Manually call \(request.httpMethod!) \(request.url!))")
+        print("Will call \(request.httpMethod!) \(request.url!))")
+        
         let (data, response) = try await urlSession.data(for: request)
         
         let urlResponse = response as! HTTPURLResponse
-        
-        print("Did receive in the end \(urlResponse.url!)")
+        let statusCode = urlResponse.statusCode
+        print("Did call \(urlResponse.url!), \(statusCode)")
         return (data, urlResponse)
     }
 }

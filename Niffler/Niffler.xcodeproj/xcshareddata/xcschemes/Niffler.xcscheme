@@ -50,7 +50,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "746853912B0CAE9900E48DFE"
+               BlueprintIdentifier = "74D55B762BE12B9600AEF67D"
                BuildableName = "NifflerUITests.xctest"
                BlueprintName = "NifflerUITests"
                ReferencedContainer = "container:Niffler.xcodeproj">
