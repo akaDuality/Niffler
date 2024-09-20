@@ -75,6 +75,7 @@ public class Api: Network {
     
     func updateAuthorizationHeader(in request: inout URLRequest) {
         if let authorization = auth.authorizationHeader {
+            // Rewrite header, instead of appending to allow retry with different authorization
             request.allHTTPHeaderFields?["Authorization"] = authorization
         }
     }
@@ -133,14 +134,6 @@ extension URLRequest {
         newRequest.httpMethod = httpMethod
         newRequest.httpBody = httpBody
         newRequest.allHTTPHeaderFields = allHTTPHeaderFields
-        return newRequest
-    }
-    
-    func withAuthorizationHeader(_ header: String?) -> URLRequest {
-        var newRequest = copy()
-        if let authorization = header {
-            newRequest.allHTTPHeaderFields?["Authorization"] = authorization
-        }
         return newRequest
     }
 }
