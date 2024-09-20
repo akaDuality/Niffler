@@ -108,19 +108,7 @@ final class ApiTests: XCTestCase {
         // Arrange
         UserDefaults.standard.set("explicitly wrong token", forKey: "UserAuthToken")
         
-        let showLoginUIExpectation = expectation(description: "show UI")
-        network.auth.requestCredentialsFromUser = {
-            Task {
-                do {
-                    try await self.network.auth.authorize(user: "stage", password: "12345")
-                    showLoginUIExpectation.fulfill()
-                } catch {
-                    XCTFail("Got error \(error)")
-                    
-                    showLoginUIExpectation.fulfill()
-                }
-            }
-        }
+        let showLoginUIExpectation = spyAuthUICompletion()
         
         // Act
         let (spends, response) = try await network.getSpends()
@@ -131,14 +119,33 @@ final class ApiTests: XCTestCase {
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertTrue(spends.content.count > 0)
     }
+     
+    private func spyAuthUICompletion() -> XCTestExpectation {
+        let showLoginUIExpectation = expectation(description: "show UI")
+        network.auth.requestCredentialsFromUser = {
+            Task {
+                defer {
+                    showLoginUIExpectation.fulfill()
+                }
+                
+                do {
+                    try await self.network.auth.authorize(user: "stage", password: "12345")
+                } catch {
+                    XCTFail("Got error \(error)")
+                }
+            }
+        }
+        
+        return showLoginUIExpectation
+    }
     
     // MARK: - Concurrency
-    func test_notAuthorized_whenPerformTwoRequests_shouldPresentLoginUIOnce() async {
+    func test_notAuthorized_whenPerformTwoRequests_shouldPresentLoginUIOnce() async throws {
         // Not authorized
         Auth.removeAuth()
         spyAuthUI()
         
-        await callTwoRequestsSynchronously()
+        try await callTwoRequestsSynchronously()
         
         XCTAssertEqual(numberOfLoginPresentations, 1)
     }
@@ -154,15 +161,12 @@ final class ApiTests: XCTestCase {
         }
     }
     
-    private func callTwoRequestsSynchronously() async {
-        let responseExpectations = expectation(description: "Success response")
-        Task {
+    private func callTwoRequestsSynchronously() async throws {
+        _ = try await Task {
             async let userRequest = network.currentUser()
             async let spendsRequest = network.getSpends()
-            let result = try await [spendsRequest, userRequest] as [Any]
-            responseExpectations.fulfill()
-        }
-        await fulfillment(of: [responseExpectations])
+            return try await [spendsRequest, userRequest] as [Any]
+        }.value
     }
     
     // MARK: flow with bearer token
