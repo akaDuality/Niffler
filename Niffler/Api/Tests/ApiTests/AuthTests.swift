@@ -13,11 +13,15 @@ final class AuthTests: XCTestCase {
     var network: Auth!
     
     override func setUpWithError() throws {
+        try super.setUpWithError()
         network = Auth()
+        Auth.clearAuthorization()
     }
 
     override func tearDownWithError() throws {
         network = nil
+        Auth.clearAuthorization()
+        try super.tearDownWithError()
     }
     
     func test_url() {

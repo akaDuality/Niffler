@@ -8,14 +8,14 @@
 import XCTest
 @testable import Api
 
-final class ApiTests: XCTestCase {
+final class ApiE2ETests: XCTestCase {
     
     var network: Api!
     
     override func setUpWithError() throws {
         try super.setUpWithError()
         
-        HTTPCookieStorage.shared.removeCookies(since: Date().addingTimeInterval(-2))
+        Auth.clearAuthorization()
         
         network = Api()
         network.auth.requestCredentialsFromUser = {
@@ -30,9 +30,7 @@ final class ApiTests: XCTestCase {
     override func tearDownWithError() throws {
         network = nil
         
-        HTTPCookieStorage.shared.removeCookies(since: Date().addingTimeInterval(-2))
-        Auth.removeAuth()
-        
+        Auth.clearAuthorization()
         try super.tearDownWithError()
     }
 
@@ -41,8 +39,8 @@ final class ApiTests: XCTestCase {
 
         let (text, response) = try await network.performWithStringResult(request)
         
-        XCTAssertEqual(text, "{\"type\":\"about:blank\",\"title\":\"Not Found\",\"status\":404,\"detail\":\"No static resource session.\",\"instance\":\"/session\"}")
-        XCTAssertEqual(response.statusCode, 404)
+        XCTAssertTrue(text.isEmpty)
+        XCTAssertEqual(response.statusCode, 401)
     }
     
     func test_unauthorized_whenGetCurrentUser_shouldFail() async throws {
@@ -192,4 +190,12 @@ final class ApiTests: XCTestCase {
 //    @PostMapping("/declineInvitation") - отклонить запрос на дружбу
 //    @PostMapping("/addFriend") - отправить запрос на дружбу с кем-то
 //    @DeleteMapping("/removeFriend") - удалить существующего друга
+}
+
+extension Auth {
+    static func clearAuthorization() {
+        let removeDate = Date().addingTimeInterval(-2*60*60)
+        HTTPCookieStorage.shared.removeCookies(since: removeDate)
+        Self.removeAuth()
+    }
 }
