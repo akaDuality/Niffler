@@ -137,7 +137,7 @@ final class ApiE2ETests: XCTestCase {
         return showLoginUIExpectation
     }
     
-    // MARK: - Concurrency
+    // MARK: Concurrency
     func test_notAuthorized_whenPerformTwoRequests_shouldPresentLoginUIOnce() async throws {
         // Not authorized
         Auth.removeAuth()
@@ -167,7 +167,32 @@ final class ApiE2ETests: XCTestCase {
         }.value
     }
     
-    // MARK: flow with bearer token
+    // MARK: - Categories
+    func test_getCategories() async throws {
+        try await network.auth.authorize(user: "misha", password: "12345")
+        
+        let (categories, getResponse) = try await network.categories()
+        
+        XCTAssertEqual(getResponse.statusCode, 200)
+        XCTAssertEqual(categories.count, 1)
+    }
+    
+    func test_newUser_whenAddCategory_shouldReturnCategoriesInGetRequest() async throws {
+        let user = UUID().uuidString.components(separatedBy: "-").first!
+        try await network.auth.createUserAndLogin(user)
+        let category = CategoryDTO.testMake(user: user)
+        
+        let (newCategory, addResponse) = try await network.addCategory(category)
+        let (categories, getResponse) = try await network.categories()
+        
+        XCTAssertEqual(categories.count, 1)
+        XCTAssertEqual(addResponse.statusCode, 200)
+    }
+    
+    // TODO: Test negative response
+    // - {"type":"niffler-spend: Bad request","title":"Not Acceptable","status":406,"detail":"Can`t add over than 8 categories for user: 'stage'","instance":"/api/categories/add"}
+    // - {"type":"niffler-spend: Bad request ","title":"Conflict","status":409,"detail":"Cannot save duplicates","instance":"/api/categories/add"}
+    
     
     // MARK: Spends
 //    @GetMapping("/spends") - все мои траты
@@ -175,8 +200,6 @@ final class ApiE2ETests: XCTestCase {
 //    @PatchMapping("/editSpend") - редактируем трату
 //    @DeleteMapping("/deleteSpends") - удаляем трату
 //    @GetMapping("/statistic") - статистика по всем тратам в текущей валюте юзера
-//    @GetMapping("/categories") - список существующих категорий трат
-//    @PostMapping("/category") - добавление новой категории (не более 8 для пользователя)
 //    @GetMapping("/allCurrencies") - доступные валюты трат
     
     // MARK: - User
@@ -197,5 +220,17 @@ extension Auth {
         let removeDate = Date().addingTimeInterval(-2*60*60)
         HTTPCookieStorage.shared.removeCookies(since: removeDate)
         Self.removeAuth()
+    }
+    
+    func createUserAndLogin(_ username: String, password: String = "12345") async throws {
+        try await register(username: username, password: password, passwordSubmit: password)
+        try await authorize(user: username, password: password)
+    }
+}
+
+extension CategoryDTO {
+    static func testMake(user: String) -> Self {
+        CategoryDTO(id: UUID().uuidString, name: "Тест",
+                    username: user, archived: false)
     }
 }

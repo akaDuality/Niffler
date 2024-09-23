@@ -24,4 +24,8 @@ public struct CategoryDTO: Identifiable, Codable, Hashable {
         self.username = username
         self.archived = archived
     }
+    
+    public var isActive: Bool {
+        !archived
+    }
 }

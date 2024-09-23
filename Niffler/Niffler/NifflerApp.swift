@@ -13,7 +13,11 @@ import SwiftUI
 struct NifflerApp: App {
     let api = Api()
     let userData = UserData()
-    let categoriesRepository = CategoriesRepository()
+    let categoriesRepository: CategoriesRepository
+    
+    init() {
+        categoriesRepository = CategoriesRepository(api: api)
+    }
 }
 
 extension NifflerApp {

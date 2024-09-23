@@ -3,12 +3,15 @@ import Api
 
 class CategoriesRepository: ObservableObject {
     
-    init() {
-        // TODO: Read from remote
-        categories = [
-            "Рыбалка", "Бары", "Рестораны",
-            "Кино", "Автозаправки",
-            "Спорт", "Кальян", "Продукты"]
+    init(api: Api) {
+
+    
+        Task {
+            let (categories, response) = try await api.categories()
+            self.categories = categories
+                .filter(\.isActive)
+                .map(\.name)
+        }
     }
     
     @Published private(set) var categories: [String]

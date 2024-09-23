@@ -90,8 +90,9 @@ public class Auth: Network {
         // TODO: Should set continuation to nil?
     }
     
-    // Sign Up
-    public func register(username: String, password: String, passwordSubmit: String) async throws  -> Int{
+    /// Sign Up
+    @discardableResult
+    public func register(username: String, password: String, passwordSubmit: String) async throws -> Int {
         let xsrf = try await getRegisterXSRF()
         
         let registerRequest = registerRequest(login: username, password: password, passwordSubmit: passwordSubmit, xsrf: xsrf)

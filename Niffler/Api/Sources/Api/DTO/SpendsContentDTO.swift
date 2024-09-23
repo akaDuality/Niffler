@@ -13,3 +13,18 @@ public struct SpendsContentDTO: Identifiable, Codable {
     public let description: String
     public let username: String
 }
+
+//    [
+//        {
+//            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+//            "name": "string",
+//            "username": "string",
+//            "archived": true
+//        }
+//    ]
+//public struct CategoryDto: Decodable {
+//    let id: String
+//    let name: String
+//    let username: String
+//    let archived: String
+//}
