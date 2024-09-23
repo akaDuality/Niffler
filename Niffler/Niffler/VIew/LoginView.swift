@@ -74,7 +74,7 @@ extension LoginView {
                 Divider()
                     .padding(.top, 16)
 
-                NavigationLink(destination: SignUpView()) {
+                NavigationLink(destination: SignUpView(username: $username, password: $password)) {
                     CreateNewAccountButton()
                 }
             }

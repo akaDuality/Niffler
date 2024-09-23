@@ -2,8 +2,8 @@ import Api
 import SwiftUI
 
 struct SignUpView: View {
-    @State private var username: String = Defaults.username
-    @State private var password: String = Defaults.password
+    @Binding var username: String
+    @Binding var password: String
     @State private var confirmPassword: String = Defaults.password
     @State private var isLoadingForSignUp: Bool = false
     @State private var isSignUpSuccessful: Bool = false
