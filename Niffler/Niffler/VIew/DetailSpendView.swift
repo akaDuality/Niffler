@@ -8,16 +8,12 @@ struct DetailSpendView: View {
     let onAddSpend: () -> Void
     var editSpendView: Spends?
 
-    @State var categories: [String] = [
-        "Рыбалка", "Бары", "Рестораны",
-        "Кино", "Автозаправки",
-        "Спорт", "Кальян", "Продукты"]
-
     @State private var amount: String = Defaults.amount
     @State private var currency: String = "₽"
     @State private var spendDate: Date = Date()
     @State private var description: String = Defaults.description
     @State private var selectedCategory: String = Defaults.selectedCategory
+    
     @FocusState private var keyboardFocused: Bool
 
     init(spendsRepository: SpendsRepository,
@@ -44,9 +40,6 @@ struct DetailSpendView: View {
             }
         }
     }
-    
-    @State private var isAddCategoryAlertVisible = false
-    @State private var newCategoryName = ""
 }
 
 extension DetailSpendView {
@@ -91,45 +84,8 @@ extension DetailSpendView {
                     accessibilityIdentifier: "currencyField")
             }
 
-            VStack(alignment: .leading) {
-                Text("Category")
-                    .font(.caption)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                HStack(spacing: 16) {
-                    Picker(
-                        "Select category",
-                        selection: $selectedCategory) {
-                            ForEach(categories, id: \.self) { category in
-                                Text(category).tag(category)
-                            }
-                        }
-                        .padding(4)
-                        .cornerRadius(8)
-                        .background(Color.gray50)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(AppColors.gray_300, lineWidth: 1)
-                        }
-                        .accessibilityIdentifier("Select category")
-                    
-                    Button("+ Add") {
-                        isAddCategoryAlertVisible = true
-                    }
-                    .alert("Add category", isPresented: $isAddCategoryAlertVisible) {
-                        TextField("Name", text: $newCategoryName)
-                        
-                        Button(action: addCategory, label: {
-                            Text("Add")
-                        }).disabled(newCategoryName.isEmpty)
-                        
-                        Button("Cancel", role: .cancel) { }
-                    } message: {
-                        Text("Input name for new category")
-                    }
-                }
-            }
-            .padding()
+            CategorySelectorView(selectedCategory: $selectedCategory)
+                .padding()
 
             CustomTextField(
                 title: "Description",
@@ -153,17 +109,6 @@ extension DetailSpendView {
                 prefillForEditing(editSpendView)
             }
         })
-    }
-    
-    private func addCategory() {
-        // Add to model
-        categories.append(newCategoryName)
-        selectedCategory = newCategoryName
-        
-        // Hide UI
-        newCategoryName = ""
-        isAddCategoryAlertVisible = false
-        // Category will be added to server along with spend
     }
     
     private func prefillForEditing(_ spend: Spends) {
@@ -226,6 +171,72 @@ extension DetailSpendView {
                 .accessibilityIdentifier(accessibilityIdentifier)
         }
         .padding(.horizontal)
+    }
+}
+
+struct CategorySelectorView: View {
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("Category")
+                .font(.caption)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            HStack(spacing: 16) {
+                if categories.count > 0 {
+                    Picker(
+                        "Select category",
+                        selection: $selectedCategory) {
+                            ForEach(categories, id: \.self) { category in
+                                Text(category).tag(category)
+                            }
+                        }
+                        .padding(4)
+                        .cornerRadius(8)
+                        .background(Color.gray50)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(AppColors.gray_300, lineWidth: 1)
+                        }
+                        .accessibilityIdentifier("Select category")
+                }
+                
+                Button("+ Add") {
+                    isAddCategoryAlertVisible = true
+                }
+                .alert("Add category", isPresented: $isAddCategoryAlertVisible) {
+                    TextField("Name", text: $newCategoryName)
+                    
+                    Button(action: addCategory, label: {
+                        Text("Add")
+                    }).disabled(newCategoryName.isEmpty)
+                    
+                    Button("Cancel", role: .cancel) { }
+                } message: {
+                    Text("Input name for new category")
+                }
+            }
+        }
+    }
+    
+    // TODO: Read from remote
+    @State private var categories: [String] = [
+        "Рыбалка", "Бары", "Рестораны",
+        "Кино", "Автозаправки",
+        "Спорт", "Кальян", "Продукты"]
+    
+    @State private var isAddCategoryAlertVisible = false
+    @State private var newCategoryName = ""
+    @Binding private var selectedCategory: String
+    
+    private func addCategory() {
+        // Add to model
+        categories.append(newCategoryName)
+        selectedCategory = newCategoryName
+        
+        // Hide UI
+        newCategoryName = ""
+        isAddCategoryAlertVisible = false
+        // Category will be added to server along with spend
     }
 }
 
