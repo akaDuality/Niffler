@@ -8,9 +8,10 @@ struct DetailSpendView: View {
     let onAddSpend: () -> Void
     var editSpendView: Spends?
 
-    let categories: [String] = ["Рыбалка", "Бары", "Рестораны",
-                                "Кино", "Автозаправки",
-                                "Спорт", "Кальян", "Продукты"]
+    @State var categories: [String] = [
+        "Рыбалка", "Бары", "Рестораны",
+        "Кино", "Автозаправки",
+        "Спорт", "Кальян", "Продукты"]
 
     @State private var amount: String = Defaults.amount
     @State private var currency: String = "₽"
@@ -43,6 +44,9 @@ struct DetailSpendView: View {
             }
         }
     }
+    
+    @State private var isAddCategoryAlertVisible = false
+    @State private var newCategoryName = ""
 }
 
 extension DetailSpendView {
@@ -64,7 +68,7 @@ extension DetailSpendView {
 
     @ViewBuilder
     func SpendForm() -> some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 0) {
             HStack {
                 CustomTextField(
                     title: "Amount",
@@ -87,26 +91,43 @@ extension DetailSpendView {
                     accessibilityIdentifier: "currencyField")
             }
 
-            VStack {
+            VStack(alignment: .leading) {
                 Text("Category")
                     .font(.caption)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                Picker(
-                    "Select category",
-                    selection: $selectedCategory) {
-                        ForEach(categories, id: \.self) { category in
-                            Text(category).tag(category)
+                HStack(spacing: 16) {
+                    Picker(
+                        "Select category",
+                        selection: $selectedCategory) {
+                            ForEach(categories, id: \.self) { category in
+                                Text(category).tag(category)
+                            }
                         }
+                        .padding(4)
+                        .cornerRadius(8)
+                        .background(Color.gray50)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(AppColors.gray_300, lineWidth: 1)
+                        }
+                        .accessibilityIdentifier("Select category")
+                    
+                    Button("+ Add") {
+                        isAddCategoryAlertVisible = true
                     }
-                    .padding()
-                    .cornerRadius(8)
-                    .background(AppColors.gray_50)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(AppColors.gray_300, lineWidth: 1)
+                    .alert("Add category", isPresented: $isAddCategoryAlertVisible) {
+                        TextField("Name", text: $newCategoryName)
+                        
+                        Button(action: addCategory, label: {
+                            Text("Add")
+                        }).disabled(newCategoryName.isEmpty)
+                        
+                        Button("Cancel", role: .cancel) { }
+                    } message: {
+                        Text("Input name for new category")
                     }
-                    .accessibilityIdentifier("Select category")
+                }
             }
             .padding()
 
@@ -115,17 +136,11 @@ extension DetailSpendView {
                 placeholder: "Description",
                 text: $description,
                 accessibilityIdentifier: "descriptionField")
+            .padding(2) // Show bottom line
 
             VStack(alignment: .leading, spacing: 10) {
-                Text("Spend Date")
-                    .font(.caption)
-                    .foregroundStyle(.gray)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
                 DatePicker("", selection: $spendDate, displayedComponents: [.date])
                     .datePickerStyle(.graphical)
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 12)
                     .background(.background, in: .rect(cornerRadius: 10))
             }
         }
@@ -140,6 +155,13 @@ extension DetailSpendView {
         })
     }
     
+    private func addCategory() {
+        categories.append(newCategoryName)
+        newCategoryName = ""
+        isAddCategoryAlertVisible = false
+        // Category will be added to server along with spend
+    }
+    
     private func prefillForEditing(_ spend: Spends) {
         amount = String(spend.amount)
         spendDate = spend.spendDate!
@@ -152,27 +174,29 @@ extension DetailSpendView {
             spendDate: spendDate,
             category: CategoryDTO(name: selectedCategory, archived: false),
             currency: "RUB",
-            amount: Double(amount)!, // брать из amount amount string to double?
+            amount: Double(amount)!, // TODO: брать из amount string to double?
             description: description,
-            username: "stage" // прикапывать user name
+            username: "stage" // TODO: брать актуальный user name
         )
     }
 
     @ViewBuilder
     func SendSpendFormButton() -> some View {
-        VStack {
-            Button(action: {
-                let newSpend = spendFromUI()
-                if let editSpendView {
-                    // TODO: Improve?
-                } else {
-                    addSpend(newSpend)
-                }
-            }) {
-                Text("\(editSpendView == nil ? "Add" : "Edit") Spend")
+        Button(action: {
+            let newSpend = spendFromUI()
+            if let editSpendView {
+                // TODO: Improve?
+            } else {
+                addSpend(newSpend)
             }
-            .padding()
+        }) {
+            Text("\(editSpendView == nil ? "Add" : "Edit") Spend")
+                .frame(maxWidth: .infinity)
+                .padding(16)
         }
+        .font(.headline)
+        .buttonStyle(.borderedProminent)
+        .padding(16)
     }
 
     @ViewBuilder
@@ -188,9 +212,9 @@ extension DetailSpendView {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             TextField(placeholder, text: text)
-                .padding()
+                .padding(8)
+                .background(Color.gray50)
                 .cornerRadius(8)
-                .background(AppColors.gray_50)
                 .background(content: {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(AppColors.gray_300, lineWidth: 1)
