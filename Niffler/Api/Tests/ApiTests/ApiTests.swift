@@ -62,7 +62,8 @@ final class ApiE2ETests: XCTestCase {
         XCTAssertEqual(response.statusCode, 200)
     }
     
-    func test_authorized_spends() async throws {
+    // MARK: - Spends
+    func test_authorized_getSpends_success() async throws {
         try await network.auth.authorize(user: "stage", password: "12345")
 
         let (spends, response) = try await network.getSpends()
@@ -71,27 +72,34 @@ final class ApiE2ETests: XCTestCase {
         XCTAssertTrue(spends.content.count > 0)
     }
     
-    func test_add_spend() async throws {
+    func test_authorized_addSpend_success() async throws {
         try await network.auth.authorize(user: "stage", password: "12345")
         
-        let testSpend = Spends(
-            id: "Any",
-            spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00"),
-            category: CategoryDTO(name: "Test", archived: false),
-            currency: "RUB",
-            amount: 69,
-            description: "Test Spend",
-            username: "stage"
-        )
-
+        let testSpend = Spends.testMake(amount: 40)
         let (spend, response) = try await network.addSpend(testSpend)
         
         XCTAssertEqual(response.statusCode, 201)
         XCTAssertEqual(spend.description, testSpend.description)
     }
     
+    func test_editSpend() async throws {
+        let username = UUID().uuidString.components(separatedBy: "-").first!
+        try await network.auth.createUserAndLogin(username)
+        
+        let testSpend = Spends.testMake(amount: 40, username: username)
+        let (spendResponse, _) = try await network.addSpend(testSpend)
+        let editedSpend = spendResponse.with(amount: 50)
+        
+        let (spendAfterEditing, _) = try await network.editSpend(editedSpend)
+        
+        XCTAssertEqual(spendAfterEditing.amount, 50)
+    }
+    
+    // MARK: Statistic
+    
     func test_get_stat() async throws {
         try await network.auth.authorize(user: "stage", password: "12345")
+        
         let (stat, response) = try await network.getStat()
         
         XCTAssertEqual(response.statusCode, 200)
@@ -232,5 +240,24 @@ extension CategoryDTO {
     static func testMake(user: String) -> Self {
         CategoryDTO(id: UUID().uuidString, name: "Тест",
                     username: user, archived: false)
+    }
+}
+
+extension Spends {
+    static func testMake(id: String = UUID().uuidString,  amount: Double, username: String = "stage") -> Self {
+        Spends(
+            spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
+            category: CategoryDTO(name: "Test", archived: false),
+            currency: "RUB",
+            amount: amount,
+            description: "Test Spend",
+            username: username
+        )
+    }
+}
+
+extension SpendsContentDTO {
+    func with(amount: Double) -> Spends {
+        Spends(id: id, spendDate: spendDate, category: category, currency: currency, amount: amount, description: description, username: username)
     }
 }

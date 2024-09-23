@@ -10,6 +10,7 @@ public struct Spends: Identifiable, Encodable, Hashable {
     public let username: String
     
     enum CodingKeys: CodingKey {
+        case id
         case spendDate
         case category
         case currency
@@ -21,6 +22,7 @@ public struct Spends: Identifiable, Encodable, Hashable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
+        try container.encode(id, forKey: .id)
         try container.encode(spendDate, forKey: .spendDate)
         try container.encode(category, forKey: .category)
         try container.encode(currency, forKey: .currency)
