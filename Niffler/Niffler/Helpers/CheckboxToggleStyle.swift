@@ -5,8 +5,8 @@ struct CheckboxToggleStyle: ToggleStyle {
     HStack {
       Image(configuration.isOn ? "Checked=True" : "Checked=False")
         .resizable()
-        .background(configuration.isOn ? AppColors.blue_100 : AppColors.gray_50)
-        .foregroundColor(configuration.isOn ? AppColors.blue_100 : AppColors.gray_50)
+        .background(configuration.isOn ? AppColors.blue_100 : Color(.gray50))
+        .foregroundColor(configuration.isOn ? AppColors.blue_100 : Color(.gray50))
         .frame(width: 24, height: 24)
         .onTapGesture { configuration.isOn.toggle() }
         .cornerRadius(4)
