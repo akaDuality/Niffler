@@ -13,7 +13,7 @@ struct SignUpView: View {
     
     @EnvironmentObject var api: Api
 
-    @State private var presentAler: Bool = false
+    @State private var presentAlert: Bool = false
     @State private var errorText: String?
 }
 
@@ -80,7 +80,7 @@ extension SignUpView {
 
                     await MainActor.run {
                         if responseCode == 201 {
-                            presentAler = true
+                            presentAlert = true
                         } else {
                             errorText = "Не удалось создать пользователя"
                         }
@@ -90,7 +90,7 @@ extension SignUpView {
                     errorText = "Не удалось создать пользователя"
                 }
             }
-            .alert("Congratulations!", isPresented: $presentAler) {
+            .alert("Congratulations!", isPresented: $presentAlert) {
                 Button {
                     self.isLoginViewPresent = true
                 } label: {
