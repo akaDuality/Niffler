@@ -4,10 +4,20 @@ import SwiftUI
 struct SignUpView: View {
     @Binding var username: String
     @Binding var password: String
-    @State private var confirmPassword: String = Defaults.password
+    var hideSignup: () -> Void
+    
+    init(username: Binding<String>, password: Binding<String>, hideSignup: @escaping () -> Void) {
+        self._username = username
+        self._password = password
+        self.confirmPassword = password.wrappedValue
+        
+        self.hideSignup = hideSignup
+    }
+    
+    @State private var confirmPassword: String
     @State private var isLoadingForSignUp: Bool = false
     @State private var isSignUpSuccessful: Bool = false
-    @State private var isLoginViewPresent: Bool = false
+    
     @State private var isSecuredPassword: Bool = true
     @State private var isSecuredConfirm: Bool = true
     
@@ -33,11 +43,8 @@ extension SignUpView {
                         .foregroundStyle(AppColors.blue_100)
                         .underline()
                         .onTapGesture {
-                            self.isLoginViewPresent = true
+                            hideSignup()
                         }
-                        .sheet(isPresented: $isLoginViewPresent, content: {
-                            LoginView(onLogin: {})
-                        })
                 }
             }
 
@@ -92,7 +99,7 @@ extension SignUpView {
             }
             .alert("Congratulations!", isPresented: $presentAlert) {
                 Button {
-                    self.isLoginViewPresent = true
+                    hideSignup()
                 } label: {
                     Text("Log in")
                 }
@@ -101,7 +108,6 @@ extension SignUpView {
                 Text(" You've registered!")
             }
 
-            
             if let errorText {
                 Text(errorText)
                     .font(.caption2)

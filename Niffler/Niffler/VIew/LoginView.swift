@@ -16,6 +16,7 @@ struct LoginView: View {
     let onLogin: () -> Void
 
     @State private var errorText: String?
+    @State var isSignUpPresented = false
 }
 
 extension LoginView {
@@ -74,10 +75,17 @@ extension LoginView {
                 Divider()
                     .padding(.top, 16)
 
-                NavigationLink(destination: SignUpView(username: $username, password: $password)) {
-                    CreateNewAccountButton()
-                }
-            }
+                CreateNewAccountButton()
+                    .onTapGesture {
+                        self.isSignUpPresented = true
+                    }
+            }.sheet(isPresented: $isSignUpPresented, content: {
+                SignUpView(username: $username,
+                           password: $password,
+                           hideSignup: {
+                    isSignUpPresented = false
+                })
+            })
         }
         .interactiveDismissDisabled()
     }
