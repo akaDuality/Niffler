@@ -156,7 +156,11 @@ extension DetailSpendView {
     }
     
     private func addCategory() {
+        // Add to model
         categories.append(newCategoryName)
+        selectedCategory = newCategoryName
+        
+        // Hide UI
         newCategoryName = ""
         isAddCategoryAlertVisible = false
         // Category will be added to server along with spend
