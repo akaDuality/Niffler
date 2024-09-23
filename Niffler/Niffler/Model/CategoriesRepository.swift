@@ -4,17 +4,16 @@ import Api
 class CategoriesRepository: ObservableObject {
     
     init(api: Api) {
-
-    
         Task {
-            let (categories, response) = try await api.categories()
+            // TODO: Handle failure
+            let (categories, _) = try await api.categories()
             self.categories = categories
                 .filter(\.isActive)
                 .map(\.name)
         }
     }
     
-    @Published private(set) var categories: [String]
+    @Published private(set) var categories: [String] = []
     
     func add(_ newCategory: String) {
         categories.append(newCategory)
