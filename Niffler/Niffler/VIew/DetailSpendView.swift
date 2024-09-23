@@ -12,8 +12,10 @@ struct DetailSpendView: View {
     @State private var currency: String = "₽"
     @State private var spendDate: Date = Date()
     @State private var description: String = Defaults.description
-    @State private var selectedCategory: String = Defaults.selectedCategory
     
+    @EnvironmentObject var categoriesRepository: CategoriesRepository
+    @State private var selectedCategory: String = Defaults.selectedCategory // Can vary during editing
+
     @FocusState private var keyboardFocused: Bool
 
     init(spendsRepository: SpendsRepository,
@@ -107,6 +109,8 @@ extension DetailSpendView {
         .onAppear(perform: {
             if let editSpendView {
                 prefillForEditing(editSpendView)
+            } else {
+                selectedCategory = categoriesRepository.selectedCategory
             }
         })
     }
@@ -121,7 +125,7 @@ extension DetailSpendView {
     private func spendFromUI() -> Spends {
         Spends(
             spendDate: spendDate,
-            category: CategoryDTO(name: selectedCategory, archived: false),
+            category: categoriesRepository.currentCategoryDto,
             currency: "RUB",
             amount: Double(amount)!, // TODO: брать из amount string to double?
             description: description,
@@ -175,6 +179,7 @@ extension DetailSpendView {
 }
 
 struct CategorySelectorView: View {
+    
     var body: some View {
         VStack(alignment: .leading) {
             Text("Category")
@@ -182,11 +187,11 @@ struct CategorySelectorView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             HStack(spacing: 16) {
-                if categories.count > 0 {
+                if categoriesRepository.categories.count > 0 {
                     Picker(
                         "Select category",
                         selection: $selectedCategory) {
-                            ForEach(categories, id: \.self) { category in
+                            ForEach(categoriesRepository.categories, id: \.self) { category in
                                 Text(category).tag(category)
                             }
                         }
@@ -218,20 +223,19 @@ struct CategorySelectorView: View {
         }
     }
     
-    // TODO: Read from remote
-    @State private var categories: [String] = [
-        "Рыбалка", "Бары", "Рестораны",
-        "Кино", "Автозаправки",
-        "Спорт", "Кальян", "Продукты"]
-    
     @State private var isAddCategoryAlertVisible = false
     @State private var newCategoryName = ""
+    
+    init(selectedCategory: Binding<String>) {
+        self._selectedCategory = selectedCategory
+    }
+    
     @Binding private var selectedCategory: String
+    @EnvironmentObject var categoriesRepository: CategoriesRepository
     
     private func addCategory() {
         // Add to model
-        categories.append(newCategoryName)
-        selectedCategory = newCategoryName
+        categoriesRepository.add(newCategoryName)
         
         // Hide UI
         newCategoryName = ""

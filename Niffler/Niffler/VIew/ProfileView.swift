@@ -7,10 +7,8 @@ struct ProfileView: View {
     let currencies = ["USD", "EUR", "RUB", "KZT"]
 
     @State private var newCategory = ""
-    @State private var categories: [String] = ["Рыбалка", "Бары", "Рестораны",
-                                               "Кино", "Автозаправки",
-                                               "Спорт", "Кальян", "Продукты"]
-
+    
+    @EnvironmentObject var categoriesRepository: CategoriesRepository
     @EnvironmentObject var userData: UserData
 }
 
@@ -70,17 +68,22 @@ extension ProfileView {
         VStack {
             TextField("Add New Category", text: $newCategory)
                 .padding()
-                .background(RoundedRectangle(cornerRadius: 10).fill(Color.white).shadow(radius: 2))
+                .background(RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.white)
+                    .shadow(radius: 2))
 
             Button("Add Category") {
                 addCategory()
             }
             .padding()
-            .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue).shadow(radius: 2))
+            .background(RoundedRectangle(cornerRadius: 10)
+                .fill(Color.blue)
+                .shadow(radius: 2))
             .foregroundColor(.white)
             .buttonStyle(.plain)
 
-            ForEach(categories, id: \.self) { category in
+            // TODO: Support on delete https://www.hackingwithswift.com/quick-start/swiftui/how-to-let-users-delete-rows-from-a-list
+            ForEach(categoriesRepository.categories, id: \.self) { category in
                 HStack {
                     Text(category)
                         .frame(maxWidth: .infinity)
@@ -102,9 +105,8 @@ extension ProfileView {
 
     func addCategory() {
         if !newCategory.isEmpty {
-            categories.append(newCategory)
+            categoriesRepository.add(newCategory)
             newCategory = ""
-            // TODO: Wotk with API
         }
     }
 }

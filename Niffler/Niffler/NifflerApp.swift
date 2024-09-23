@@ -13,6 +13,7 @@ import SwiftUI
 struct NifflerApp: App {
     let api = Api()
     let userData = UserData()
+    let categoriesRepository = CategoriesRepository()
 }
 
 extension NifflerApp {
@@ -22,5 +23,6 @@ extension NifflerApp {
         }
         .environmentObject(api)
         .environmentObject(userData)
+        .environmentObject(categoriesRepository)
     }
 }
