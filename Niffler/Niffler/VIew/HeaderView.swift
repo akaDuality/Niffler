@@ -68,14 +68,12 @@ extension HeaderView {
                     }
             }
         }
-        .sheet(isPresented: $isPresentAddSpendView) {
-            DetailSpendView(
-                spendsRepository: spendsRepository,
-                onAddSpend: {
-                    self.isPresentAddSpendView = false
-                }
-            )
-        }
+        .navigationDestination(isPresented: $isPresentAddSpendView, destination: {
+            DetailSpendView(spendsRepository: spendsRepository,
+                            onAddSpend: {
+                self.isPresentAddSpendView = false
+            })
+        })
         .accessibilityIdentifier(SpendsViewIDs.addSpendButton.rawValue)
     }
 }

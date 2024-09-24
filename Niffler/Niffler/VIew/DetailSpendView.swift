@@ -61,17 +61,7 @@ struct DetailSpendView: View {
 extension DetailSpendView {
     var body: some View {
         ScrollView(.vertical) {
-            VStack {
-                HStack {
-                    Text("\(editSpendView == nil ? "Add new spending" : "Edit spending")")
-                        .font(.custom("YoungSerif-Regular", size: 24))
-                        .padding()
-
-                    Spacer()
-                }
-                SpendForm()
-                SendSpendFormButton()
-            }
+            SpendForm()
         }
     }
 
@@ -116,14 +106,15 @@ extension DetailSpendView {
                     .background(.background, in: .rect(cornerRadius: 10))
             }
         }
-        .navigationTitle("\(editSpendView == nil ? "Add" : "Edit") Spend")
-//        .toolbar(content: {
-//            SendSpendFormButton() // TODO: Made smaller variant
-//        })
+        .navigationTitle("\(editSpendView == nil ? "New" : "Edit") Spend")
+        .toolbar(content: {
+            SendSpendFormButton() // TODO: Made smaller variant
+        })
         .onAppear(perform: {
             if let editSpendView {
                 prefillForEditing(editSpendView)
             } else {
+                // Read last used category
                 selectedCategory = categoriesRepository.selectedCategory
             }
         })
@@ -158,13 +149,11 @@ extension DetailSpendView {
                 edit(newSpend)
             }
         }) {
-            Text("\(editSpendView == nil ? "Add" : "Edit") Spend")
-                .frame(maxWidth: .infinity)
-                .padding(16)
+            Text(editSpendView == nil ? "Add" : "Edit")
+                .padding(.horizontal, 16)
         }
         .font(.headline)
         .buttonStyle(.borderedProminent)
-        .padding(16)
     }
 
     @ViewBuilder
