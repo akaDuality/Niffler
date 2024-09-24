@@ -4,7 +4,7 @@ import SwiftUI
 
 struct StatisticView: View {
     @Binding var statByCategories: [StatByCategories]
-    @Binding var totalStat: Int
+    @Binding var totalStat: Double
 }
 
 extension StatisticView {
@@ -38,7 +38,7 @@ extension StatisticView {
             Text("\(totalStat, specifier: "%.0f") ₽")
                 .bold()
                 .foregroundColor(.black)
-        )
+        ).frame(width: 200)
     }
 
     @ViewBuilder
@@ -58,6 +58,7 @@ extension StatisticView {
     func CategoryLabel(_ category: String, _ amount: Double, _ color: Color) -> some View {
         HStack {
             Text("\(category) \(amount, specifier: "%.0f") ₽")
+                .font(.caption2)
                 .foregroundColor(.white)
                 .padding(8)
         }
@@ -93,10 +94,13 @@ private func sortedCategory(spends: [Spends]) -> [(String, Double, Color)] {
     return categorizedData
 }
 
-// #Preview {
-//    StatisticView(spends:
-//        .constant(
-//            preveiwSpends
-//        )
-//    )
-// }
+ #Preview {
+    StatisticView(
+        statByCategories: .constant(previewStats),
+        totalStat: .constant(100)
+    )
+ }
+
+let previewStats = [
+    StatByCategories(categoryName: "Рыбалка", currency: "RUB", firstSpendDate: Date(), lastSpendDate: Date(), sum: 100)
+    ]

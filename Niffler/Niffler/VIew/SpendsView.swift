@@ -8,7 +8,7 @@ struct SpendsView: View {
     
     @State var screenState: ScreenState = .loading
     @State var statByCategories: [StatByCategories] = []
-    @State var totalStat: Int = .zero
+    @State var totalStat: Double = .zero
     
     enum ScreenState {
         case loading
@@ -26,7 +26,7 @@ struct SpendsView: View {
             
             let (statData, _) = try await api.getStat()
             let stat = Stat(from: statData)
-            self.totalStat = stat.total
+            self.totalStat = Double(stat.total)
             self.statByCategories = stat.statByCategories
             
             screenState = .data(spendsRepository.sortedSpends)
