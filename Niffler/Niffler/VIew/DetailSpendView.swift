@@ -31,7 +31,6 @@ struct DetailSpendView: View {
         Task {
             do {
                 let (spend, _) = try await api.addSpend(spend)
-//                let spend = Spends(dto: spendDto)
                 
                 await MainActor.run {
                     spendsRepository.add(spend)
@@ -153,10 +152,10 @@ extension DetailSpendView {
     func SendSpendFormButton() -> some View {
         Button(action: {
             let newSpend = spendFromUI()
-            if let editSpendView {
-                edit(newSpend)
-            } else {
+            if editSpendView == nil {
                 addSpend(newSpend)
+            } else {
+                edit(newSpend)
             }
         }) {
             Text("\(editSpendView == nil ? "Add" : "Edit") Spend")

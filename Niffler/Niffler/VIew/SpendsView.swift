@@ -34,6 +34,9 @@ struct SpendsView: View {
             screenState = .error("Не смогли получить список трат")
         }
     }
+    
+    @State private var isEdit: Bool = false
+    @State private var selectedSpend: Spends?
 }
 
 extension SpendsView {
@@ -51,11 +54,12 @@ extension SpendsView {
                         StatisticView(statByCategories: $statByCategories, totalStat: $totalStat)
                         
                         ForEach(spendsRepository.sortedSpends) { spend in
-                            NavigationLink(value: spend) {
-                                SpendCell(spend: spend)
-                                    .contentShape(Rectangle())
-                            }
-                            .buttonStyle(.plain)
+                            SpendCell(spend: spend)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    selectedSpend = spend
+                                    isEdit = true
+                                }
                         }
                         .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
                     }
@@ -68,13 +72,15 @@ extension SpendsView {
                     }
                 }
             }
-            .navigationDestination(for: Spends.self) { spend in
-                DetailSpendView(spendsRepository: spendsRepository,
-                                onAddSpend: {
-//                    self.isPresentAddSpendView = false
-                    // TODO: Hide edit view
-                }, editSpendView: spend)
-            }
+            .navigationDestination(isPresented: $isEdit, destination: {
+                if let selectedSpend {
+                    DetailSpendView(spendsRepository: spendsRepository,
+                                    onAddSpend: deselect,
+                                    editSpendView: selectedSpend)
+                } else {
+                    EmptyView()
+                }
+            })
             .onAppear {
                 // TODO: Restore check?
 //                if screenState != .loading {
@@ -89,6 +95,16 @@ extension SpendsView {
                 }
             }
         }
+    }
+    
+    func select(spend: Spends) {
+        selectedSpend = spend
+        isEdit = true
+    }
+    
+    func deselect() {
+        selectedSpend = nil
+        isEdit = false
     }
 
 }
