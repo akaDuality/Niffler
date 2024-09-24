@@ -21,7 +21,7 @@ struct SpendsView: View {
             screenState = .loading
             
             let (spendsDto, _) = try await api.getSpends()
-            let spendsModel = spendsDto.content.map { Spends(dto: $0) }
+            let spendsModel = spendsDto.content
             spendsRepository.replace(spendsModel)
             
             let (statData, _) = try await api.getStat()
@@ -52,7 +52,7 @@ extension SpendsView {
                         
                         ForEach(spendsRepository.sortedSpends) { spend in
                             NavigationLink(value: spend) {
-                                SpendCard(spend: spend)
+                                SpendCell(spend: spend)
                                     .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
@@ -71,7 +71,8 @@ extension SpendsView {
             .navigationDestination(for: Spends.self) { spend in
                 DetailSpendView(spendsRepository: spendsRepository,
                                 onAddSpend: {
-                    // TODO: Edit spend
+//                    self.isPresentAddSpendView = false
+                    // TODO: Hide edit view
                 }, editSpendView: spend)
             }
             .onAppear {
@@ -98,6 +99,7 @@ extension SpendsView {
 
 let preveiwSpends: [Spends] = [
     Spends(
+        id: nil,
         spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
         category: CategoryDTO(name: "test", archived: false),
         currency: "RUB",
@@ -106,6 +108,7 @@ let preveiwSpends: [Spends] = [
         username: "stage"
     ),
     Spends(
+        id: nil,
         spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
         category: CategoryDTO(name: "test", archived: false),
         currency: "RUB",
@@ -114,6 +117,7 @@ let preveiwSpends: [Spends] = [
         username: "stage"
     ),
     Spends(
+        id: nil,
         spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
         category: CategoryDTO(name: "test", archived: false),
         currency: "RUB",

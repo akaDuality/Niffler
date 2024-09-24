@@ -1,7 +1,7 @@
 import Api
 import SwiftUI
 
-struct SpendCard: View {
+struct SpendCell: View {
     @State private var isChecked: Bool = false
     var spend: Spends
     var body: some View {
@@ -48,6 +48,7 @@ struct SpendCard: View {
 }
 
 let testSpend = Spends(
+    id: nil,
     spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
     category: CategoryDTO(name: "test", archived: false),
     currency: "RUB",
@@ -57,5 +58,5 @@ let testSpend = Spends(
 )
 
 #Preview {
-    SpendCard(spend: testSpend)
+    SpendCell(spend: testSpend)
 }

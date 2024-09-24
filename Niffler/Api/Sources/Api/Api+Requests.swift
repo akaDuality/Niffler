@@ -16,12 +16,13 @@ extension Api {
         return try await performWithJsonResult(request)
     }
     
-    public func addSpend(_ spend: Spends) async throws -> (SpendsContentDTO, HTTPURLResponse) {
+    public func addSpend(_ spend: Spends) async throws -> (Spends, HTTPURLResponse) {
         let request = request(method: "POST", path: "/api/spends/add", body: spend)
         return try await performWithJsonResult(request)
     }
     
-    public func editSpend(_ spend: Spends) async throws -> (SpendsContentDTO, HTTPURLResponse) {
+    public func editSpend(_ spend: Spends) async throws -> (Spends, HTTPURLResponse) {
+        precondition(spend.id != nil)
         let request = request(method: "PATCH", path: "/api/spends/edit", body: spend)
         return try await performWithJsonResult(request)
     }

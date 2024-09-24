@@ -30,11 +30,26 @@ struct DetailSpendView: View {
     func addSpend(_ spend: Spends) {
         Task {
             do {
-                let (spendDto, _) = try await api.addSpend(spend)
-                let spend = Spends(dto: spendDto)
+                let (spend, _) = try await api.addSpend(spend)
+//                let spend = Spends(dto: spendDto)
                 
                 await MainActor.run {
                     spendsRepository.add(spend)
+                    onAddSpend()
+                }
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func edit(_ spend: Spends) {
+        Task {
+            do {
+                let (spend, _) = try await api.editSpend(spend)
+                
+                await MainActor.run {
+                    spendsRepository.replace(spend)
                     onAddSpend()
                 }
             } catch {
@@ -103,9 +118,9 @@ extension DetailSpendView {
             }
         }
         .navigationTitle("\(editSpendView == nil ? "Add" : "Edit") Spend")
-        .toolbar(content: {
-            SendSpendFormButton()
-        })
+//        .toolbar(content: {
+//            SendSpendFormButton() // TODO: Made smaller variant
+//        })
         .onAppear(perform: {
             if let editSpendView {
                 prefillForEditing(editSpendView)
@@ -124,6 +139,7 @@ extension DetailSpendView {
     
     private func spendFromUI() -> Spends {
         Spends(
+            id: editSpendView?.id, // can be nil for new spend
             spendDate: spendDate,
             category: categoriesRepository.currentCategoryDto,
             currency: "RUB",
@@ -138,7 +154,7 @@ extension DetailSpendView {
         Button(action: {
             let newSpend = spendFromUI()
             if let editSpendView {
-                // TODO: Improve?
+                edit(newSpend)
             } else {
                 addSpend(newSpend)
             }
@@ -246,6 +262,7 @@ struct CategorySelectorView: View {
 
 #Preview {
     let testSpend = Spends(
+        id: nil,
         spendDate: DateFormatterHelper.shared
             .dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
         category: CategoryDTO(name: "Рыбалка", archived: false),

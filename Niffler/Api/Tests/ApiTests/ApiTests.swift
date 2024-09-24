@@ -190,8 +190,8 @@ final class ApiE2ETests: XCTestCase {
         try await network.auth.createUserAndLogin(user)
         let category = CategoryDTO.testMake(user: user)
         
-        let (newCategory, addResponse) = try await network.addCategory(category)
-        let (categories, getResponse) = try await network.categories()
+        let (_, addResponse) = try await network.addCategory(category)
+        let (categories, _) = try await network.categories()
         
         XCTAssertEqual(categories.count, 1)
         XCTAssertEqual(addResponse.statusCode, 200)
@@ -246,6 +246,7 @@ extension CategoryDTO {
 extension Spends {
     static func testMake(id: String = UUID().uuidString,  amount: Double, username: String = "stage") -> Self {
         Spends(
+            id: id,
             spendDate: DateFormatterHelper.shared.dateFormatterToApi.date(from: "2023-12-07T05:00:00.000+00:00")!,
             category: CategoryDTO(name: "Test", archived: false),
             currency: "RUB",
@@ -256,7 +257,7 @@ extension Spends {
     }
 }
 
-extension SpendsContentDTO {
+extension Spends {
     func with(amount: Double) -> Spends {
         Spends(id: id, spendDate: spendDate, category: category, currency: currency, amount: amount, description: description, username: username)
     }
