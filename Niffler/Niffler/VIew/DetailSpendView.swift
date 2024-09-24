@@ -69,29 +69,19 @@ extension DetailSpendView {
     func SpendForm() -> some View {
         VStack(spacing: 0) {
             HStack {
-                CustomTextField(
-                    title: "Amount",
-                    placeholder: "0",
-                    text: $amount,
-                    accessibilityIdentifier: "amountField"
-                )
+                
+                TextField("amount", text: $amount)
+                    .font(.system(size: 80, weight: .bold, design: .monospaced))
+                    .multilineTextAlignment(.center)
+                    .accessibilityIdentifier("amountField")
                 .keyboardType(.numberPad)
+                .frame(maxWidth: .infinity)
                 .focused($keyboardFocused)
+                .padding(.vertical, 50)
                 .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        keyboardFocused = true
-                    }
+                    keyboardFocused = true
                 }
-
-                CustomTextField(
-                    title: "Currency",
-                    placeholder: "₽",
-                    text: $currency,
-                    accessibilityIdentifier: "currencyField")
             }
-
-            CategorySelectorView(selectedCategory: $selectedCategory)
-                .padding()
 
             CustomTextField(
                 title: "Description",
@@ -101,15 +91,14 @@ extension DetailSpendView {
             .padding(2) // Show bottom line
 
             VStack(alignment: .leading, spacing: 10) {
+                // TODO: Inline? https://stackoverflow.com/questions/75073023/how-to-trigger-swiftui-datepicker-programmatically
                 DatePicker("", selection: $spendDate, displayedComponents: [.date])
                     .datePickerStyle(.graphical)
                     .background(.background, in: .rect(cornerRadius: 10))
+                    .padding(.top, 50)
             }
         }
         .navigationTitle("\(editSpendView == nil ? "New" : "Edit") Spend")
-        .toolbar(content: {
-            SendSpendFormButton() // TODO: Made smaller variant
-        })
         .onAppear(perform: {
             if let editSpendView {
                 prefillForEditing(editSpendView)
@@ -118,6 +107,15 @@ extension DetailSpendView {
                 selectedCategory = categoriesRepository.selectedCategory
             }
         })
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                CategorySelectorView(selectedCategory: $selectedCategory)
+                
+                Spacer()
+                
+                SendSpendFormButton()
+            }
+        }
     }
     
     private func prefillForEditing(_ spend: Spends) {
@@ -185,46 +183,38 @@ extension DetailSpendView {
 struct CategorySelectorView: View {
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("Category")
-                .font(.caption)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            HStack(spacing: 16) {
-                if categoriesRepository.categories.count > 0 {
-                    Picker(
-                        "Select category",
-                        selection: $selectedCategory) {
-                            ForEach(categoriesRepository.categories, id: \.self) { category in
-                                Text(category).tag(category)
-                            }
-                        }
-                        .padding(4)
-                        .cornerRadius(8)
-                        .background(Color.gray50)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(AppColors.gray_300, lineWidth: 1)
-                        }
-                        .accessibilityIdentifier("Select category")
+        Spacer()
+        
+        if categoriesRepository.categories.count > 0 {
+            Menu(selectedCategory) {
+                ForEach(categoriesRepository.categories, id: \.self) { category in
+                    Button(category) {
+                        selectedCategory = category
+                    }
                 }
                 
-                Button("+ Add") {
+                Divider()
+                
+                Button("+ New category") {
                     isAddCategoryAlertVisible = true
                 }
-                .alert("Add category", isPresented: $isAddCategoryAlertVisible) {
-                    TextField("Name", text: $newCategoryName)
-                    
-                    Button(action: addCategory, label: {
-                        Text("Add")
-                    }).disabled(newCategoryName.isEmpty)
-                    
-                    Button("Cancel", role: .cancel) { }
-                } message: {
-                    Text("Input name for new category")
-                }
+            }
+            .accessibilityIdentifier("Select category")
+            .buttonStyle(.bordered)
+            .alert("Add category", isPresented: $isAddCategoryAlertVisible) {
+                TextField("Name", text: $newCategoryName)
+                
+                Button(action: addCategory, label: {
+                    Text("Add")
+                }).disabled(newCategoryName.isEmpty)
+                
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("Input name for new category")
             }
         }
+
+        Spacer()
     }
     
     @State private var isAddCategoryAlertVisible = false
@@ -263,4 +253,5 @@ struct CategorySelectorView: View {
     repository.add(testSpend)
     
     return DetailSpendView(spendsRepository: repository, onAddSpend: {})
+        .environmentObject(CategoriesRepository(api: Api()))
 }
