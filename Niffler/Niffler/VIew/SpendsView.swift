@@ -16,9 +16,11 @@ struct SpendsView: View {
         case error(String)
     }
     
-    func fetchData() async {
+    func fetchData(showLoading: Bool) async {
         do {
-            screenState = .loading
+            if showLoading {
+                screenState = .loading
+            }
             
             let (spendsDto, _) = try await api.getSpends()
             let spendsModel = spendsDto.content
@@ -37,6 +39,8 @@ struct SpendsView: View {
     
     @State private var isEdit: Bool = false
     @State private var selectedSpend: Spends?
+    
+    @State private var loadDataOnce = true
 }
 
 extension SpendsView {
@@ -57,9 +61,9 @@ extension SpendsView {
                             SpendCell(spend: spend)
                                 .contentShape(Rectangle())
                                 .onTapGesture {
-                                    selectedSpend = spend
-                                    isEdit = true
+                                    select(spend: spend)
                                 }
+                                .highlightOnSelect(isPressed: selectedSpend == spend)
                         }
                         .accessibilityIdentifier(SpendsViewIDs.spendsList.rawValue)
                     }
@@ -67,7 +71,7 @@ extension SpendsView {
                     Text(errorText)
                     Button("Reload") {
                         Task {
-                            await fetchData()
+                            await fetchData(showLoading: true)
                         }
                     }
                 }
@@ -82,16 +86,20 @@ extension SpendsView {
                 }
             })
             .onAppear {
-                // TODO: Restore check?
-//                if screenState != .loading {
+                withAnimation {
+                    deselect()
+                }
+                if loadDataOnce {
+                    loadDataOnce = false
+                    
                     Task {
-                        await fetchData()
+                        await fetchData(showLoading: true)
                     }
-//                }
+                }
             }
             .refreshable {
                 Task {
-                    await fetchData()
+                    await fetchData(showLoading: false)
                 }
             }
         }
@@ -106,7 +114,20 @@ extension SpendsView {
         selectedSpend = nil
         isEdit = false
     }
+}
 
+struct HighlightOnSelect: ViewModifier {
+    let isPressed: Bool
+    func body(content: Content) -> some View {
+        content
+            .background(isPressed ? Color.gray.opacity(0.25) : Color.clear)
+    }
+}
+
+extension View {
+    func highlightOnSelect(isPressed: Bool) -> some View {
+        modifier(HighlightOnSelect(isPressed: isPressed))
+    }
 }
 
 #Preview {
