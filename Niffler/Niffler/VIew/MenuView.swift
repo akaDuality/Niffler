@@ -29,7 +29,14 @@ extension MenuView {
                     Text("Profile")
                 }
                 .sheet(isPresented: $showingProfile) {
-                    ProfileView()
+                    NavigationView() {
+                        ProfileView()
+                            .navigationBarTitleDisplayMode(.inline)
+                            .navigationBarItems(trailing: Button("Close") {
+                                showingProfile = false
+                                // TODO: Ask to save?
+                            })
+                    }
                 }
                 .buttonStyle(.plain)
             }

@@ -7,13 +7,17 @@ class CategoriesRepository: ObservableObject {
         Task {
             // TODO: Handle failure
             let (categories, _) = try await api.categories()
+            self.categoriesDto = categories
             self.categories = categories
                 .filter(\.isActive)
                 .map(\.name)
+            
+            self.selectedCategory = self.categories.first!// TODO: Remember last selected
         }
     }
     
     @Published private(set) var categories: [String] = []
+    private var categoriesDto: [CategoryDTO] = []
     
     func add(_ newCategory: String) {
         categories.append(newCategory)
@@ -25,6 +29,12 @@ class CategoriesRepository: ObservableObject {
     var selectedCategory: String = Defaults.selectedCategory
     
     var currentCategoryDto: CategoryDTO {
-        CategoryDTO(name: selectedCategory, archived: false)
+        categoriesDto.first { dto in
+            dto.name == selectedCategory
+        }!
+    }
+    
+    func remove(_ indexSet: IndexSet) {
+        categories.remove(atOffsets: indexSet)
     }
 }

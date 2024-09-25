@@ -14,26 +14,22 @@ struct ProfileView: View {
 
 extension ProfileView {
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                UserInfo()
-                Categories()
-            }
-            .navigationTitle("Profile")
-            .padding()
-        }
+        
+        Form {
+            UserInfo()
+            CategoriesSection()
+        }.navigationTitle("Profile")
     }
 
     @ViewBuilder
     func UserInfo() -> some View {
-        VStack(spacing: 20) {
+        Section(header: Text("User info")) {
             TextField("Name", text: $name)
-                .padding()
-                .background(RoundedRectangle(cornerRadius: 10).fill(Color.white).shadow(radius: 2))
+                .multilineTextAlignment(.leading)
+
 
             TextField("Surname", text: $surname)
-                .padding()
-                .background(RoundedRectangle(cornerRadius: 10).fill(Color.white).shadow(radius: 2))
+                .multilineTextAlignment(.leading)
 
             Picker("Currency", selection: $selectedCurrencyIndex) {
                 ForEach(0 ..< currencies.count, id: \.self) { index in
@@ -41,18 +37,17 @@ extension ProfileView {
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
-            .padding()
 
-            Button("Submit") {
-                // TODO: Wotk with API, and Close profile? 
+            Button(action: {
+                // TODO: Work with API, and Close profile?
                 saveChanges()
-            }
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
+            }, label: {
+                Text("Submit")
+                    .frame(maxWidth: .infinity)
+            })
+            .buttonStyle(.borderedProminent)
+            
         }
-        .padding()
         .onAppear {
             setUserInfo()
         }
@@ -64,35 +59,20 @@ extension ProfileView {
     }
     
     @ViewBuilder
-    func Categories() -> some View {
-        VStack {
-            TextField("Add New Category", text: $newCategory)
-                .padding()
-                .background(RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.white)
-                    .shadow(radius: 2))
-
-            Button("Add Category") {
-                addCategory()
-            }
-            .padding()
-            .background(RoundedRectangle(cornerRadius: 10)
-                .fill(Color.blue)
-                .shadow(radius: 2))
-            .foregroundColor(.white)
-            .buttonStyle(.plain)
-
-            // TODO: Support on delete https://www.hackingwithswift.com/quick-start/swiftui/how-to-let-users-delete-rows-from-a-list
+    func CategoriesSection() -> some View {
+        Section(header: Text("Categories")) {
             ForEach(categoriesRepository.categories, id: \.self) { category in
-                HStack {
-                    Text(category)
-                        .frame(maxWidth: .infinity)
-                        .padding(5)
-                }
-                .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.3)))
+                Text(category)
+            }.onDelete { index in
+                self.categoriesRepository.remove(index)
+                // TODO: Remove from remote
+            }
+            
+            Button("Add Category") {
+                // TODO: Show alert
             }
         }
-        .padding()
+        .listStyle(.insetGrouped)
     }
 
     func saveChanges() {

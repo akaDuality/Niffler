@@ -30,6 +30,7 @@ struct DetailSpendView: View {
     func addSpend(_ spend: Spends) {
         Task {
             do {
+                // TODO: Show progress indicator
                 let (spend, _) = try await api.addSpend(spend)
                 
                 await MainActor.run {
@@ -37,6 +38,8 @@ struct DetailSpendView: View {
                     onAddSpend()
                 }
             } catch {
+                let (spends, _) = try await api.getSpends()
+                // TODO: Show alert
                 print(error)
             }
         }
