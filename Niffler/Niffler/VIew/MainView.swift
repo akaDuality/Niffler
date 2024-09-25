@@ -52,12 +52,6 @@ extension MainView {
             } else {
                 NavigationStack {
                     VStack {
-                        HeaderView(
-                            spendsRepository: spendsRepository,
-                            switchMenuIcon: false,
-                            onPressMenu: { showMenu.toggle() }
-                        )
-                        Divider()
                         if showMenu {
                             MenuView(
                                 onPressLogout: {
@@ -65,25 +59,35 @@ extension MainView {
                                     isPresentLoginInModalScreen = true
                                 }
                             )
-                        } else {
-                            Section {
-                                SpendsView(spendsRepository: spendsRepository)
-                                    .onAppear {
-                                        // TODO: Check that is called on main queue
-                                        api.auth.requestCredentialsFromUser = {
-                                            isPresentLoginInModalScreen = true
-                                        }
-                                    }
-                                    .sheet(isPresented: $isPresentLoginInModalScreen) {
-                                        LoginView(onLogin: {
-                                            self.isPresentLoginInModalScreen = false
-                                        })
-                                    }
-                            }
+                            .padding(.bottom, 50) // Hide bottom during dismiss
+                            .transition(.move(edge: .top))
                         }
+                        
+                        HeaderView(
+                            spendsRepository: spendsRepository,
+                            switchMenuIcon: false,
+                            onPressMenu: { showMenu.toggle() }
+                        )
+                        Divider()
+                        
+                        Section {
+                            SpendsView(spendsRepository: spendsRepository)
+                                .onAppear {
+                                    // TODO: Check that is called on main queue
+                                    api.auth.requestCredentialsFromUser = {
+                                        isPresentLoginInModalScreen = true
+                                    }
+                                }
+                                .sheet(isPresented: $isPresentLoginInModalScreen) {
+                                    LoginView(onLogin: {
+                                        self.isPresentLoginInModalScreen = false
+                                    })
+                                }
+                        }
+                        
                         Spacer()
                     }
-                }
+                }.animation(.default, value: showMenu)
                 .onAppear {
                     fetchData()
                 }

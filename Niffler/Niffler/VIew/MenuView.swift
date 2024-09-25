@@ -16,7 +16,7 @@ struct MenuView: View {
 
 extension MenuView {
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 16) {
             Text("Menu")
                 .font(.custom("YoungSerif-regular", size: 24))
 
@@ -42,22 +42,18 @@ extension MenuView {
             }
 
             Divider()
-                .padding(.vertical)
 
             HStack {
                 Image("ic_friends_gray")
                 Text("Friends")
             }
-            .padding(.vertical)
 
             HStack {
                 Image("ic_all_gray")
                 Text("All people")
             }
-            .padding(.vertical)
 
             Divider()
-                .padding(.vertical)
                 .frame(maxWidth: .infinity)
 
             HStack {
@@ -80,8 +76,7 @@ extension MenuView {
                         .padding(.horizontal, 12)
                 }
             }
-            .padding(.vertical)
-
+            
             Spacer()
         }
         .padding()
