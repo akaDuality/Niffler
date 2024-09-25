@@ -38,6 +38,11 @@ extension Api {
         return try await performWithJsonResult(request)
     }
     
+    public func updateCategory(_ category: CategoryDTO) async throws -> (CategoryDTO, HTTPURLResponse) {
+        let request = request(method: "PATCH", path: "/api/categories/update", body: category)
+        return try await performWithJsonResult(request)
+    }
+    
     // MARK: Stats
     public func getStat() async throws -> (StatDTO, HTTPURLResponse) {
         let queryParams = [

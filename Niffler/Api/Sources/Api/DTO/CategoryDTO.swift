@@ -4,7 +4,7 @@ public struct CategoryDTO: Identifiable, Codable, Hashable {
     public let id: String?
     public let name: String
     public let username: String?
-    public let archived: Bool
+    public var archived: Bool
 
     public init(name: String, archived: Bool) {
         self.init(id: nil, name: name, username: nil, archived: archived)

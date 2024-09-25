@@ -65,7 +65,6 @@ extension ProfileView {
                 Text(category)
             }.onDelete { index in
                 self.categoriesRepository.remove(index)
-                // TODO: Remove from remote
             }
             
             Button("Add Category") {

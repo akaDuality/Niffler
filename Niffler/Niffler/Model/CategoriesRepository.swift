@@ -3,17 +3,24 @@ import Api
 
 class CategoriesRepository: ObservableObject {
     
+    let api: Api
+    
     init(api: Api) {
+        self.api = api
         Task {
-            // TODO: Handle failure
-            let (categories, _) = try await api.categories()
-            self.categoriesDto = categories
-            self.categories = categories
-                .filter(\.isActive)
-                .map(\.name)
-            
-            self.selectedCategory = self.categories.first!// TODO: Remember last selected
+            try await loadCategories()
         }
+    }
+    
+    private func loadCategories() async throws {
+        // TODO: Handle failure
+        let (categories, _) = try await api.categories()
+        self.categoriesDto = categories
+        self.categories = categories
+            .filter(\.isActive)
+            .map(\.name)
+        
+        self.selectedCategory = self.categories.first!// TODO: Remember last selected
     }
     
     @Published private(set) var categories: [String] = []
@@ -35,6 +42,23 @@ class CategoriesRepository: ObservableObject {
     }
     
     func remove(_ indexSet: IndexSet) {
+        var removedCategory = categoriesDto[indexSet.first!]
         categories.remove(atOffsets: indexSet)
+        removedCategory.archived = true
+        
+        Task {
+            do {
+                _ = try await api.updateCategory(removedCategory)
+            } catch {
+                // TODO: Show in UI
+                print(error)
+            }
+        }
+    }
+}
+
+extension Sequence {
+    subscript(index: Int) -> Self.Iterator.Element? {
+        return enumerated().first(where: {$0.offset == index})?.element
     }
 }
