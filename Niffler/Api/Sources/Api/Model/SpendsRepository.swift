@@ -1,7 +1,20 @@
 import Foundation
-import Api
 
-class SpendsRepository: ObservableObject {
+public class SpendsRepository: ObservableObject {
+    
+    @Published
+    public private(set) var sortedSpends: [Spends] = []
+    public init(api: Api) {
+        self.api = api
+    }
+    
+    private let api: Api
+    
+    public func fetch() async throws {
+        let (spendsDto, _) = try await api.getSpends()
+        let spendsModel = spendsDto.content
+        replace(spendsModel)
+    }
     
     private(set) var spends: [Spends] = [] {
         didSet {
@@ -9,17 +22,15 @@ class SpendsRepository: ObservableObject {
         }
     }
     
-    @Published private(set) var sortedSpends: [Spends] = []
-    
-    func add(_ spend: Spends) {
+    public func add(_ spend: Spends) {
         spends.append(spend)
     }
     
-    func replace(_ spends: [Spends]) {
+    public func replace(_ spends: [Spends]) {
         self.spends = spends
     }
     
-    func replace(_ spend: Spends) {
+    public func replace(_ spend: Spends) {
         guard let index = spends.firstIndex(where: { aSpend in
             aSpend.id == spend.id
         }) else {

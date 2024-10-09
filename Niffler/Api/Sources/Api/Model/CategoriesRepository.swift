@@ -1,18 +1,15 @@
 import Foundation
-import Api
 
-class CategoriesRepository: ObservableObject {
+public class CategoriesRepository: ObservableObject {
     
     let api: Api
     
-    init(api: Api) {
+    public init(api: Api, selectedCategory: String?) {
         self.api = api
-        Task {
-            try await loadCategories()
-        }
+        self.selectedCategory = selectedCategory
     }
     
-    private func loadCategories() async throws {
+    public func loadCategories() async throws {
         // TODO: Handle failure
         let (categories, _) = try await api.categories()
         self.categoriesDto = categories
@@ -20,31 +17,36 @@ class CategoriesRepository: ObservableObject {
             .filter(\.isActive)
             .map(\.name)
         
-        self.selectedCategory = self.categories.first!// TODO: Remember last selected
+        self.selectedCategory = selectedCategory ?? self.categories.first!
     }
     
-    @Published private(set) var categories: [String] = []
-    private var categoriesDto: [CategoryDTO] = []
-    
-    func add(_ newCategory: String) {
+    public func add(_ newCategory: String) {
         categories.append(newCategory)
         selectedCategory = newCategory
         
         // TODO: Work with API
     }
     
-    var selectedCategory: String = Defaults.selectedCategory
+    @Published public private(set) var categories: [String] = []
     
-    var currentCategoryDto: CategoryDTO {
+    public private(set) var selectedCategory: String?
+    
+    private var categoriesDto: [CategoryDTO] = []
+    
+    
+    
+    public var currentCategoryDto: CategoryDTO {
         categoriesDto.first { dto in
             dto.name == selectedCategory
-        }!
+        } ?? categoriesDto.first! // TODO: 
     }
     
-    func remove(_ indexSet: IndexSet) {
+    public func remove(_ indexSet: IndexSet) {
         var removedCategory = categoriesDto[indexSet.first!]
         categories.remove(atOffsets: indexSet)
         removedCategory.archived = true
+        
+        // TODO: Select another one if needed
         
         Task {
             do {

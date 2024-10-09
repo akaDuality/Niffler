@@ -14,12 +14,18 @@ final class SpendsUITests: TestCase {
             .waitSpendsScreen()
             .addSpent()
         
-        let title = UUID().uuidString
+        let title = UUID.randomPart
         newSpendPage
             .inputSpent(title: title)
         
         // Assert
         spendsPage
             .assertNewSpendIsShown(title: title)
+    }
+}
+
+extension UUID {
+    static var randomPart: String {
+        UUID().uuidString.components(separatedBy: "-").first!
     }
 }

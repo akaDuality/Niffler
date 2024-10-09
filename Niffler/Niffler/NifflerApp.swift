@@ -14,9 +14,20 @@ struct NifflerApp: App {
     let api = Api()
     let userData = UserData()
     let categoriesRepository: CategoriesRepository
+    let spendsRepository: SpendsRepository
     
     init() {
-        categoriesRepository = CategoriesRepository(api: api)
+        spendsRepository = SpendsRepository(api: api)
+        categoriesRepository = CategoriesRepository(api: api, selectedCategory: Defaults.selectedCategory)
+        
+        loadData()
+    }
+    
+    func loadData() {
+        Task {
+            try await categoriesRepository.loadCategories()
+            // TODO: handle erros
+        }
     }
 }
 
@@ -28,5 +39,7 @@ extension NifflerApp {
         .environmentObject(api)
         .environmentObject(userData)
         .environmentObject(categoriesRepository)
+        .environmentObject(spendsRepository)
+        
     }
 }

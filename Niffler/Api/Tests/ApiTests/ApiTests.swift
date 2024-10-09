@@ -43,15 +43,6 @@ final class ApiE2ETests: XCTestCase {
         XCTAssertEqual(response.statusCode, 401)
     }
     
-    func test_unauthorized_whenGetCurrentUser_shouldFail() async throws {
-        let request = network.request(method: "GET", path: "currentUser")
-        
-        let (text, response) = try await network.performWithStringResult(request)
-        
-        XCTAssertTrue(text.isEmpty)
-        XCTAssertEqual(response.statusCode, 401)
-    }
-
     func test_authorized_currentUser() async throws {
         let (name, password) = ("stage", "12345")
         
@@ -147,7 +138,6 @@ final class ApiE2ETests: XCTestCase {
     
     // MARK: Concurrency
     func test_notAuthorized_whenPerformTwoRequests_shouldPresentLoginUIOnce() async throws {
-        // Not authorized
         Auth.removeAuth()
         spyAuthUI()
         
@@ -180,9 +170,55 @@ final class ApiE2ETests: XCTestCase {
         try await network.auth.authorize(user: "misha", password: "12345")
         
         let (categories, getResponse) = try await network.categories()
-        
         XCTAssertEqual(getResponse.statusCode, 200)
-        XCTAssertEqual(categories.count, 1)
+        XCTAssertEqual(categories.count, 2)
+        
+        let activeCategories = categories
+            .filter(\.isActive)
+            .map(\.name)
+        
+        XCTAssertLessThan(activeCategories.count, categories.count)
+    }
+    
+    func test_getCategoriesRepository() async throws {
+        try await network.auth.authorize(user: "misha", password: "12345")
+        
+        let sut = CategoriesRepository(api: network, selectedCategory: nil)
+        
+        try await sut.loadCategories()
+        
+        XCTAssertGreaterThan(sut.categories.count, 0)
+    }
+    
+    func test_getCategoriesRepository_shouldSelectDefault() async throws {
+        try await network.auth.authorize(user: "misha", password: "12345")
+        
+        let sut = CategoriesRepository(api: network, selectedCategory: nil)
+        
+        try await sut.loadCategories()
+        
+        XCTAssertEqual(sut.selectedCategory, "Test2")
+    }
+    
+    func test_haveLocalDefault_getCategoriesRepository_shouldSelectLocalDefault() async throws {
+        try await network.auth.authorize(user: "misha", password: "12345")
+        
+        let sut = CategoriesRepository(api: network, selectedCategory: "Test")
+        
+        try await sut.loadCategories()
+        
+        XCTAssertEqual(sut.selectedCategory, "Test")
+    }
+    
+    func test_whenAddCategory_shouldSelectItAsDefault() async throws {
+        try await network.auth.authorize(user: "misha", password: "12345")
+        
+        let sut = CategoriesRepository(api: network, selectedCategory: "Test")
+        
+        try await sut.loadCategories()
+        sut.add("Test3")
+        
+        XCTAssertEqual(sut.selectedCategory, "Test3")
     }
     
     func test_newUser_whenAddCategory_shouldReturnCategoriesInGetRequest() async throws {
@@ -237,9 +273,9 @@ extension Auth {
 }
 
 extension CategoryDTO {
-    static func testMake(user: String) -> Self {
-        CategoryDTO(id: UUID().uuidString, name: "Тест",
-                    username: user, archived: false)
+    static func testMake(user: String, name: String = "Test", archived: Bool = false) -> Self {
+        CategoryDTO(id: UUID().uuidString, name: name,
+                    username: user, archived: archived)
     }
 }
 

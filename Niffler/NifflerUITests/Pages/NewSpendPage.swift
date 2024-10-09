@@ -6,7 +6,7 @@ class NewSpendPage: BasePage {
         inputAmount()
         .selectCategory()
         .inputDescription(title)
-        .swipeToAddSpendsButton()
+//        .swipeToAddSpendsButton()
         .pressAddSpend()
     }
     
@@ -27,14 +27,14 @@ class NewSpendPage: BasePage {
         return self
     }
     
-    func swipeToAddSpendsButton() -> Self {
-        let screenCenter = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-        let screenTop = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.15))
-        screenCenter.press(forDuration: 0.01, thenDragTo: screenTop)
-        return self
-    }
+//    func swipeToAddSpendsButton() -> Self {
+//        let screenCenter = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+//        let screenTop = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.15))
+//        screenCenter.press(forDuration: 0.01, thenDragTo: screenTop)
+//        return self
+//    }
     
     func pressAddSpend() {
-        app.buttons["Add Spend"].tap()
+        app.buttons["Add"].tap()
     }
 }

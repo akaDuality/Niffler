@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -100,10 +100,6 @@
 		A9FCA79D2BEB760700A5A1D2 /* PasswordField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		7439FA6E2CA20152007C71DD /* Model */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Model; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		746853732B0CAE9700E48DFE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -162,7 +158,6 @@
 				746853792B0CAE9700E48DFE /* NifflerApp.swift */,
 				7468537B2B0CAE9700E48DFE /* ContentView.swift */,
 				A94CFBFD2B204CEB00BFD09F /* SharedAccessibilityIdentifier.swift */,
-				7439FA6E2CA20152007C71DD /* Model */,
 				A967D07E2B0CB20500410674 /* VIew */,
 				7468537D2B0CAE9700E48DFE /* Item.swift */,
 				7468537F2B0CAE9900E48DFE /* Assets.xcassets */,
@@ -269,9 +264,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				7439FA6E2CA20152007C71DD /* Model */,
 			);
 			name = Niffler;
 			packageProductDependencies = (
@@ -584,7 +576,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Niffler/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = P67Q4Q7HA9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Niffler/Info.plist;
@@ -614,7 +606,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Niffler/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = P67Q4Q7HA9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Niffler/Info.plist;

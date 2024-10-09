@@ -2,16 +2,16 @@ import Api
 import SwiftUI
 
 struct MainView: View {
-    let spendsRepository = SpendsRepository()
     
     @State var isPresentLoginOnStart: Bool = false
     @State var isPresentLoginInModalScreen = false
     @State var showMenu: Bool = false
 
+    @EnvironmentObject var spendsRepository: SpendsRepository
+    
     @EnvironmentObject var api: Api {
         didSet {
             isPresentLoginOnStart = !api.auth.isAuthorized()
-            
         }
     }
     

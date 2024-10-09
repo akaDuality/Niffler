@@ -107,7 +107,7 @@ extension DetailSpendView {
                 prefillForEditing(editSpendView)
             } else {
                 // Read last used category
-                selectedCategory = categoriesRepository.selectedCategory
+                selectedCategory = categoriesRepository.selectedCategory! // TODO: Handle unknown
             }
         })
         .toolbar {
@@ -252,9 +252,9 @@ struct CategorySelectorView: View {
         description: "Test Spend",
         username: "stage"
     )
-    let repository = SpendsRepository()
+    let repository = SpendsRepository(api: Api())
     repository.add(testSpend)
     
     return DetailSpendView(spendsRepository: repository, onAddSpend: {})
-        .environmentObject(CategoriesRepository(api: Api()))
+        .environmentObject(CategoriesRepository(api: Api(), selectedCategory: ""))
 }

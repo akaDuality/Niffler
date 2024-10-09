@@ -1,4 +1,5 @@
 import SwiftUI
+import Api
 
 struct ProfileView: View {
     @State private var name: String = "Name"

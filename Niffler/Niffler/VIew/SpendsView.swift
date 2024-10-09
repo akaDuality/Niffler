@@ -22,14 +22,7 @@ struct SpendsView: View {
                 screenState = .loading
             }
             
-            let (spendsDto, _) = try await api.getSpends()
-            let spendsModel = spendsDto.content
-            spendsRepository.replace(spendsModel)
-            
-            let (statData, _) = try await api.getStat()
-            let stat = Stat(from: statData)
-            self.totalStat = Double(stat.total)
-            self.statByCategories = stat.statByCategories
+            try await spendsRepository.fetch()
             
             screenState = .data(spendsRepository.sortedSpends)
         } catch {

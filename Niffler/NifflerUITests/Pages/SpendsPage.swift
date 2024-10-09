@@ -26,7 +26,7 @@ class SpendsPage: BasePage {
     }
     
     func assertNewSpendIsShown(title: String, file: StaticString = #filePath, line: UInt = #line) {
-        let isFound = app.scrollViews.switches.staticTexts[title].waitForExistence(timeout: 1)
+        let isFound = app.scrollViews.staticTexts[title].waitForExistence(timeout: 1)
         XCTAssertTrue(isFound, file: file, line: line)
     }
 }

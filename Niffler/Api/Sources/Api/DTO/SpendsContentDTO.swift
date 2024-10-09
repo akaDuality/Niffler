@@ -4,6 +4,8 @@ public struct SpendsDTO: Decodable {
     public let content: [Spends]
 }
 
+import SwiftData
+
 public struct Spends: Identifiable, Codable, Hashable {
     public init(id: String?, spendDate: Date?, category: CategoryDTO, currency: String, amount: Double, description: String, username: String) {
         self.id = id
@@ -15,6 +17,7 @@ public struct Spends: Identifiable, Codable, Hashable {
         self.username = username
     }
     
+    // MARK: - Codable
     /// New spend has no id until response from backend
     public let id: String?
     public let spendDate: Date?
@@ -24,7 +27,12 @@ public struct Spends: Identifiable, Codable, Hashable {
     public let description: String
     public let username: String
     
+    // MARK: - Model
     public var dateForSort: Date {
         spendDate ?? Date()
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
