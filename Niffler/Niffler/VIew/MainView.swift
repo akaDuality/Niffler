@@ -3,30 +3,19 @@ import SwiftUI
 
 struct MainView: View {
     
-    @State var isPresentLoginOnStart: Bool = false
+    @State var isPresentLoginOnStart: Bool
     @State var isPresentLoginInModalScreen = false
     @State var showMenu: Bool = false
 
     @EnvironmentObject var spendsRepository: SpendsRepository
     
-    @EnvironmentObject var api: Api {
-        didSet {
-            isPresentLoginOnStart = !api.auth.isAuthorized()
-        }
-    }
+    @EnvironmentObject var api: Api
     
-    init() {
-        setupForUITests()
+    init(isPresentLoginOnStart: Bool) {
+        self.isPresentLoginOnStart = isPresentLoginOnStart
     }
 
     let userData = UserData()
-
-
-    func setupForUITests() {
-        if CommandLine.arguments.contains("RemoveAuthOnStart") {
-            Auth.removeAuth()
-        }
-    }
 
     func fetchData() {
         Task {

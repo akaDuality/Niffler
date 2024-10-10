@@ -20,11 +20,25 @@ struct NifflerApp: App {
         spendsRepository = SpendsRepository(api: api)
         categoriesRepository = CategoriesRepository(api: api, selectedCategory: Defaults.selectedCategory)
         
+        setupForUITests()
         loadData()
+    }
+    
+    func setupForUITests() {
+        if CommandLine.arguments.contains("RemoveAuthOnStart") {
+            Auth.removeAuth()
+            UIView.setAnimationsEnabled(false)
+            UIApplication.shared.keyWindow?.layer.speed = 100
+        }
     }
     
     func loadData() {
         Task {
+            guard api.auth.isAuthorized() else {
+                print("Not fetch category because is unauthorized")
+                return
+            }
+            
             try await categoriesRepository.loadCategories()
             // TODO: handle erros
         }
@@ -34,12 +48,11 @@ struct NifflerApp: App {
 extension NifflerApp {
     var body: some Scene {
         WindowGroup {
-            MainView()
+            MainView(isPresentLoginOnStart: !api.auth.isAuthorized())
         }
         .environmentObject(api)
         .environmentObject(userData)
         .environmentObject(categoriesRepository)
         .environmentObject(spendsRepository)
-        
     }
 }
