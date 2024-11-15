@@ -44,6 +44,11 @@ struct SpendCell: View {
                 .foregroundStyle(AppColors.gray_700)
         }
         .padding(.trailing, 16)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(spend.description)
+        .accessibilityValue(spend.amountStringSpellOut)
+        .accessibilityCustomContent("Category", spend.category.name)
+        .accessibilityCustomContent("Spend date", spend.spendDateDescription)
     }
 }
 

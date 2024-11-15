@@ -12,7 +12,10 @@ class SpendsPage: BasePage {
     
     @discardableResult
     func waitSpendsScreen(file: StaticString = #filePath, line: UInt = #line) -> Self {
-        let isFound = app.scrollViews.switches.firstMatch.waitForExistence(timeout: 10)
+        let isFound = app.firstMatch
+            .scrollViews.firstMatch
+            .switches.firstMatch
+            .waitForExistence(timeout: 10)
         
         XCTAssertTrue(isFound,
                       "Не дождались экрана со списком трат",
@@ -26,7 +29,11 @@ class SpendsPage: BasePage {
     }
     
     func assertNewSpendIsShown(title: String, file: StaticString = #filePath, line: UInt = #line) {
-        let isFound = app.scrollViews.staticTexts[title].waitForExistence(timeout: 1)
+        let isFound = app.firstMatch
+            .scrollViews.firstMatch
+            .staticTexts[title].firstMatch
+            .waitForExistence(timeout: 1)
+        
         XCTAssertTrue(isFound, file: file, line: line)
     }
 }

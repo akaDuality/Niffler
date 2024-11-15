@@ -4,9 +4,11 @@ class LoginPage: BasePage {
     
     @discardableResult
     func input(login: String, password: String) -> Self {
-        input(login: login)
-        input(password: password)
-        pressLoginButton()
+        XCTContext.runActivity(named: "Авторизуюсь \(login), \(password)") { _ in
+            input(login: login)
+            input(password: password)
+            pressLoginButton()
+        }
         return self
     }
     
