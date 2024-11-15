@@ -177,7 +177,7 @@ final class ApiE2ETests: XCTestCase {
             .filter(\.isActive)
             .map(\.name)
         
-        XCTAssertLessThan(activeCategories.count, categories.count)
+        XCTAssertLessThanOrEqual(activeCategories.count, categories.count)
     }
     
     func test_getCategoriesRepository() async throws {

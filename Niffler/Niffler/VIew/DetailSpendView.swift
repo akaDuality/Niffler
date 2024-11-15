@@ -188,33 +188,39 @@ struct CategorySelectorView: View {
     var body: some View {
         Spacer()
         
-        if categoriesRepository.categories.count > 0 {
-            Menu(selectedCategory) {
-                ForEach(categoriesRepository.categories, id: \.self) { category in
-                    Button(category) {
-                        selectedCategory = category
+        Group {
+            if categoriesRepository.categories.count > 0 {
+                Menu(selectedCategory) {
+                    ForEach(categoriesRepository.categories, id: \.self) { category in
+                        Button(category) {
+                            selectedCategory = category
+                        }
+                    }
+                    
+                    Divider()
+                    
+                    Button("+ New category") {
+                        isAddCategoryAlertVisible = true
                     }
                 }
-                
-                Divider()
-                
+            } else {
                 Button("+ New category") {
                     isAddCategoryAlertVisible = true
                 }
             }
-            .accessibilityIdentifier("Select category")
-            .buttonStyle(.bordered)
-            .alert("Add category", isPresented: $isAddCategoryAlertVisible) {
-                TextField("Name", text: $newCategoryName)
-                
-                Button(action: addCategory, label: {
-                    Text("Add")
-                }).disabled(newCategoryName.isEmpty)
-                
-                Button("Cancel", role: .cancel) { }
-            } message: {
-                Text("Input name for new category")
-            }
+        }
+        .accessibilityIdentifier("Select category")
+        .buttonStyle(.bordered)
+        .alert("Add category", isPresented: $isAddCategoryAlertVisible) {
+            TextField("Name", text: $newCategoryName)
+            
+            Button(action: addCategory, label: {
+                Text("Add")
+            }).disabled(newCategoryName.isEmpty)
+            
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Input name for new category")
         }
 
         Spacer()

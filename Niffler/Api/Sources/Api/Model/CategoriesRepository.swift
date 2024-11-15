@@ -9,6 +9,7 @@ public class CategoriesRepository: ObservableObject {
         self.selectedCategory = selectedCategory
     }
     
+    @MainActor
     public func loadCategories() async throws {
         // TODO: Handle failure
         let (categories, _) = try await api.categories()
@@ -33,12 +34,15 @@ public class CategoriesRepository: ObservableObject {
     
     private var categoriesDto: [CategoryDTO] = []
     
-    
-    
     public var currentCategoryDto: CategoryDTO {
         categoriesDto.first { dto in
             dto.name == selectedCategory
-        } ?? categoriesDto.first! // TODO: 
+        } ?? makeNewCategory()
+    }
+    
+    private func makeNewCategory() -> CategoryDTO {
+        CategoryDTO(id: nil, name: selectedCategory!, // TODO: Make it optional
+                    username: nil, archived: false)
     }
     
     public func remove(_ indexSet: IndexSet) {

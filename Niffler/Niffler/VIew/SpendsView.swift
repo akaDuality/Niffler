@@ -5,7 +5,7 @@ struct SpendsView: View {
     @EnvironmentObject var api: Api
     
     @StateObject var spendsRepository: SpendsRepository // StateObject allows to 
-    
+    @StateObject var categoriesRepository: CategoriesRepository
     
     @State var statByCategories: [StatByCategories] = []
     @State var totalStat: Double = .zero
@@ -23,7 +23,10 @@ struct SpendsView: View {
                 screenState = .loading
             }
             
-            try await spendsRepository.fetch()
+            async let spends: () = spendsRepository.fetch()
+            async let categories: () = categoriesRepository.loadCategories()
+            
+            _ = try await (spends, categories)
             
             screenState = .data(spendsRepository.sortedSpends)
         } catch {

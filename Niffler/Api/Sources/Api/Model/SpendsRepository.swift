@@ -18,7 +18,11 @@ public class SpendsRepository: ObservableObject {
     
     private(set) var spends: [Spends] = [] {
         didSet {
-            sortedSpends = sortedByDateDesc(spends)
+            Task {
+                await MainActor.run {
+                    sortedSpends = sortedByDateDesc(spends)
+                }
+            }
         }
     }
     

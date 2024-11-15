@@ -8,7 +8,7 @@ struct MainView: View {
     @State var showMenu: Bool = false
 
     @EnvironmentObject var spendsRepository: SpendsRepository
-    
+    @EnvironmentObject var categoriesRepository: CategoriesRepository
     @EnvironmentObject var api: Api
     
     init(isPresentLoginOnStart: Bool) {
@@ -60,7 +60,8 @@ extension MainView {
                         Divider()
                         
                         Section {
-                            SpendsView(spendsRepository: spendsRepository)
+                            SpendsView(spendsRepository: spendsRepository,
+                                       categoriesRepository: categoriesRepository)
                                 .onAppear {
                                     // TODO: Check that is called on main queue
                                     api.auth.requestCredentialsFromUser = {

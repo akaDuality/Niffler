@@ -21,7 +21,6 @@ struct NifflerApp: App {
         categoriesRepository = CategoriesRepository(api: api, selectedCategory: Defaults.selectedCategory)
         
         setupForUITests()
-        loadData()
     }
     
     func setupForUITests() {
@@ -29,18 +28,6 @@ struct NifflerApp: App {
             Auth.removeAuth()
             UIView.setAnimationsEnabled(false)
             UIApplication.shared.keyWindow?.layer.speed = 100
-        }
-    }
-    
-    func loadData() {
-        Task {
-            guard api.auth.isAuthorized() else {
-                print("Not fetch category because is unauthorized")
-                return
-            }
-            
-            try await categoriesRepository.loadCategories()
-            // TODO: handle erros
         }
     }
 }
