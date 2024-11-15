@@ -6,10 +6,11 @@ struct SpendsView: View {
     
     @StateObject var spendsRepository: SpendsRepository // StateObject allows to 
     
-    @State var screenState: ScreenState = .loading
+    
     @State var statByCategories: [StatByCategories] = []
     @State var totalStat: Double = .zero
     
+    @State var screenState: ScreenState = .loading
     enum ScreenState {
         case loading
         case data([Spends])

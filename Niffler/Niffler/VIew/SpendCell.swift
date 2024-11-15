@@ -25,13 +25,13 @@ struct SpendCell: View {
             VStack {
                 HStack {
                     Spacer()
-                    Text(currencyString(spend.amount, allowDigits: 0))
+                    Text(spend.amountStringForUI)
                         .foregroundStyle(.primary)
                 }
 
                 HStack {
                     Spacer()
-                    Text(spend.spendDate.map(DateFormatterHelper.shared.formatForUser) ?? "No data")
+                    Text(spend.spendDateDescription)
                         .font(.caption)
                         .font(.system(size: 16))
                         .foregroundStyle(Color.primary.secondary)

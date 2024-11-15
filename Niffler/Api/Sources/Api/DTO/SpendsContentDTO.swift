@@ -36,3 +36,31 @@ public struct Spends: Identifiable, Codable, Hashable {
         hasher.combine(id)
     }
 }
+
+extension Spends {
+    public var amountStringForUI: String {
+        Self.amountFormatterWithDigits.string(from: .init(value: amount)) ?? ""
+    }
+    
+    public var amountStringSpellOut: String {
+        Self.amountFormatterSpellOut.string(from: .init(value: amount)) ?? ""
+    }
+    
+    static var amountFormatterWithDigits: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.maximumFractionDigits = 0
+        return formatter
+    }()
+    
+    static var amountFormatterSpellOut: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .spellOut
+        formatter.maximumFractionDigits = 0
+        return formatter
+    }()
+    
+    public var spendDateDescription: String {
+        spendDate.map(DateFormatterHelper.shared.formatForUser) ?? "No data"
+    }
+}

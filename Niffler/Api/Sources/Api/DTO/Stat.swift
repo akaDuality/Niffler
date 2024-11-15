@@ -13,7 +13,7 @@ public struct Stat {
     }
 }
 
-public struct StatByCategories: Identifiable {
+public struct StatByCategories: Identifiable, Sendable {
     public let id: UUID
     public let categoryName: String
     public let currency: String

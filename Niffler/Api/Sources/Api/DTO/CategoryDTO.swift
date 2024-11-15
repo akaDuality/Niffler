@@ -1,6 +1,6 @@
 import Foundation
 
-public struct CategoryDTO: Identifiable, Codable, Hashable {
+public struct CategoryDTO: Identifiable, Codable, Hashable, Sendable {
     public let id: String?
     public let name: String
     public let username: String?

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct UserDataModel: Codable {
+public struct UserDataModel: Codable, Sendable {
     public let id: String
     public let username: String
     public let firstname: String?

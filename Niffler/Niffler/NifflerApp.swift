@@ -25,7 +25,7 @@ struct NifflerApp: App {
     }
     
     func setupForUITests() {
-        if CommandLine.arguments.contains("RemoveAuthOnStart") {
+        if ProcessInfo.processInfo.arguments.contains("RemoveAuthOnStart") {
             Auth.removeAuth()
             UIView.setAnimationsEnabled(false)
             UIApplication.shared.keyWindow?.layer.speed = 100

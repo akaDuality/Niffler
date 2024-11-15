@@ -1,8 +1,8 @@
 import Foundation
 
-public class DateFormatterHelper {
+public final class DateFormatterHelper: Sendable {
     
-    public static var shared: DateFormatterHelper = {
+    public static private(set) var shared: DateFormatterHelper = {
        DateFormatterHelper()
     }()
     
